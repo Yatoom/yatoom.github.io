@@ -72,8 +72,16 @@ body {
 .simple-button {
 	z-index: 2;
 	position: fixed;
-	float: right;
-	margin-right: 10px;
+	right: 10px;
+	background-color: @white;
+
+	.menu-button {
+		height: 60px;
+		cursor: pointer;
+	}
+	@media screen and (min-width: 536px) {
+		display: none;
+	}	
 }
 
 .top-logo {
@@ -195,7 +203,7 @@ body {
 .logo  {
 	background: url('../img/bg-1-blur.jpg') no-repeat 0% 0% fixed;
 	@media screen and (max-width: 801px) {
-		background: #abc;
+		background: lavender;
 	}
 
 	/* License & info: http://www.flickr.com/photos/58842866@N08/5388146683/ */

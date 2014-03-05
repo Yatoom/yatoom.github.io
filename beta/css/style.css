@@ -55,8 +55,17 @@ body {
 .simple-button {
   z-index: 2;
   position: fixed;
-  float: right;
-  margin-right: 10px;
+  right: 10px;
+  background-color: #ffffff;
+}
+.simple-button .menu-button {
+  height: 60px;
+  cursor: pointer;
+}
+@media screen and (min-width: 536px) {
+  .simple-button {
+    display: none;
+  }
 }
 @media screen and (max-width: 535px) {
   .top-logo {
@@ -188,7 +197,7 @@ body {
 }
 @media screen and (max-width: 801px) {
   .logo {
-    background: #abc;
+    background: lavender;
   }
 }
 .logo img {
