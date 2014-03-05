@@ -4,7 +4,7 @@ function moveScreen() {
 		// Open Menu
 		$(".menu").css("right", "0px");
 		$(".container").css("left", "-300px");
-		$(".contact").css("left", "-300px");
+
 	} else {
 		setDefault();
 	}
@@ -33,22 +33,15 @@ function moveText() {
 
 /** Set default values. */
 function setDefault() {
-	$(".menu").css("right", "-300px");
-	$(".purple-box, .green-box, .blue-box, .red-box, .contact .info, .contact .design").css("padding", "5% 15% 5% 15%");
-	$(".contact .design").css("padding", "2% 15% 2% 15%"); // Different padding values
-	$(".purple-box, .green-box, .blue-box, .red-box, .contact .info, .contact .design, .about").css("right", "0px");
-	$(".container").css("left", "0px");
-	$(".about").css("width", "100%");
-	$(".contact").css("left", "0px");
-	$(".logo").css("padding", "160px 0px 100px 0px")
-	$(".logo").css("width", "100%");
+	$(".purple-box, .green-box, .blue-box, .red-box, .container, .logo, .contact, .info, .contact, .design, .about, .menu").removeAttr("style");
 }
 
 $(document).ready(function(){
 	/** Show menu */
-	$("#menu-button, #menu-button-simple").on("click", function(){
+	$("#menu-button, #menu-button-2").on("click", function(){
 		console.log($(".menu").css("width"));
-		if ($(window).width() > 1024){
+		if ($(document).width() > 1024){
+			console.log($(document).width());
 			moveText();
 		} else {
 			moveScreen();

@@ -383,9 +383,10 @@ body {
   /* Safari */
 
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1039px) {
   .contact {
     width: 100%;
+    position: absolute;
   }
 }
 .contact .info {
