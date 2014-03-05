@@ -288,6 +288,15 @@ body {
   transition: padding 0.5s, right 0.5s;
   -webkit-transition: padding 0.5s, right 0.5s;
 }
+@media screen and (max-width: 800px) {
+  .purple-box,
+  .green-box,
+  .blue-box,
+  .red-box {
+    padding: 5% 1% 5% 1% !important;
+    width: 98%;
+  }
+}
 .purple-box h1,
 .green-box h1,
 .blue-box h1,
