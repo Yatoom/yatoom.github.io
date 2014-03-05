@@ -48,6 +48,17 @@ body {
   animation: spin 0.5s linear;
 }
 @media screen and (max-width: 535px) {
+  .top {
+    display: none;
+  }
+}
+.simple-button {
+  z-index: 2;
+  position: fixed;
+  float: right;
+  margin-right: 10px;
+}
+@media screen and (max-width: 535px) {
   .top-logo {
     display: none;
   }
