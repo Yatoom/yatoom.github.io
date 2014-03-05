@@ -170,6 +170,11 @@ body {
   -webkit-transition: all 0.5s;
   /* Safari */
 }
+@media screen and (max-width: 801px) {
+  .logo {
+    background: #abc;
+  }
+}
 .logo img {
   display: block;
   margin-left: auto;
@@ -299,10 +304,10 @@ body {
   height: 500px;
   background-size: cover;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 801px) {
   .separator {
-    background: none;
-    height: 0px;
+    background: none !important;
+    height: 0px !important;
   }
 }
 .separator-2 {
@@ -312,10 +317,10 @@ body {
   height: 500px;
   background-size: cover;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 801px) {
   .separator-2 {
-    background: none;
-    height: 0px;
+    background: none !important;
+    height: 0px !important;
   }
 }
 .separator-3 {
@@ -325,10 +330,10 @@ body {
   height: 500px;
   background-size: cover;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 801px) {
   .separator-3 {
-    background: none;
-    height: 0px;
+    background: none !important;
+    height: 0px !important;
   }
 }
 .contact {
