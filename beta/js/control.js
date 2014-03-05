@@ -38,7 +38,7 @@ function setDefault() {
 
 $(document).ready(function(){
 	/** Show menu */
-	$("#menu-button, #menu-button-2").on("click", function(){
+	$("#menu-button, #menu-button-simple").on("click", function(){
 		console.log($(".menu").css("width"));
 		if ($(document).width() > 1024){
 			console.log($(document).width());
