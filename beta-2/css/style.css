@@ -231,6 +231,11 @@ body {
   color: #777;
   background-color: #eee;
 }
+.color:last-child a,
+.link:hover:last-child a,
+.active:last-child a {
+  color: #777;
+}
 .separator,
 .separator-2,
 .separator-3 {
