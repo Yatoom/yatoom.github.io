@@ -39,9 +39,9 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="1600"
-     inkscape:window-height="848"
+     inkscape:window-height="845"
      inkscape:window-x="0"
-     inkscape:window-y="-3"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
@@ -53,7 +53,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -137,24 +137,5 @@
          id="tspan3023"
          x="439.41635"
          y="-20.536066" /></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#8c3e8f;fill-opacity:1;stroke:#8c3e8f;font-family:Sans;stroke-opacity:1"
-       x="758.15686"
-       y="736.10956"
-       id="text4419"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/var/www/html/skin-perfection-2/skin-perfection-9.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan4421"
-         x="758.15686"
-         y="736.10956"
-         style="font-size:72px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#8c3e8f;font-family:Comfortaa;-inkscape-font-specification:Comfortaa;fill-opacity:1;stroke:#8c3e8f;stroke-opacity:1">Beauty <tspan
-   style="fill:#1a1a1a;stroke:#1a1a1a"
-   id="tspan5482">&amp;</tspan><tspan
-   style="stroke:#411042;stroke-opacity:1;fill:#411042;fill-opacity:1"
-   id="tspan5478"> Wellness </tspan></tspan></text>
   </g>
 </svg>
