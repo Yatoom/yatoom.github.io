@@ -99,15 +99,18 @@ body {
   background: url('../img/waterlily.jpg') no-repeat 100% 0% fixed;
   background-size: cover;
   width: 100%;
-  min-height: 800px;
-  height: 100%;
   position: relative;
+  height: auto;
+  margin-top: -21px;
+  padding-bottom: 21px;
+  min-height: 100%;
 }
 .hero .display {
-  position: absolute;
-  left: 15%;
-  top: 100px;
   width: 70%;
+  padding-left: 15%;
+  height: auto;
+  position: static;
+  padding-top: 10%;
 }
 .hero .display p {
   padding: 0px 20px 40px 20px;
@@ -124,6 +127,9 @@ body {
   z-index: 1;
   color: #ffffff;
   padding: 30px 15% 90px 15%;
+}
+.box img {
+  max-width: 100%;
 }
 .full {
   min-height: calc(100% - 120px);
@@ -198,7 +204,7 @@ body {
   opacity: 1.0;
 }
 .choice {
-  width: 100%;
+  width: auto;
   height: 100px;
   text-align: center;
 }
@@ -273,8 +279,8 @@ body {
     width: 90%;
   }
   .hero .display {
-    left: 5%;
-    width: 80%;
+    width: 90%;
+    padding-left: 5%;
   }
 }
 /* Hide  menu */
@@ -285,11 +291,5 @@ body {
   .container {
     left: 0px;
     width: 100%;
-  }
-}
-/* Push up the display text. */
-@media all and (max-width: 624px) {
-  .hero .display {
-    top: 50px;
   }
 }
