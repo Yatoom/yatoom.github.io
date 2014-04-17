@@ -39,6 +39,7 @@ function checkBetween(id) {
 	}
 }
 
+// Activates a navigation link when it has the same height as the box.
 function activator(id) {
 	var li = $(".nav li a[href='#" + id + "']");
 	if (checkBetween(id)) {
@@ -48,6 +49,7 @@ function activator(id) {
 	}
 }
 
+// Get all the ids inside the target
 function getIds(target) {
 	$(target + " div").each(function(index, element){
 		if ($(element).attr("id") !== undefined) {
@@ -56,6 +58,7 @@ function getIds(target) {
 	});
 }
 
+// Check if element has to be activated.
 function check() {
 	for (var i = 0; i < ids.length; i++) {
 		activator(ids[i]);
