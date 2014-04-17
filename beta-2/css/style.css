@@ -1,3 +1,4 @@
+@import url('http://fonts.googleapis.com/css?family=Raleway:300,400,600,700');
 body,
 html {
   height: 100%;
@@ -8,109 +9,17 @@ body {
   background-color: #161616;
   font-family: 'Open Sans', sans-serif;
 }
+/* Menu */
 .nav img {
   width: 40px;
   height: 40px;
   margin-bottom: -13px;
-}
-.full {
-  min-height: calc(100% - 120px);
-}
-.next,
-.previous {
-  padding: 10px;
-  cursor: pointer;
-  position: absolute;
-  text-decoration: none;
-  opacity: 0.3;
-  color: #ffffff !important;
-  bottom: 40px;
-}
-.next {
-  right: 5%;
-  border: 2px solid #ffffff;
-}
-.previous {
-  right: calc(5% + 170px);
-  border: 2px solid #ffffff;
-}
-.next:hover,
-.previous:hover {
-  background-color: transparent !important;
-  opacity: 1.0;
-}
-/* make keyframes that tell the start state and the end state of our object */
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-moz-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.fade-in {
-  opacity: 0;
-  /* make things invisible upon start */
-
-  -webkit-animation: fadeIn ease-in 1;
-  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
-
-  -moz-animation: fadeIn ease-in 1;
-  animation: fadeIn ease-in 1;
-  -webkit-animation-fill-mode: forwards;
-  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
-
-  -moz-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-duration: 1s;
-  -moz-animation-duration: 1s;
-  animation-duration: 1s;
 }
 .logo {
   width: 230px;
   cursor: pointer;
   display: block;
   margin-left: 5px;
-}
-::selection {
-  color: #303030;
-  background: #ffffff;
-}
-::-moz-selection {
-  color: #ffffff;
-  background: #303030;
-}
-.container {
-  position: absolute;
-  z-index: 2;
-  width: calc(100% - 255px);
-  left: 255px;
-  height: 100%;
-}
-.container a {
-  color: #d0d0d0;
-  font-weight: bold;
-}
-.container a:hover {
-  color: #ffffff;
-  background-color: #303030;
-  text-decoration: none;
 }
 .menu {
   width: 250px;
@@ -143,7 +52,47 @@ body {
   padding: 15px;
   margin-left: -15px;
   font-weight: 300;
-  border-bottom: 1px dashed #EEE;
+  border-bottom: 1px dashed #eeeeee;
+}
+.link:hover a,
+.active a {
+  color: #ffffff;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
+}
+.link {
+  margin-left: -5px;
+  padding-left: 5px;
+}
+.design {
+  background-color: #ffffff;
+  width: 245px;
+  color: #777777;
+  padding: 5px;
+  margin-left: -5px;
+  margin-top: 5px;
+  position: fixed;
+  height: 30px;
+  bottom: 0px;
+  text-align: center;
+  z-index: 10;
+}
+/* Box */
+.container {
+  position: absolute;
+  z-index: 2;
+  width: calc(100% - 255px);
+  left: 255px;
+  height: 100%;
+}
+.container a {
+  color: #eeeeee;
+  font-weight: bold;
+}
+.container a:hover {
+  color: #ffffff;
+  background-color: #303030;
+  text-decoration: none;
 }
 .hero {
   display: block;
@@ -157,7 +106,7 @@ body {
 .hero .display {
   position: absolute;
   left: 15%;
-  top: 20%;
+  top: 100px;
   width: 70%;
 }
 .hero .display p {
@@ -168,28 +117,6 @@ body {
   padding: 20px;
   color: #ffffff;
 }
-.choice {
-  width: 100%;
-  height: 100px;
-  text-align: center;
-}
-.button {
-  margin: 10px;
-  text-decoration: none;
-  border: 2px solid #ffffff;
-  padding: 20px;
-  color: #ffffff !important;
-  display: inline-block;
-}
-.button:hover {
-  border: 2px solid #ffffff;
-  color: #c24149 !important;
-  background-color: #ffffff !important;
-}
-.btn-secondary {
-  color: #EEE;
-  border: 2px dashed #EEE;
-}
 .box {
   position: relative;
   width: 70%;
@@ -198,15 +125,8 @@ body {
   color: #ffffff;
   padding: 30px 15% 90px 15%;
 }
-.link:hover a,
-.active a {
-  color: #ffffff;
-  font-weight: bold;
-  border-bottom: 1px solid rgba(0, 0, 0, 0);
-}
-.link {
-  margin-left: -5px;
-  padding-left: 5px;
+.full {
+  min-height: calc(100% - 120px);
 }
 .color:nth-of-type(5n+4),
 .link:hover:nth-of-type(5n+4),
@@ -236,43 +156,16 @@ body {
 .color:last-child,
 .link:hover:last-child,
 .active:last-child {
-  /*	background: url('../img/background-green.svg') fixed 100% 100%;
-	background-size: cover;*/
-
-  color: #777;
-  background-color: #eee;
+  color: #777777;
+  background-color: #eeeeee;
 }
 .color:last-child a,
 .link:hover:last-child a,
 .active:last-child a {
-  color: #777;
-}
-.separator,
-.separator-2,
-.separator-3 {
-  display: block;
-}
-.separator {
-  background: url('../img/hot-stone.jpg') no-repeat fixed 0% 0%;
-  height: 500px;
-  background-size: cover;
-}
-.separator-2 {
-  /* License: http://pixabay.com/p-115317/?no_redirect */
-
-  background: url('../img/flowers.jpg') no-repeat fixed 0% 0%;
-  height: 500px;
-  background-size: cover;
-}
-.separator-3 {
-  /* License & info: http://www.flickr.com/photos/58842866@N08/5388146683/ */
-
-  background: url('../img/bg-1.jpg') no-repeat fixed 0% 0%;
-  height: 500px;
-  background-size: cover;
+  color: #777777;
 }
 .contact {
-  border-top: 5px solid #ccc;
+  border-top: 5px solid #c8c8c8;
 }
 .contact .info {
   width: 100%;
@@ -280,16 +173,123 @@ body {
   bottom: 20%;
   text-align: center;
 }
-.design {
-  background-color: #ffffff;
-  width: 245px;
-  color: #777;
-  padding: 5px;
-  margin-left: -5px;
-  margin-top: 5px;
-  position: fixed;
-  height: 30px;
-  bottom: 0px;
+/* Buttons */
+.next,
+.previous {
+  padding: 10px;
+  cursor: pointer;
+  position: absolute;
+  text-decoration: none;
+  opacity: 0.3;
+  color: #ffffff !important;
+  bottom: 40px;
+}
+.next {
+  right: 5%;
+  border: 2px solid #ffffff;
+}
+.previous {
+  right: calc(5% + 170px);
+  border: 2px solid #ffffff;
+}
+.next:hover,
+.previous:hover {
+  background-color: transparent !important;
+  opacity: 1.0;
+}
+.choice {
+  width: 100%;
+  height: 100px;
   text-align: center;
-  z-index: 10;
+}
+.button {
+  margin: 10px;
+  text-decoration: none;
+  border: 2px solid #ffffff;
+  padding: 20px;
+  color: #ffffff !important;
+  display: inline-block;
+}
+.button:hover {
+  border: 2px solid #ffffff;
+  color: #c24149 !important;
+  background-color: #ffffff !important;
+}
+.btn-secondary {
+  color: #eeeeee;
+  border: 2px dashed #eeeeee;
+}
+/* Keyframes */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  opacity: 0;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+}
+/* selection */
+::selection {
+  color: #303030;
+  background: #ffffff;
+}
+::-moz-selection {
+  color: #ffffff;
+  background: #303030;
+}
+/* Responsive */
+/* Smaller padding */
+@media all and (max-width: 1024px) {
+  .box {
+    padding: 30px 5% 90px 5%;
+    width: 90%;
+  }
+  .hero .display {
+    left: 5%;
+    width: 80%;
+  }
+}
+/* Hide  menu */
+@media all and (max-width: 800px) {
+  .menu {
+    left: -255px;
+  }
+  .container {
+    left: 0px;
+    width: 100%;
+  }
+}
+/* Push up the display text. */
+@media all and (max-width: 624px) {
+  .hero .display {
+    top: 50px;
+  }
 }

@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="skin-perfection-blue.svg"
+   sodipodi:docname="skin-perfection-testing.svg"
    inkscape:export-filename="/var/www/html/skin-perfection-4/img/skin-perfection-blue.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="323.82699"
-     inkscape:cy="240.16129"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="605.59822"
+     inkscape:cy="165.00889"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -38,11 +38,11 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="759"
-     inkscape:window-height="411"
-     inkscape:window-x="101"
-     inkscape:window-y="22"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1600"
+     inkscape:window-height="845"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
   <metadata
@@ -53,7 +53,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -109,11 +109,11 @@
          id="tspan3065"
          x="272.22806"
          y="509.88525"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#333333;fill-opacity:1;stroke:#333333;stroke-opacity:1;font-family:Raleway;-inkscape-font-specification:Raleway Bold"><tspan
-           style="font-weight:normal;fill:#333333;fill-opacity:1;stroke:#333333;stroke-opacity:1;-inkscape-font-specification:Raleway"
-           id="tspan3094">SKIN</tspan><tspan
-           style="fill:#199344;fill-opacity:1;stroke:#199344;stroke-opacity:1"
-           id="tspan3794">PERFECTION</tspan></tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#222222;fill-opacity:1;stroke:#222222;stroke-opacity:1;font-family:Open Sans;-inkscape-font-specification:Open Sans Light"><tspan
+           style="stroke:#222222;stroke-opacity:0"
+           id="tspan3763">SKIN</tspan><tspan
+           style="font-weight:bold;-inkscape-font-specification:Open Sans Bold"
+           id="tspan3759">PERFECTION</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
