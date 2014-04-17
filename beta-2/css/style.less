@@ -77,13 +77,11 @@ body {
 }
 
 .container {
-	height: 100%;
 	position: absolute;
-	width: 100%;
-	left: 0%;
 	z-index: 2;
 	width: ~"calc(100% - 255px)";
 	left: 255px;
+	height: 100%;
 
 	a {
 		color: @gray;
@@ -108,7 +106,7 @@ body {
 	padding-top: 20px;
 	margin-left: -15px;
 	padding-left: 20px;
-	overflow-y: auto;
+	overflow: auto;
 	left: 0px;
 	padding-bottom: 10px;
 
@@ -120,7 +118,6 @@ body {
 
 	.active {
 		a {
-			border-left: 5px solid @white;
 			padding-left: 10px;
 		}
 	}
@@ -142,8 +139,9 @@ body {
 	background: url('../img/waterlily.jpg') no-repeat 100% 0% fixed;
 	background-size: cover;
 	width: 100%;
-	min-height: 700px;
+	min-height: 800px;
 	height: 100%;
+	position: relative;
 
 	.display {
 		position: absolute;
@@ -168,7 +166,7 @@ body {
 	height: 100px;
 	margin-bottom: 0px;
 	text-align: center;
-	padding-top: 20px !important;
+
 }
 
 .button {
@@ -177,6 +175,7 @@ body {
 	border: 2px solid @white;
 	padding: 20px;
 	color: @white !important;
+	display: inline-block;
 }
 
 .button:hover {
@@ -287,7 +286,6 @@ body {
 	position: fixed;
 	height: 30px;
 	bottom: 0px;
-	
 	text-align: center;
 	z-index: 10;
 }
