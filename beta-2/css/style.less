@@ -12,6 +12,7 @@
 body, html {
  height: 100%;
  padding: 0;
+ overflow-x: hidden;
 }
 
 body {
@@ -70,7 +71,7 @@ body {
         padding: 15px;
         margin-left: -15px;
         font-weight: 300;
-        border-bottom: 1px dashed @light;
+        border-bottom: 1px solid @light;
     }
 }
 
@@ -92,13 +93,13 @@ body {
     width: 245px;
     color: @gray;
     padding: 5px;
-    margin-left: -5px;
     margin-top: 5px;
     position: fixed;
     height: 30px;
     bottom: 0px;
     text-align: center;
-    z-index: 10;
+    z-index: 0;
+    left: 0px;
 }
 
 /* Box */
@@ -188,6 +189,7 @@ body {
 .color:nth-of-type(5n), .link:hover:nth-of-type(5n), .active:nth-of-type(5n){
     background-color: @red;
 }
+
 
 .color:last-child, .link:hover:last-child, .active:last-child {
     color: @gray;
@@ -319,5 +321,41 @@ body {
         left: 0px;
         width: 100%;
     }
+
+    .design {
+        left: -255px;
+    }
 }
 
+@media all and (max-width: 500px) {
+    .hero {
+        background: none;
+        background-color: @red;
+    }
+}
+
+
+/* Menu button */
+.menu-button {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    height: 50px;
+    width: 50px;
+    background: url(../img/right.svg);
+    background-size: 100% 100%;
+    z-index: 100; 
+    display: none;
+}
+
+.button-left {
+    background: url(../img/left.svg);
+    background-size: 100% 100%;
+}
+
+// Show menu button.
+@media all and (max-width: 800px) {
+    .menu-button {
+        display: block;
+    }
+}
