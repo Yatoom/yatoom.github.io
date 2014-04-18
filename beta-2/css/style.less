@@ -6,6 +6,7 @@
 @black : #303030;
 @blue : #535C9C;
 @purple : #713472;
+@animspeed: 0.1s;
 
 @import url('http://fonts.googleapis.com/css?family=Raleway:300,400,600,700');
 
@@ -37,6 +38,9 @@ body {
 }
 
 .menu {
+    -webkit-transition: @animspeed;
+    transition: @animspeed;
+
     width: 250px;
     left: -300px;
     height: ~"calc(100% - 70px)";
@@ -89,6 +93,9 @@ body {
 }
 
 .design {
+    -webkit-transition: @animspeed;
+    transition: @animspeed;
+
     background-color: @white;
     width: 245px;
     color: @gray;
@@ -105,6 +112,9 @@ body {
 /* Box */
 
 .container {
+    -webkit-transition: @animspeed;
+    transition: @animspeed;
+
     position: absolute;
     z-index: 2;
     width: ~"calc(100% - 255px)";
@@ -311,22 +321,6 @@ body {
     }
 }
 
-/* Hide  menu */
-@media all and (max-width: 800px) {
-    .menu {
-        left: -255px;
-    }
-
-    .container {
-        left: 0px;
-        width: 100%;
-    }
-
-    .design {
-        left: -255px;
-    }
-}
-
 @media all and (max-width: 500px) {
     .hero {
         background: none;
@@ -337,25 +331,91 @@ body {
 
 /* Menu button */
 .menu-button {
+    -webkit-transition: @animspeed;
+    transition: @animspeed;
+    
     position: fixed;
-    top: 0%;
-    left: 0%;
+    top: 0px;
+    left: 255px;
     height: 50px;
     width: 50px;
-    background: url(../img/right.svg);
-    background-size: 100% 100%;
     z-index: 100; 
-    display: none;
+    display: block;
 }
 
-.button-left {
-    background: url(../img/left.svg);
-    background-size: 100% 100%;
-}
+/* Menu default behavior */
+.menu-default {
+    .menu, .design {
+        left: 0px;
+    }
 
-// Show menu button.
-@media all and (max-width: 800px) {
+    .container {
+        left: 255px;
+        width: ~"calc(100% - 255px)";
+    }
+
     .menu-button {
-        display: block;
+        background: url(../img/left.svg);
+        background-size: 100% 100%;        
+        left: 255px;
+    }
+
+    @media all and (max-width: 800px) {
+        .menu, .design, {
+            left: -255px;
+        }
+
+        .container {
+            left: 0px;
+            width: 100%;
+        }
+
+        .menu-button {
+            background: url(../img/right.svg);
+            background-size: 100% 100%;
+            left: 0px;
+        }
+    }
+}
+
+
+/* Menu closed */
+.menu-closed {
+    .menu, .design {
+        left: -255px;
+    }
+    .container {
+        left: 0px;
+        width: 100%;
+    }
+
+    .menu-button {
+        background: url(../img/right.svg);
+        background-size: 100% 100%;
+        left: 0px;
+    }
+}
+
+/* Menu opened */
+.menu-opened {
+    .menu, .design {
+        left: 0px;
+    }
+
+    .container {
+        left: 255px;
+    }
+
+    .menu-button {
+        background: url(../img/left.svg);
+        background-size: 100% 100%;
+        left: 255px;
+    }
+
+    @media all and (max-width: 800px) {
+        .container {
+            left: 255px;
+            width: 100%;
+        }
     }
 }
