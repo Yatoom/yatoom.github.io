@@ -6,8 +6,8 @@ $(document).ready(function(){
 
 	$('.menu-button').on("click", function () {
 		if ($('.menu').attr('style') !== undefined) {
-			// $('.menu-button, .menu, .container, .left, .design').removeAttr("style");
-			// $('.menu-button').removeClass('button-left');
+			//$('.menu-button, .menu, .container, .left, .design').removeAttr("style");
+			$('.menu-button').removeClass('button-left');
 
 			$('.menu, .design').css("left", "-255px");
 			$('.container').css("left", "0px");
