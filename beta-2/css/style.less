@@ -226,14 +226,15 @@ body {
 /* Buttons */
 
 .next, .previous {
-    padding: 10px;
+    padding: 17px;
     cursor: pointer;
     text-decoration: none;
-    opacity: 0.3;
-    color: @white !important;
+    //opacity: 0.3;
+    color: rgba(255, 255, 255, 0.5) !important;
     margin-left: 10px;
     margin-top: 10px;
-    border: 2px solid @white;
+
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .navigation {
@@ -241,11 +242,13 @@ body {
     position: absolute;
     bottom: 0px;
     right: 5%;
+    
 }
 
 .next:hover, .previous:hover {
-    background-color: transparent !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
     opacity: 1.0;
+    color: rgba(255, 255, 255, 1.0) !important;
 }
 
 .choice {
