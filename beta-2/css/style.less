@@ -13,7 +13,6 @@
 body, html {
  height: 100%;
  padding: 0;
- overflow-x: hidden;
 }
 
 body {
@@ -229,21 +228,19 @@ body {
 .next, .previous {
     padding: 10px;
     cursor: pointer;
-    position: absolute;
     text-decoration: none;
     opacity: 0.3;
     color: @white !important;
-    bottom: 40px;
+    margin-left: 10px;
+    margin-top: 10px;
+    border: 2px solid @white;
 }
 
-.next {
+.navigation {
+    height: 50px;   
+    position: absolute;
+    bottom: 0px;
     right: 5%;
-    border: 2px solid @white;
-}
-
-.previous {
-    right: ~"calc(5% + 170px)";
-    border: 2px solid @white;
 }
 
 .next:hover, .previous:hover {
@@ -343,8 +340,9 @@ body {
     left: 255px;
     height: 36px;
     width: 50px;
-    z-index: 100; 
+    z-index: 100;
     display: block;
+    cursor: pointer;
 }
 
 /* Menu default behavior */

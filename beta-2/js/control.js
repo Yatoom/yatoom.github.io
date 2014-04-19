@@ -9,7 +9,7 @@ $(document).ready(function(){
 			
 			$('body').removeClass('menu-default');
 
-			if ($('menu').css("left") == "0px") {
+			if ($('.menu').css("left") == "0px") {
 				$('body').addClass('menu-opened');
 			} else {
 				$('body').addClass('menu-closed');
