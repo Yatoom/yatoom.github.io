@@ -7,6 +7,8 @@
 @blue : #535C9C;
 @purple : #713472;
 @animspeed: 0.1s;
+@orange : #e67e22;
+@brown: #574229;
 
 @import url('http://fonts.googleapis.com/css?family=Raleway:300,400,600,700');
 
@@ -200,7 +202,7 @@ body {
 }
 
 .color:nth-of-type(5n+3), .link:hover:nth-of-type(5n+3), .active:nth-of-type(5n+3){
-    background-color: @blue;
+    background-color: @brown;
 }
 .color:nth-of-type(5n), .link:hover:nth-of-type(5n), .active:nth-of-type(5n){
     background-color: @red;
@@ -235,10 +237,13 @@ body {
     text-decoration: none;
     //opacity: 0.3;
     color: rgba(255, 255, 255, 0.5) !important;
-    margin-left: 10px;
-    margin-top: 10px;
-    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+    margin: 10px 2px 0px 2px;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.next {
+    background-color: rgba(0, 0, 0, 0.2);   
 }
 
 .navigation {
@@ -250,7 +255,7 @@ body {
 }
 
 .next:hover, .previous:hover {
-    background-color: rgba(0, 0, 0, 0.2) !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
     opacity: 1.0;
     color: rgba(255, 255, 255, 1.0) !important;
 }
@@ -350,6 +355,7 @@ body {
     z-index: 100;
     display: block;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 /* Menu default behavior */
