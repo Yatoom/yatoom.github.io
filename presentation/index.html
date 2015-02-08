@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="css/custom.css">
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<!-- Slide 1 -->
+				<section>
+					<h1>FiestApp</h1>
+					<h3>Make every day a holiday!</h3>
+					<img data-src="img/icon.png" width="200" height="200"/>
+					<p>
+						<small>
+							Team:
+							<a>Sjors Duffhues</a> /
+							<a>Kimberley Thissen</a> /
+							<a>Martijn Muijsers</a> /
+							<a>Tim Segers</a> /
+							<a>Jeroen van Hoof</a> /
+							<a>Guido Santegoeds</a>
+						</small>
+						<small>
+							Presented by <a>Jeroen van Hoof</a> & <a>Guido Santegoeds</a>
+						</small>
+					</p>
+				</section>
+
+				<!-- Slide 2 -->
+				<section data-background="img/et-large.jpg">
+					<h1>Happy Extraterrestrial Visitor day!</h1>
+					<h3><a>Tuesday February 10</a></h3>
+				</section>
+
+				<!-- Slide 3 -->
+				<section>
+					<h2>What is FiestApp?</h2>
+					<ul>
+						<li>Wish your friends a happy holiday.</li>
+						<li>Create your own holidays.</li>
+						<li>Find fun local events.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4 -->
+				<section>
+					<h2>But why?</h2>
+					<ul>
+						<li>To connect with your friends.</li>
+						<li>To start a conversation.</li>
+						<li>To do something new and exciting.</li>
+						<li>To start a tradition.</li>
+						<li>To never be bored again.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 5 -->
+				<section>
+					<h2>Requirements</h2>
+					<ul>
+						<li>
+							Connectivity
+							<ul>
+								<li>Fetching holidays, measuring popularity, twitter trends</li>
+							</ul>
+						</li>
+						<li>
+							User Interaction
+							<ul>
+								<li>Main app interface</li>
+							</ul>
+						</li>
+						<li>
+						Use of sensors
+						<ul>
+							<li>GPS for local events, shake for random holiday, camera to add photos</li>
+						</ul>
+						</li>
+						<li>
+							Android services and activities
+							<ul>
+								<li>Sharing, map, view, push notifications, Google Wallet</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6 -->
+				<section>
+					<h2>Feasibility</h2>
+					<ul>
+						<li>Start with basic application.</li>
+						<li>Adding more functionality per iteration.</li>
+						<li>Version control.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 7 -->
+				<section>
+					<section>
+						<h2>Existing apps</h2>
+						<ul>
+							<li>Bizarre Holidays</li>
+						</ul>
+					</section>
+					<section>
+						<img data-src="img/bizarre-1.jpg" height="700">
+					</section>
+					<section>
+						<img data-src="img/bizarre-2.jpg" height="700">
+					</section>
+				</section>
+
+				<!-- Slide 8 -->
+				<section>
+					<section>
+						<h2>FiestApp</h2>
+						<h3>First draft</h3>
+					</section>
+					<section>
+						<style>
+							.device {
+								position: fixed;
+								height: 800px;
+								width: 400px;
+								top: -300px;
+								left: 300px;
+								background-image: url(img/device-sprite.png);
+								background-size: cover;
+							}
+
+							.device-content {
+								position: absolute; left: 36px; top: 105px;
+							}
+						</style>
+						<div class="device">
+							<iframe class ="device-content"
+								src="prototype/app.html" height="600px" width="335px"
+								scrolling="no" seamless="seamless"
+								></iframe>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<h1>Thanks for your attention</h1>
+					<h3>(And don't forget to celebrate extraterrestrial visitor's day)</h3>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
