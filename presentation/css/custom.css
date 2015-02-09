@@ -3,3 +3,19 @@ img {
   border: none !important;
   box-shadow: none !important;
 }
+
+h1, h2, h3, h4, h5 {
+  text-transform: none !important;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+b {
+  color: #fff;
+}
+
+.left-align {
+  text-align: left !important;
+}
