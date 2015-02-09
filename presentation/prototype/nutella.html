@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>App</title>
+
+    <!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Set a shorter title for iOS6 devices when saved to home screen -->
+    <meta name="apple-mobile-web-app-title" content="Ratchet">
+
+    <!-- Include the compiled Ratchet CSS -->
+    <link rel="stylesheet" href="dist/css/ratchet.min.css">
+
+    <!-- Intro paragraph styles. Delete once you start using this page -->
+    <style>
+        .welcome {
+          line-height: 1.5;
+          color: #555;
+        }
+        body {
+          zoom: 0.8;
+          -moz-transform: scale(0.8);
+          -moz-transform-origin: 0 0;
+        }
+
+        /*.content::-webkit-scrollbar { width: 0 !important }*/
+    </style>
+
+  </head>
+  <body>
+
+    <!-- Header bar -->
+    <header class="bar bar-nav">
+      <span class="pull-left icon icon-bars"></span>
+      <h1 class="title">Upcoming days</h1>
+    </header>
+    <nav class="bar bar-standard">
+      <div class="segmented-control">
+        <a class="control-item active">Upcoming</a>
+        <a class="control-item">Trending</a>
+        <a class="control-item">Local events</a>
+      </div>
+    </nav>
+
+    <!-- Bar at the bottom -->
+    <nav class="bar bar-tab">
+      <a class="tab-item active" href="#">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Home</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-person"></span>
+        <span class="tab-label">Profile</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-star-filled"></span>
+        <span class="tab-label">Favorite days</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-search"></span>
+        <span class="tab-label">Search days</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-gear"></span>
+        <span class="tab-label">Settings</span>
+      </a>
+    </nav>
+
+
+    <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+    <div class="content">
+      <div class="content-padded">
+        Chocaholics know that there is chocolate and then there is Nutella. The creamy and delicious chocolate and hazelnut spread has been around since the 1940s, and despite the many imitations that have appeared in the market, Nutella continues to be the favourite guilty pleasure of chocaholics around the world. It is not surprising that die-hard Nutella fans decided to start the Nutella Day tradition back in 2007. This sweet celebration was launched through social networks by a blogger and Nutella fan, and soon tens of thousands of like-minded Nutella devotees showed their appreciation for the chocolatey delight online.
+        So, Nutella fans of the world unite! Celebrate the existence of this delicious chocolate spread by grabbing a spoon and getting creative with hundreds of Nutella recipes. Start your Nutella Day with a classic Nutella-on-pancakes breakfast and follow with a shaken espresso with a dash of Nutella. On this day, add Nutella to your cupcakes, ice cream, mousse, or even to savoury dishes. Your imagination is the limit!
+      </div>
+
+    </div>
+    <!-- Include the compiled Ratchet JS -->
+    <script src="dist/js/ratchet.min.js"></script>
+  </body>
+</html>
