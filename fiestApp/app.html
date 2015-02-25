@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>App</title>
+
+    <!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Set a shorter title for iOS6 devices when saved to home screen -->
+    <meta name="apple-mobile-web-app-title" content="Ratchet">
+
+    <!-- Include the compiled Ratchet CSS -->
+    <link rel="stylesheet" href="dist/css/ratchet.min.css">
+
+    <!-- Intro paragraph styles. Delete once you start using this page -->
+    <style>
+        .welcome {
+          line-height: 1.5;
+          color: #555;
+        }
+        /*body {
+          zoom: 0.8;
+          -moz-transform: scale(0.8);
+          -moz-transform-origin: 0 0;
+        }*/
+
+        /*.content::-webkit-scrollbar { width: 0 !important }*/
+    </style>
+
+  </head>
+  <body>
+
+    <!-- Header bar -->
+    <header class="bar bar-nav">
+      <!-- <span class="pull-left icon icon-bars"></span> -->
+      <!-- <h1 class="title">Upcoming days</h1> -->
+    </header>
+    <nav class="bar bar-standard">
+      <div class="segmented-control">
+        <a class="control-item active">Upcoming</a>
+        <a class="control-item">Trending</a>
+        <a class="control-item">Local events</a>
+      </div>
+    </nav>
+
+    <!-- Bar at the bottom -->
+    <nav class="bar bar-tab">
+      <a class="tab-item active" href="#">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Home</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-person"></span>
+        <span class="tab-label">Profile</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-star-filled"></span>
+        <span class="tab-label">Favorite days</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-search"></span>
+        <span class="tab-label">Search days</span>
+      </a>
+      <a class="tab-item" href="#">
+        <span class="icon icon-gear"></span>
+        <span class="tab-label">Settings</span>
+      </a>
+    </nav>
+
+
+    <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+    <div class="content">
+      <div class="content-padded">
+        Discover funny days, weird holidays & celebrations.
+      </div>
+
+      <ul class="table-view">
+        <!-- List of upcoming days -->
+        <li class="table-view-divider">Today</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/nutella.jpg" width="30%">
+            <div class="media-body">
+              World Nutella Day
+              <p>Sara Rosso, an American blogger, thought that there were many days in the year but no day set aside to appreciate Nutella. Why not?</p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-divider">Tomorrow</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/working-naked.jpg" width="30%">
+            <div class="media-body">
+              Working Naked Day
+              <p> As its name suggests, Working Naked Day is the day in which you carry out the day’s work unclothed.</p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/doodle.jpg" width="30%">
+            <div class="media-body">
+              Doodle Day
+              <p>Release your inner artist on Doodle Day, a celebration of all those idle sketches you make while on the phone, or in boring meetings. </p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-divider">Saturday</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/card.jpg" width="30%">
+            <div class="media-body">
+              Send a Card to a Friend Day
+              <p>Everyone loves and appreciates their friends, and sending a card makes the receiver feel appreciated.</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <div class="content-padded">
+        <button class="btn btn-primary btn-block btn-outlined">Load more</button>
+      </div>
+    </div>
+    <!-- Include the compiled Ratchet JS -->
+    <script src="dist/js/ratchet.min.js"></script>
+  </body>
+</html>

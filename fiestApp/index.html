@@ -1,0 +1,109 @@
+<html>
+   <head>
+     <meta charset="utf-8">
+     <title>App</title>
+
+     <!-- Sets initial viewport load and disables zooming  -->
+     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+     <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+     <meta name="apple-mobile-web-app-capable" content="yes">
+     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+     <!-- Set a shorter title for iOS6 devices when saved to home screen -->
+     <meta name="apple-mobile-web-app-title" content="Ratchet">
+
+     <!-- Include the compiled Ratchet CSS -->
+     <link rel="stylesheet" href="dist/css/ratchet.min.css">
+
+     <!-- Custom css -->
+     <link rel="stylesheet" href="css/custom.css">
+
+     <!--Import materialize.css-->
+     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+   </head>
+
+   <body>
+      <!-- header -->
+      <nav class="deep-purple top-bar">
+         <div class="nav-wrapper">
+            <div class="container">
+               <a id="logo-container" href="#" class="brand-logo">
+                  <img src="img/logo.png" class="logo-icon"> FiestApp
+                  <div class="tag"> Make every day a holiday! </div>
+               </a>
+
+               <ul id="nav-mobile" class="right side-nav">
+                  <li><a href="profile.html">Home</a></li>
+                  <li><a href="holidays.html">Local events</a></li>
+                  <li><a href="holidays.html">Profile</a></li>
+                  <li><a href="holidays.html">Create</a></li>
+                  <li><a href="holidays.html">Search</a></li>
+                  <li><a href="settings.html">Settings</a></li>
+               </ul>
+
+               <!-- Include this line below -->
+               <a class="button-collapse" href="#" data-activates="nav-mobile"><i class="mdi-navigation-menu"></i></a>
+               <!-- End -->
+            </div>
+         </div>
+      </nav>
+
+
+      <div class="content-padded">
+        
+      </div>
+
+      <ul class="table-view">
+        <!-- List of upcoming days -->
+        <li class="table-view-divider deep-purple">Today</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/nutella.jpg" width="100px" height="100px">
+            <div class="media-body">
+              World Nutella Day
+              <p>Sara Rosso, an American blogger, thought that there were many days in the year but no day set aside to appreciate Nutella. Why not?</p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-divider deep-purple">Tomorrow</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/working-naked.jpg" width="100px" height="100px">
+            <div class="media-body">
+              Working Naked Day
+              <p> As its name suggests, Working Naked Day is the day in which you carry out the day’s work unclothed.</p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/doodle.jpg" width="100px" height="100px">
+            <div class="media-body">
+              Doodle Day
+              <p>Release your inner artist on Doodle Day, a celebration of all those idle sketches you make while on the phone, or in boring meetings. </p>
+            </div>
+          </a>
+        </li>
+        <li class="table-view-divider deep-purple">Saturday</li>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <img class="media-object pull-left" src="img/card.jpg" width="100px" height="100px">
+            <div class="media-body">
+              Send a Card to a Friend Day
+              <p>Everyone loves and appreciates their friends, and sending a card makes the receiver feel appreciated.</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+
+      <!-- Custom javascript -->
+      <script>
+         $(".button-collapse").sideNav();
+      </script>
+   </body>
+ </html>

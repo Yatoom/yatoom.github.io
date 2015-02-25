@@ -1,0 +1,75 @@
+<html>
+   <head>
+     <meta charset="utf-8">
+     <title>App</title>
+
+     <!-- Sets initial viewport load and disables zooming  -->
+     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+     <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+     <meta name="apple-mobile-web-app-capable" content="yes">
+     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+     <!-- Set a shorter title for iOS6 devices when saved to home screen -->
+     <meta name="apple-mobile-web-app-title" content="Ratchet">
+
+     <!-- Include the compiled Ratchet CSS -->
+     <link rel="stylesheet" href="dist/css/ratchet.min.css">
+
+     <!-- Custom css -->
+     <link rel="stylesheet" href="css/custom.css">
+
+     <!-- Intro paragraph styles. Delete once you start using this page -->
+     <style>
+         .welcome {
+           line-height: 1.5;
+           color: #555;
+         }
+         .top-bar {
+            height: 64px !important;
+         }
+     </style>
+
+     <!--Import materialize.css-->
+     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+   </head>
+
+   <body>
+      <!-- header -->
+      <nav class="deep-purple top-bar">
+         <div class="nav-wrapper">
+            <div class="container">
+               <a id="logo-container" href="#" class="brand-logo"><img src="img/logo.png" class="logo-icon"> FiestApp</a>
+               <ul id="nav-mobile" class="right side-nav">
+                  <li><a href="profile.html">Profile</a></li>
+                  <li><a href="index.html">Holidays</a></li>
+                  <li><a href="settings.html">Settings</a></li>
+               </ul>
+
+               <!-- Include this line below -->
+               <a class="button-collapse" href="#" data-activates="nav-mobile"><i class="mdi-navigation-menu"></i></a>
+               <!-- End -->
+            </div>
+         </div>
+      </nav>
+
+
+      <div class="content-padded">
+         <img class="media-object pull-left" src="img/nutella.jpg" width="200px" height="200px">
+         World Nutella Day
+         <p>Chocaholics know that there is chocolate and then there is Nutella. The creamy and delicious chocolate and hazelnut spread has been around since the 1940s, and despite the many imitations that have appeared in the market, Nutella continues to be the favourite guilty pleasure of chocaholics around the world. It is not surprising that die-hard Nutella fans decided to start the Nutella Day tradition back in 2007. This sweet celebration was launched through social networks by a blogger and Nutella fan, and soon tens of thousands of like-minded Nutella devotees showed their appreciation for the chocolatey delight online.</p>
+         <p>So, Nutella fans of the world unite! Celebrate the existence of this delicious chocolate spread by grabbing a spoon and getting creative with hundreds of Nutella recipes. Start your Nutella Day with a classic Nutella-on-pancakes breakfast and follow with a shaken espresso with a dash of Nutella. On this day, add Nutella to your cupcakes, ice cream, mousse, or even to savoury dishes. Your imagination is the limit!</p>
+      </div>
+
+
+
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+
+      <!-- Custom javascript -->
+      <script>
+         $(".button-collapse").sideNav();
+      </script>
+   </body>
+ </html>

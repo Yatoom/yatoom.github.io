@@ -1,0 +1,76 @@
+@import url(http://fonts.googleapis.com/css?family=Lobster+Two);
+@import url(http://fonts.googleapis.com/css?family=Indie+Flower);
+@import url(http://fonts.googleapis.com/css?family=Architects+Daughter); /* Text */
+@import url(http://fonts.googleapis.com/css?family=Slackey); /* Title */
+@import url(http://fonts.googleapis.com/css?family=Walter+Turncoat); /* Days */
+@import url(http://fonts.googleapis.com/css?family=Lato);
+
+ .welcome {
+   line-height: 1.5;
+   color: #555;
+ }
+ .tag {
+    font-size: 20px;
+    /* margin-bottom: 20px; */
+    bottom: 20px;
+    top: -25px;
+    position: relative;
+    left: 0px;
+    font-family: 'Indie Flower', cursive;
+ }
+
+ #nav-mobile li a {
+    font-family: Indie Flower, cursive;
+    font-size: 25px;
+ }
+
+img {
+   padding-right: 10px;
+}
+
+* {
+   /*overflow: auto !important;*/
+}
+
+.logo-icon {
+   vertical-align: middle;
+   height: 50px;
+   width: 59px;
+}
+
+.brand-logo {
+   font-family: 'Lobster Two', cursive;
+   font-size: 40px !important;
+}
+
+.table-view-divider {
+   color: #fff;
+   font-weight: bold;
+   font-family: "Walter Turncoat";
+}
+
+.media-body {
+   color: #673AB7;
+   font-family: "Walter Turncoat";
+   font-weight: bold;
+}
+
+.media-body p {
+   font-family: "Roboto Slab";
+}
+
+.top-bar {
+   height: 90px;
+   /*height: 120px !important;*/
+   /*overflow: hidden !important;*/
+}
+
+.segmented-control {
+   bottom: 30px;
+}
+
+nav a.button-collapse i {
+   font-size: 5rem !important;
+   position: relative !important;
+   top: 13px !important;
+}
