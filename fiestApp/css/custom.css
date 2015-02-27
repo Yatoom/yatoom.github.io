@@ -1,9 +1,10 @@
 @import url(http://fonts.googleapis.com/css?family=Lobster+Two);
 @import url(http://fonts.googleapis.com/css?family=Indie+Flower);
-@import url(http://fonts.googleapis.com/css?family=Architects+Daughter); /* Text */
-@import url(http://fonts.googleapis.com/css?family=Slackey); /* Title */
-@import url(http://fonts.googleapis.com/css?family=Walter+Turncoat); /* Days */
-@import url(http://fonts.googleapis.com/css?family=Lato);
+/*@import url(http://fonts.googleapis.com/css?family=Architects+Daughter);*/
+/*@import url(http://fonts.googleapis.com/css?family=Slackey);*/
+@import url(http://fonts.googleapis.com/css?family=Walter+Turncoat);
+/*@import url(http://fonts.googleapis.com/css?family=Lato);*/
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
 
  .welcome {
    line-height: 1.5;
