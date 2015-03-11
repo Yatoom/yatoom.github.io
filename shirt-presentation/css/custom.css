@@ -1,0 +1,27 @@
+@import url(http://fonts.googleapis.com/css?family=Indie+Flower);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu);
+@import url(http://fonts.googleapis.com/css?family=Lobster+Two);
+
+.tagline {
+   font-family: "Indie Flower" !important;
+}
+
+.title {
+   font-family: "Ubuntu" !important;
+   /*font-family: "Lobster Two" !important;*/
+}
+
+.credits {
+   font-family: "Ubuntu" !important;
+}
+
+.shirt {
+   float: left;
+}
+
+.shirt-description {
+   float: left;
+   left: 30px;
+   position: relative;
+   top: 30px;
+}
