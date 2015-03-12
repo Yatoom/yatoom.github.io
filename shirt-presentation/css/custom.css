@@ -8,6 +8,7 @@
 
 .title {
    font-family: "Ubuntu" !important;
+   text-transform: none !important;
    /*font-family: "Lobster Two" !important;*/
 }
 
