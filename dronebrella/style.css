@@ -1,0 +1,44 @@
+html,body{margin:0;background-color:#ecf0f1;font-family:'Raleway',sans-serif}
+hr{color:#aaa;border-style:none none dashed;margin-top:50px;margin-bottom:50px}
+.scrollHelper{height:70px;margin-top:-70px}
+.scrollHelper2{height:100px;margin-top:-100px}
+#fixed-top,.menu{background-color:rgba(236,240,241,0.8);text-decoration:none;color:#ecf0f1;width:100%;font-size:30px;padding:10px 0 10px 0;border-bottom:1px dashed #aaa;height:50px}#fixed-top ul,.menu ul{float:left;list-style:none;margin:10px 0 0 0}
+#fixed-top li,.menu li{float:left;margin-right:25px}#fixed-top li a,.menu li a{text-decoration:none;color:#333}
+#fixed-top img,.menu img{float:left;padding-right:23px;margin-left:7px}
+#fixed-top .toggle-menu,.menu .toggle-menu{float:right;padding:10px 5% 0 0;color:#333;text-decoration:none}
+@media screen and (min-width:922px){#fixed-top .toggle-menu,.menu .toggle-menu{display:none}}#fixed-top .active a,.menu .active a{color:#07a}
+@media screen and (max-width:921px){#fixed-top,.menu{}#fixed-top ul,.menu ul{width:100%;margin-left:-40px;margin-top:11px;display:none} #fixed-top li,.menu li{float:none;text-align:right;background-color:rgba(236,240,241,0.8);width:90%;padding-left:5%;padding-right:5%;border-bottom:1px dashed #aaa}}
+#fixed-top{position:fixed;display:none}
+.menu{margin-top:-71px}
+.logo img{display:block;margin-left:auto;margin-right:auto}
+.logo{margin-left:auto;margin-right:auto;padding:50px 0 200px 0;background-image:url('http://eyesofodysseus.files.wordpress.com/2012/05/rainwindow.jpg');background-position:top;background-size:100% 150%}
+.logo h1{text-shadow:0 0 10px #fff;text-align:center;font-size:80px;color:#333}
+.spotlight,.video,.info,.video-small,.video-smallest{width:80%;padding:3% 10% 3% 10%}
+.spotlight{font-size:40px;background-color:#07a;color:#ecf0f1}
+.video,.video-small,.video-smallest{background-color:#333;box-shadow:inset 0 0 20px #000}
+.footer{margin-top:150px;background-color:#333;width:90%;float:left;padding:5%;color:#ecf0f1;box-shadow:inset 0 0 20px #000}
+.footer img{transition-duration:.8s;-webkit-transition-duration:.8s;-ms-transition-duration:.8s;transition-property:transform;-webkit-transition-property:transform;-ms-transition-property:transform}
+.footer img:hover{transform:rotateY(360deg);-webkit-transform:rotateY(360deg);-ms-transform:rotate(360deg)}
+.info{font-size:20px;color:#333;background-color:#ecf0f1}
+.model{padding-right:30px;padding-bottom:30px;float:left;border:none;height:500px;width:70%}
+.btn{padding:10px;text-decoration:none;border-radius:5px}
+.btn:hover{border-width:3px;border-style:dashed;padding:7px;background-color:transparent}
+.btn-blue{background-color:#07a;color:#ecf0f1}
+.btn-black{background-color:#333;color:#ecf0f1}
+.btn-color-white:hover{color:#ecf0f1}
+.btn-color-black:hover{color:#777}
+.comment-col{width:29%;margin:0 2% 0 2%;float:left}
+.comment{border-radius:5px;width:92%;height:auto;font-size:20px;background-color:#fff;color:#333;padding:4%;margin-bottom:30px}
+.comment-blue{border-top:30px solid #88c4da}.comment-blue b{color:#88c4da}
+.comment-yellow{border-top:30px solid #fedd6d}.comment-yellow b{color:#fedd6d}
+.comment-pink{border-top:30px solid #c26c8b}.comment-pink b{color:#c26c8b}
+.comment-green{border-top:30px solid #ccdd5d}.comment-green b{color:#ccdd5d}
+.comment:hover{box-shadow:0 0 10px #000}
+.pull-right{float:right}
+.mark{background-color:#3ad;font-weight:bold}
+.mark2{color:#07a}
+.center{display:block;margin-left:auto;margin-right:auto}
+.blue{color:#07a}
+.quote{background-image:url("quote.png");height:20px;width:25px;float:left}
+.name{color:#777}
+@media screen and (min-width:1024px){.video-small{display:none !important}}@media screen and (min-width:600px){.video-smallest{display:none !important}}@media screen and (max-width:600px){.video-small{display:none !important}}@media screen and (max-width:1024px){.video{display:none !important} .logo{background-size:100% 100% !important} .comment{float:none !important;width:auto !important} .comment-col{float:none !important;width:auto !important}}
