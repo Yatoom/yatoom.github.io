@@ -1,0 +1,94 @@
+<!Doctype html>
+<html>
+<head>
+	<title> Yawl viewer</title>
+</head>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/main.css">
+<!--<link rel="stylesheet" href="highlight/styles/monokai.css">-->
+<!--<link rel="stylesheet" href="highlight/styles/dracula.css">-->
+<link rel="stylesheet" href="highlight/styles/hybrid.css">
+<link rel="stylesheet" href="xml/xml.css">
+
+<body>
+	<div class="grid">
+		<header class="header">
+			<h2 class="header__title">YAWL parser</h2>
+			<h3 class="header__author">By Jeroen van Hoof</h3>
+		</header>
+		<h2>Input</h2>
+		<textarea id="yawl" class="area-height full-width"></textarea>
+		<button id="parse" class="button button--submit">Parse</button>
+		<div class="globals"></div>
+		<div class="nets"></div>
+		<div id="tree"></div>
+	</div>
+
+	<script src="vendor/sprintf.js"></script>
+	<script src="vendor/jquery.js"></script>
+	<script src="vendor/highlight.pack.js"></script>
+	<script src="xml/xml.js"></script>
+	<script src="js/extender.js"></script>
+	<script src="js/parser.js"></script>
+	<script src="js/drawer.js"></script>
+	<script>
+		data = {}
+		
+		$("#parse").click(update)
+		
+		function update() {
+			data.raw = $("#yawl").val()
+			data.yawl = Parser.parseYawl(data.raw)
+			data.specification = Parser.getSpecification(data.yawl)
+			data.layout = Parser.getLayout(data.yawl)
+			data.nets = Parser.getNets(data.yawl)
+			data.netIds = Parser.getNetIds(data.nets)
+			
+			fillNets()
+			fillGlobal()
+			highlight()
+		}
+		
+		function fillGlobal() {
+			$(".globals").html("<h1>Global</h1>")
+			var code = '' +
+			'<span class="subtitle"><b>MetaData</b></span> <pre><code contenteditable id="global-metadata" class="html full-width"></code></pre><div id="global-metadata-tree"></div>' +
+			'<span class="subtitle subtitle--specs"><b>Specifications</b></span> <pre><code contenteditable id="global-specs" class="html full-width"></code></pre><div id="global-specs-tree"></div>'
+			$(".globals").append(code)
+			var specs = Parser.getGlobalSpecs(data.yawl)
+			var meta = Parser.xmlToText(Parser.getMetaData(data.yawl))
+			$("#global-metadata").html(Parser.encodeXML(meta))
+			$("#global-specs").html(Parser.encodeXML(specs))
+			Parser.makeTree(meta, "#global-metadata-tree")
+			Parser.makeTree(specs, "#global-specs-tree")
+		}
+		
+		function fillNets() {
+			$(".nets").html("<h1>Nets</h1>")
+			for (var i in data.netIds) {
+				var e = data.netIds[i]
+				var area = sprintf('<h2>%s</h2>' +
+				'<span class="subtitle"><b>%s</b> Layout</span> <pre><code contenteditable class="html net-%s-layout full-width"></code></pre><div class="net-%s-layout-tree"></div>' + 
+				'<span class="subtitle subtitle--specs"><b>%s</b> Specs</span> <pre><code contenteditable class="html net-%s-specs full-width"></code></pre><div class="net-%s-specs-tree"></div>', e, e, e, e, e, e, e)
+				$(".nets").append(area)
+				
+				var layout = Parser.xmlToText(Parser.getNet(data.yawl, e))
+				var specs = Parser.xmlToText(Parser.getNetSpecs(data.yawl, e))
+				$(sprintf(".net-%s-layout", e)).html(Parser.encodeXML(layout))
+				$(sprintf(".net-%s-specs", e)).html(Parser.encodeXML(specs))
+				Parser.makeTree(layout, sprintf(".net-%s-layout-tree", e))
+				Parser.makeTree(specs, sprintf(".net-%s-specs-tree", e))
+			}
+		}
+		
+		function highlight() {
+			$('pre code').each(function(i, block) {
+    		hljs.highlightBlock(block);
+  		});
+		}
+		
+		
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,3682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema3.0.xsd">
+  <specification uri="Notebook_service_center_v1">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>Limengye</creator>
+      <description>No description provided</description>
+      <version>0.4</version>
+      <persistent>false</persistent>
+      <identifier>UID_ec23f7cd-6460-4a41-83c8-4f38b540d8a8</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>customertype</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="New_customer" />
+          </flowsInto>
+        </inputCondition>
+        <task id="New_customer">
+          <name>New customer</name>
+          <flowsInto>
+            <nextElementRef id="Customer_get_service_at_desk" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Get_customer_appointment_via_email" />
+            <predicate ordering="0">/Net/customertype/text()='true'</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="InputCondition" />
+              </port>
+            </join>
+            <split>
+              <port value="activated" />
+              <port value="activated">
+                <flowDestination id="Get_customer_appointment_via_email" />
+              </port>
+            </split>
+          </configuration>
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;customertype&gt;{/New_customer/customertype/text()}&lt;/customertype&gt;" />
+              <mapsTo>customertype</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-156b1e8a-2b8e-420f-a13f-6a57a99f404b</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="New_customer" />
+        </task>
+        <task id="Customer_get_service_at_desk">
+          <name>Customer get service at desk</name>
+          <flowsInto>
+            <nextElementRef id="Register_and_discuss_issues_of_notebook" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Prepare_an_employee_for_appointment" />
+              </port>
+              <port value="activated">
+                <flowSource id="New_customer" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Register_and_discuss_issues_of_notebook" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Customer_get_service_at_desk" />
+        </task>
+        <task id="Get_customer_appointment_via_email">
+          <name>Get customer appointment via email</name>
+          <flowsInto>
+            <nextElementRef id="Schedule_appointment_in_2-5_days" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="New_customer" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Schedule_appointment_in_2-5_days" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Get_customer_appointment_via_email" />
+        </task>
+        <task id="Register_and_discuss_issues_of_notebook">
+          <name>Register and discuss issues of notebook</name>
+          <flowsInto>
+            <nextElementRef id="Deliver_a_replacement_notebook_to_customer" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Customer_get_service_at_desk" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Deliver_a_replacement_notebook_to_customer" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Register_and_discuss_issues_of_notebook" />
+        </task>
+        <task id="Schedule_appointment_in_2-5_days">
+          <name>Schedule appointment in 2-5 days</name>
+          <flowsInto>
+            <nextElementRef id="Prepare_an_employee_for_appointment" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Get_customer_appointment_via_email" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Prepare_an_employee_for_appointment" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Schedule_appointment_in_2-5_days" />
+        </task>
+        <task id="Deliver_a_replacement_notebook_to_customer">
+          <name>Deliver a replacement notebook to customer</name>
+          <flowsInto>
+            <nextElementRef id="Place_customers_notebook_in_storage_cabinet" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Register_and_discuss_issues_of_notebook" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Place_customers_notebook_in_storage_cabinet" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Deliver_a_replacement_notebook_to_customer" />
+        </task>
+        <task id="Prepare_an_employee_for_appointment">
+          <name>Prepare an employee for appointment</name>
+          <flowsInto>
+            <nextElementRef id="Customer_get_service_at_desk" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Schedule_appointment_in_2-5_days" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Customer_get_service_at_desk" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Prepare_an_employee_for_appointment" />
+        </task>
+        <task id="Place_customers_notebook_in_storage_cabinet">
+          <name>Place customers notebook in storage cabinet</name>
+          <flowsInto>
+            <nextElementRef id="takein_finshed" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Place_customers_notebook_in_storage_cabinet" />
+        </task>
+        <task id="takein_finshed">
+          <name>takein finshed</name>
+          <flowsInto>
+            <nextElementRef id="C_3" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Pick_notebook_from_storage_cabinet" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="A" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Place_customers_notebook_in_storage_cabinet" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Pick_notebook_from_storage_cabinet" />
+                <flowDestination id="A" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Get_ready_to_repair" />
+        </task>
+        <condition id="C_3">
+          <flowsInto>
+            <nextElementRef id="Customer_has_new_notebook_for_1_day" />
+          </flowsInto>
+        </condition>
+        <task id="A">
+          <name>A</name>
+          <flowsInto>
+            <nextElementRef id="Break_out_support_call" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Get_a_call" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Give_help" />
+              </port>
+              <port value="activated">
+                <flowSource id="takein_finshed" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Break_out_support_call" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Get_a_call" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="A" />
+        </task>
+        <task id="Customer_has_new_notebook_for_1_day">
+          <name>Customer has new notebook for 1 day</name>
+          <flowsInto>
+            <nextElementRef id="Offer_new_notebook" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="C_3" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Offer_new_notebook" />
+              </port>
+            </split>
+          </configuration>
+          <timer>
+            <trigger>OnExecuting</trigger>
+            <duration>PT60S</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Customer_has_new_notebook_for_1_day" />
+        </task>
+        <task id="Pick_notebook_from_storage_cabinet">
+          <name>Pick notebook from storage cabinet</name>
+          <flowsInto>
+            <nextElementRef id="Get_repair_station" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Get_repair_station" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Pick_notebook_from_storage_cabinet" />
+        </task>
+        <task id="Break_out_support_call">
+          <name>Break out support call</name>
+          <flowsInto>
+            <nextElementRef id="Ask_customer_to_pick_up_repaired_notebook" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="C_1" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="A" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Ask_customer_to_pick_up_repaired_notebook" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Break_out_support_call" />
+        </task>
+        <task id="Get_a_call">
+          <name>Get a call</name>
+          <flowsInto>
+            <nextElementRef id="Give_help" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="A" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Give_help" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Get_a_call" />
+        </task>
+        <task id="Get_repair_station">
+          <name>Get repair station</name>
+          <flowsInto>
+            <nextElementRef id="Start_to_repair" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Pick_notebook_from_storage_cabinet" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Start_to_repair" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Get_repair_station" />
+        </task>
+        <task id="Offer_new_notebook">
+          <name>Offer new notebook</name>
+          <flowsInto>
+            <nextElementRef id="C_2" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Get_response" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-156b1e8a-2b8e-420f-a13f-6a57a99f404b</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Offer_new_notebook" />
+        </task>
+        <condition id="C_1">
+          <flowsInto>
+            <nextElementRef id="Milestone" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Break_out_support_call" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Ask_customer_to_pick_up_repaired_notebook" />
+          </flowsInto>
+        </condition>
+        <condition id="C_2">
+          <flowsInto>
+            <nextElementRef id="No_response" />
+          </flowsInto>
+        </condition>
+        <task id="Ask_customer_to_pick_up_repaired_notebook">
+          <name>Ask customer to pick up repaired notebook</name>
+          <flowsInto>
+            <nextElementRef id="Inform_customer_about_repairing" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Break_out_support_call" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Inform_customer_about_repairing" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Get_response">
+          <name>Get response</name>
+          <flowsInto>
+            <nextElementRef id="Positive" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Negative" />
+            <predicate ordering="1">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Offer_new_notebook" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Positive" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Negative" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Get_response" />
+        </task>
+        <task id="Give_help">
+          <name>Give help</name>
+          <flowsInto>
+            <nextElementRef id="A" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Give_help" />
+        </task>
+        <task id="Milestone">
+          <name>Milestone</name>
+          <flowsInto>
+            <nextElementRef id="C_1" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="T" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Milestone" />
+        </task>
+        <task id="No_response">
+          <name>No response</name>
+          <flowsInto>
+            <nextElementRef id="Offer_new_notebook" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT30S</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="No_response" />
+        </task>
+        <task id="Start_to_repair">
+          <name>Start to repair</name>
+          <flowsInto>
+            <nextElementRef id="OS_problem" />
+            <predicate>true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Hardware_malfunction_problem" />
+            <predicate>true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Hard_disk_problem" />
+            <predicate>true()</predicate>
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="or" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Test_whole_system" />
+              </port>
+              <port value="activated">
+                <flowSource id="Get_repair_station" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="OS_problem" />
+                <flowDestination id="Hardware_malfunction_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="OS_problem" />
+                <flowDestination id="Hardware_malfunction_problem" />
+                <flowDestination id="Hard_disk_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="OS_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Hard_disk_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Hardware_malfunction_problem" />
+                <flowDestination id="Hard_disk_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="OS_problem" />
+                <flowDestination id="Hard_disk_problem" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Hardware_malfunction_problem" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Start_to_repair" />
+        </task>
+        <task id="Hard_disk_problem">
+          <name>Hard disk problem</name>
+          <flowsInto>
+            <nextElementRef id="Filesystem_repair" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Start_to_repair" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Filesystem_repair" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Hardware_malfunction_problem">
+          <name>Hardware malfunction problem</name>
+          <flowsInto>
+            <nextElementRef id="Remove_malfunction_component" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Start_to_repair" />
+              </port>
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Hardware_malfunction_problem" />
+        </task>
+        <task id="Inform_customer_about_repairing">
+          <name>Inform customer about repairing</name>
+          <flowsInto>
+            <nextElementRef id="Return_replacement_laptop" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Buy_the_replacement" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Ask_customer_to_pick_up_repaired_notebook" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Return_replacement_laptop" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Buy_the_replacement" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Negative">
+          <name>Negative</name>
+          <flowsInto>
+            <nextElementRef id="Milestone" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Offer_new_notebook" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="OS_problem">
+          <name>OS problem</name>
+          <flowsInto>
+            <nextElementRef id="Fix_software_problem" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Start_to_repair" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Fix_software_problem" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="OS_problem" />
+        </task>
+        <task id="Positive">
+          <name>Positive</name>
+          <flowsInto>
+            <nextElementRef id="T" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Get_response" />
+              </port>
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="T">
+          <flowsInto>
+            <nextElementRef id="Ask_customer_to_pick_up_repaired_notebook" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Positive" />
+              </port>
+              <port value="activated">
+                <flowSource id="Milestone" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Ask_customer_to_pick_up_repaired_notebook" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Buy_the_replacement">
+          <name>Buy the replacement</name>
+          <flowsInto>
+            <nextElementRef id="Give_up_the_repaired_laptop_and_get_discount" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Take_repaired_PC" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Inform_customer_about_repairing" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Take_repaired_PC" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Give_up_the_repaired_laptop_and_get_discount" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Filesystem_repair">
+          <name>Filesystem repair</name>
+          <flowsInto>
+            <nextElementRef id="Preliminary_test" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Hard_disk_problem" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Preliminary_test" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Fix_software_problem">
+          <name>Fix software problem</name>
+          <flowsInto>
+            <nextElementRef id="Preliminary_test_1" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="OS_problem" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Preliminary_test_1" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Fix_software_problem" />
+        </task>
+        <task id="Remove_malfunction_component">
+          <name>Remove malfunction component</name>
+          <flowsInto>
+            <nextElementRef id="Start_the_solution" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Start_the_solution" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Remove_malfunction_component" />
+        </task>
+        <task id="Return_replacement_laptop">
+          <name>Return replacement laptop</name>
+          <flowsInto>
+            <nextElementRef id="Pay_the_bill" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Inform_customer_about_repairing" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Pay_the_bill" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Give_up_the_repaired_laptop_and_get_discount">
+          <name>Give up the repaired laptop and get discount</name>
+          <flowsInto>
+            <nextElementRef id="Pay_the_bill" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Buy_the_replacement" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Pay_the_bill" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Pay_the_bill">
+          <name>Pay the bill</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Give_up_the_repaired_laptop_and_get_discount" />
+              </port>
+              <port value="activated">
+                <flowSource id="Return_replacement_laptop" />
+              </port>
+              <port value="activated">
+                <flowSource id="Take_repaired_PC" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="OutputCondition" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Preliminary_test">
+          <name>Preliminary test</name>
+          <flowsInto>
+            <nextElementRef id="Replace_hard_disk" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Hard_disk_problem_finished" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Filesystem_repair" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Replace_hard_disk" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Hard_disk_problem_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Preliminary_test_1">
+          <name>Preliminary test</name>
+          <flowsInto>
+            <nextElementRef id="Reinstall_OS_and_all_applications" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="OS_problem_finished" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Fix_software_problem" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="OS_problem_finished" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Reinstall_OS_and_all_applications" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Preliminary_test" />
+        </task>
+        <task id="Start_the_solution">
+          <name>Start the solution</name>
+          <flowsInto>
+            <nextElementRef id="Create_a_request_for_quote_to_buy_a_replacement_component" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Try_to_repair_the_malfunctioning_component" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Remove_malfunction_component" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Create_a_request_for_quote_to_buy_a_replacement_component" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Start_the_solution" />
+        </task>
+        <task id="Take_repaired_PC">
+          <name>Take repaired PC</name>
+          <flowsInto>
+            <nextElementRef id="Pay_the_bill" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Buy_the_replacement" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Pay_the_bill" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Create_a_request_for_quote_to_buy_a_replacement_component">
+          <name>Create a request for quote to buy a replacement component</name>
+          <flowsInto>
+            <nextElementRef id="Send_request_to_3_suppliers" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Start_the_solution" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Send_request_to_3_suppliers" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Create_a_request_for_quote_to_buy_a_replacement_component" />
+        </task>
+        <task id="Hard_disk_problem_finished">
+          <name>Hard disk problem finished</name>
+          <flowsInto>
+            <nextElementRef id="Log_harddisk_solution" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Replace_hard_disk" />
+              </port>
+              <port value="activated">
+                <flowSource id="Preliminary_test" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Log_harddisk_solution" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="OS_problem_finished">
+          <name>OS problem finished</name>
+          <flowsInto>
+            <nextElementRef id="Log_OS_solution" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Preliminary_test_1" />
+              </port>
+              <port value="activated">
+                <flowSource id="Reinstall_OS_and_all_applications" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Log_OS_solution" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Reinstall_OS_and_all_applications">
+          <name>Reinstall OS and all applications</name>
+          <flowsInto>
+            <nextElementRef id="OS_problem_finished" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Preliminary_test_1" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="OS_problem_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Reinstall_OS_and_all_applications" />
+        </task>
+        <task id="Replace_hard_disk">
+          <name>Replace hard disk</name>
+          <flowsInto>
+            <nextElementRef id="Hard_disk_problem_finished" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Preliminary_test" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Hard_disk_problem_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Try_to_repair_the_malfunctioning_component">
+          <name>Try to repair the malfunctioning component</name>
+          <flowsInto>
+            <nextElementRef id="Deferred_choice" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Deferred_choice" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <condition id="Deferred_choice">
+          <name>Deferred choice</name>
+          <flowsInto>
+            <nextElementRef id="Test_thoroughly" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Time_out" />
+          </flowsInto>
+        </condition>
+        <task id="Log_OS_solution">
+          <name>Log OS solution</name>
+          <flowsInto>
+            <nextElementRef id="Test_whole_system" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Log_harddisk_solution">
+          <name>Log harddisk solution</name>
+          <flowsInto>
+            <nextElementRef id="Test_whole_system" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Send_request_to_3_suppliers">
+          <name>Send request to 3 suppliers</name>
+          <flowsInto>
+            <nextElementRef id="Wait_for_responds" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Time_out_of_1_day" />
+              </port>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Send_request_to_3_suppliers" />
+        </task>
+        <task id="Test_thoroughly">
+          <name>Test thoroughly</name>
+          <flowsInto>
+            <nextElementRef id="Discard_component" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Test_ok" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Deferred_choice" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Test_ok" />
+              </port>
+              <port value="activated">
+                <flowDestination id="Discard_component" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Time_out">
+          <name>Time out</name>
+          <flowsInto>
+            <nextElementRef id="Discard_component" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Deferred_choice" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Discard_component" />
+              </port>
+            </split>
+          </configuration>
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT1H</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Time_out" />
+        </task>
+        <task id="Discard_component">
+          <name>Discard component</name>
+          <flowsInto>
+            <nextElementRef id="Repair_hardware_finished" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Time_out" />
+              </port>
+              <port value="activated">
+                <flowSource id="Test_thoroughly" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Repair_hardware_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Discard_component" />
+        </task>
+        <task id="Test_ok">
+          <name>Test ok</name>
+          <flowsInto>
+            <nextElementRef id="Cancel_order" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Test_thoroughly" />
+              </port>
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Test_ok_and_cancel_quote_request" />
+        </task>
+        <task id="Test_whole_system">
+          <name>Test whole system</name>
+          <flowsInto>
+            <nextElementRef id="Tesk_whole_ok" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Start_to_repair" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="or" />
+          <split code="xor" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated" />
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Wait_for_responds">
+          <name>Wait for responds</name>
+          <flowsInto>
+            <nextElementRef id="C" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Send_request_to_3_suppliers" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="C" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Wait_for_responds" />
+        </task>
+        <condition id="C">
+          <flowsInto>
+            <nextElementRef id="Time_out_of_1_day" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Receive_quote" />
+          </flowsInto>
+        </condition>
+        <task id="Cancel_order">
+          <name>Cancel order</name>
+          <flowsInto>
+            <nextElementRef id="Put_back_the_component" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <rem value="activated" />
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <removesTokens id="Cancel_order" />
+          <removesTokens id="Create_a_request_for_quote_to_buy_a_replacement_component" />
+          <removesTokens id="Place_order_with_best_quote" />
+          <removesTokens id="Receive_quote" />
+          <removesTokens id="Send_request_to_3_suppliers" />
+          <removesTokens id="Time_out_of_1_day" />
+          <removesTokens id="Wait_for_responds" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Cancellation" />
+        </task>
+        <task id="Receive_quote">
+          <name>Receive quote</name>
+          <flowsInto>
+            <nextElementRef id="Place_order_with_best_quote" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="C" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Place_order_with_best_quote" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Repair_hardware_finished">
+          <name>Repair hardware finished</name>
+          <flowsInto>
+            <nextElementRef id="Hardware_repair_finished" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+              <port value="activated">
+                <flowSource id="Discard_component" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Hardware_repair_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Tesk_whole_ok">
+          <name>Tesk whole ok</name>
+          <flowsInto>
+            <nextElementRef id="C_1" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Test_whole_system" />
+              </port>
+            </join>
+            <split>
+              <port value="activated" />
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Time_out_of_1_day">
+          <name>Time out of 1 day</name>
+          <flowsInto>
+            <nextElementRef id="Send_request_to_3_suppliers" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="C" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Send_request_to_3_suppliers" />
+              </port>
+            </split>
+          </configuration>
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT30S</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Time_out_of_1_day" />
+        </task>
+        <task id="Hardware_repair_finished">
+          <name>Hardware repair finished</name>
+          <flowsInto>
+            <nextElementRef id="Log_hardware_solution" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Repair_hardware_finished" />
+                <flowSource id="Place_new_component_in_notebook" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Log_hardware_solution" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Place_order_with_best_quote">
+          <name>Place order with best quote</name>
+          <flowsInto>
+            <nextElementRef id="Cancel_repair_attempt" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Cancel_repair_attempt" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Put_back_the_component">
+          <name>Put back the component</name>
+          <flowsInto>
+            <nextElementRef id="Repair_hardware_finished" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Cancel_order" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Repair_hardware_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Cancel_repair_attempt">
+          <name>Cancel repair attempt</name>
+          <flowsInto>
+            <nextElementRef id="Receive_ordered_component" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Place_order_with_best_quote" />
+              </port>
+            </join>
+            <rem value="activated" />
+            <split>
+              <port value="activated">
+                <flowDestination id="Receive_ordered_component" />
+              </port>
+            </split>
+          </configuration>
+          <removesTokens id="Discard_component" />
+          <removesTokens id="Test_ok" />
+          <removesTokens id="Test_thoroughly" />
+          <removesTokens id="Time_out" />
+          <removesTokens id="Try_to_repair_the_malfunctioning_component" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Cancel_repair_attempt" />
+        </task>
+        <task id="Log_hardware_solution">
+          <name>Log hardware solution</name>
+          <flowsInto>
+            <nextElementRef id="Test_whole_system" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Receive_ordered_component">
+          <name>Receive ordered component</name>
+          <flowsInto>
+            <nextElementRef id="Place_new_component_in_notebook" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated" />
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Place_new_component_in_notebook" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Place_new_component_in_notebook">
+          <name>Place new component in notebook</name>
+          <flowsInto>
+            <nextElementRef id="Hardware_repair_finished" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <configuration>
+            <join>
+              <port value="activated">
+                <flowSource id="Receive_ordered_component" />
+              </port>
+            </join>
+            <split>
+              <port value="activated">
+                <flowDestination id="Hardware_repair_finished" />
+              </port>
+            </split>
+          </configuration>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+    <decomposition id="A" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Break_out_support_call" xsi:type="WebServiceGatewayFactsType">
+      <name>Break out support call</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Cancel_repair_attempt" xsi:type="WebServiceGatewayFactsType">
+      <name>Cancel repair attempt</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Cancellation" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Create_a_request_for_quote_to_buy_a_replacement_component" xsi:type="WebServiceGatewayFactsType">
+      <name>Create a request for quote to buy a replacement component</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Customer_get_service_at_desk" xsi:type="WebServiceGatewayFactsType">
+      <name>Customer get service at desk</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Customer_has_new_notebook_for_1_day" xsi:type="WebServiceGatewayFactsType">
+      <name>Customer has new notebook for 1 day</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Deliver_a_replacement_notebook_to_customer" xsi:type="WebServiceGatewayFactsType">
+      <name>Deliver a replacement notebook to customer</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Discard_component" xsi:type="WebServiceGatewayFactsType">
+      <name>Discard component</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Fix_software_problem" xsi:type="WebServiceGatewayFactsType">
+      <name>Fix software problem</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Get_a_call" xsi:type="WebServiceGatewayFactsType">
+      <name>Get a call</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Get_customer_appointment_via_email" xsi:type="WebServiceGatewayFactsType">
+      <name>Get customer appointment via email</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Get_ready_to_repair" xsi:type="WebServiceGatewayFactsType">
+      <name>Get ready to repair</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Get_repair_station" xsi:type="WebServiceGatewayFactsType">
+      <name>Get repair station</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Get_response" xsi:type="WebServiceGatewayFactsType">
+      <name>Get response</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Give_help" xsi:type="WebServiceGatewayFactsType">
+      <name>Give help</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Hardware_malfunction_problem" xsi:type="WebServiceGatewayFactsType">
+      <name>Hardware malfunction problem</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Milestone" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="New_customer" xsi:type="WebServiceGatewayFactsType">
+      <name>New customer</name>
+      <outputParam>
+        <index>0</index>
+        <name>customertype</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="No_response" xsi:type="WebServiceGatewayFactsType">
+      <name>No response</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="OS_problem" xsi:type="WebServiceGatewayFactsType">
+      <name>OS problem</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Offer_new_notebook" xsi:type="WebServiceGatewayFactsType">
+      <name>Offer new notebook</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Pick_notebook_from_storage_cabinet" xsi:type="WebServiceGatewayFactsType">
+      <name>Pick notebook from storage cabinet</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Place_customers_notebook_in_storage_cabinet" xsi:type="WebServiceGatewayFactsType">
+      <name>Place customers notebook in storage cabinet</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Preliminary_test" xsi:type="WebServiceGatewayFactsType">
+      <name>Preliminary test</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Prepare_an_employee_for_appointment" xsi:type="WebServiceGatewayFactsType">
+      <name>Prepare an employee for appointment</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Register_and_discuss_issues_of_notebook" xsi:type="WebServiceGatewayFactsType">
+      <name>Register and discuss issues of notebook</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Reinstall_OS_and_all_applications" xsi:type="WebServiceGatewayFactsType">
+      <name>Reinstall OS and all applications</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Remove_malfunction_component" xsi:type="WebServiceGatewayFactsType">
+      <name>Remove malfunction component</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Schedule_appointment_in_2-5_days" xsi:type="WebServiceGatewayFactsType">
+      <name>Schedule appointment in 2-5 days</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Send_request_to_3_suppliers" xsi:type="WebServiceGatewayFactsType">
+      <name>Send request to 3 suppliers</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Start_the_solution" xsi:type="WebServiceGatewayFactsType">
+      <name>Start the solution</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Start_to_repair" xsi:type="WebServiceGatewayFactsType">
+      <name>Start to repair</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Test_ok_and_cancel_quote_request" xsi:type="WebServiceGatewayFactsType">
+      <name>Test ok and cancel quote request</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Time_out" xsi:type="WebServiceGatewayFactsType">
+      <name>Time out</name>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="Time_out_of_1_day" xsi:type="WebServiceGatewayFactsType">
+      <name>Time out of 1 day</name>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="Wait_for_responds" xsi:type="WebServiceGatewayFactsType">
+      <name>Wait for responds</name>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="en" country="US"/>
+    <specification id="Notebook_service_center_v1">
+      <size w="62" h="66"/>
+      <net id="Net">
+        <bounds x="-3" y="-187" w="3370" h="929"/>
+        <frame x="0" y="0" w="1365" h="544"/>
+        <viewport x="0" y="0" w="1365" h="544"/>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="3,296" y="280" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="8" y="380" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C">
+          <attributes>
+            <bounds x="1,916" y="632" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C_1">
+          <attributes>
+            <bounds x="2,728" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C_2">
+          <attributes>
+            <bounds x="1,096" y="604" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C_3">
+          <attributes>
+            <bounds x="844" y="420" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <container id="Deferred_choice">
+          <vertex>
+            <attributes>
+              <bounds x="1,756" y="508" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,724" y="540" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Log_OS_solution">
+          <vertex>
+            <attributes>
+              <bounds x="2,019" y="264" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,987" y="296" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Test_thoroughly">
+          <vertex>
+            <attributes>
+              <bounds x="1,868" y="508" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,840" y="540" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,899" y="508" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Register_and_discuss_issues_of_notebook">
+          <vertex>
+            <attributes>
+              <bounds x="640" y="227" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="608" y="260" w="96" h="90"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Reinstall_OS_and_all_applications">
+          <vertex>
+            <attributes>
+              <bounds x="1,555" y="316" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,524" y="348" w="98" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="No_response">
+          <vertex>
+            <attributes>
+              <bounds x="1,042" y="740" w="33" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,011" y="773" w="98" h="37"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Milestone">
+          <vertex>
+            <attributes>
+              <bounds x="2,373" y="852" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,341" y="885" w="96" h="18"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="2,404" y="852" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,363" y="852" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Get_a_call">
+          <vertex>
+            <attributes>
+              <bounds x="840" y="564" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="808" y="596" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Tesk_whole_ok">
+          <vertex>
+            <attributes>
+              <bounds x="2,609" y="244" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,576" y="277" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Pick_notebook_from_storage_cabinet">
+          <vertex>
+            <attributes>
+              <bounds x="919" y="279" w="33" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="888" y="312" w="96" h="90"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Hard_disk_problem_finished">
+          <vertex>
+            <attributes>
+              <bounds x="1,908" y="136" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,872" y="168" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="1,898" y="136" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Positive">
+          <vertex>
+            <attributes>
+              <bounds x="1,148" y="788" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,116" y="820" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Cancel_repair_attempt">
+          <vertex>
+            <attributes>
+              <bounds x="2,208" y="619" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,172" y="652" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,198" y="619" w="11" h="33"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Time_out">
+          <vertex>
+            <attributes>
+              <bounds x="1,868" y="400" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,836" y="432" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Hardware_malfunction_problem">
+          <vertex>
+            <attributes>
+              <bounds x="1,236" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,204" y="664" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Place_order_with_best_quote">
+          <vertex>
+            <attributes>
+              <bounds x="2,116" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,088" y="664" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="2,147" y="632" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Cancel_order">
+          <vertex>
+            <attributes>
+              <bounds x="2,106" y="490" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,072" y="520" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Start_the_solution">
+          <vertex>
+            <attributes>
+              <bounds x="1,468" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,440" y="664" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,499" y="632" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Prepare_an_employee_for_appointment">
+          <vertex>
+            <attributes>
+              <bounds x="460" y="516" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="428" y="548" w="101" h="72"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Break_out_support_call">
+          <vertex>
+            <attributes>
+              <bounds x="1,361" y="468" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,328" y="501" w="97" h="38"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,392" y="468" w="11" h="33"/>
+            </attributes>
+          </decorator>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="1,351" y="468" w="11" h="33"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Buy_the_replacement">
+          <vertex>
+            <attributes>
+              <bounds x="3,032" y="396" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="3,004" y="428" w="99" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="3,063" y="396" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Pay_the_bill">
+          <vertex>
+            <attributes>
+              <bounds x="3,204" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="3,168" y="312" w="96" h="18"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="3,194" y="280" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Negative">
+          <vertex>
+            <attributes>
+              <bounds x="1,244" y="784" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,216" y="816" w="96" h="18"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,275" y="784" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Replace_hard_disk">
+          <vertex>
+            <attributes>
+              <bounds x="1,592" y="68" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,560" y="100" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Get_customer_appointment_via_email">
+          <vertex>
+            <attributes>
+              <bounds x="216" y="516" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="184" y="548" w="101" h="72"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Offer_new_notebook">
+          <vertex>
+            <attributes>
+              <bounds x="1,007" y="607" w="33" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="974" y="640" w="98" h="37"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,038" y="607" w="12" h="33"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="997" y="607" w="12" h="33"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Place_customers_notebook_in_storage_cabinet">
+          <vertex>
+            <attributes>
+              <bounds x="792" y="136" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="760" y="168" w="96" h="90"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="takein_finshed">
+          <vertex>
+            <attributes>
+              <bounds x="792" y="273" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="765" y="304" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="823" y="273" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Hard_disk_problem">
+          <vertex>
+            <attributes>
+              <bounds x="1,220" y="104" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,188" y="137" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Test_ok">
+          <vertex>
+            <attributes>
+              <bounds x="2,005" y="508" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,973" y="541" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="New_customer">
+          <vertex>
+            <attributes>
+              <bounds x="124" y="380" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="96" y="412" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="155" y="380" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Receive_ordered_component">
+          <vertex>
+            <attributes>
+              <bounds x="2,268" y="616" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,236" y="648" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Filesystem_repair">
+          <vertex>
+            <attributes>
+              <bounds x="1,312" y="104" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,280" y="136" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="A">
+          <vertex>
+            <attributes>
+              <bounds x="760" y="500" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="729" y="532" w="96" h="18"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="791" y="500" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="750" y="500" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Repair_hardware_finished">
+          <vertex>
+            <attributes>
+              <bounds x="2,284" y="392" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,248" y="424" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,274" y="392" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Schedule_appointment_in_2-5_days">
+          <vertex>
+            <attributes>
+              <bounds x="352" y="516" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="320" y="548" w="101" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Return_replacement_laptop">
+          <vertex>
+            <attributes>
+              <bounds x="3,076" y="196" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="3,044" y="228" w="99" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Ask_customer_to_pick_up_repaired_notebook">
+          <vertex>
+            <attributes>
+              <bounds x="2,860" y="320" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,824" y="352" w="96" h="90"/>
+            </attributes>
+          </label>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,850" y="320" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Receive_quote">
+          <vertex>
+            <attributes>
+              <bounds x="1,984" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,952" y="664" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Put_back_the_component">
+          <vertex>
+            <attributes>
+              <bounds x="2,200" y="483" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,168" y="516" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Log_harddisk_solution">
+          <vertex>
+            <attributes>
+              <bounds x="2,099" y="123" w="33" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,069" y="155" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Place_new_component_in_notebook">
+          <vertex>
+            <attributes>
+              <bounds x="2,372" y="620" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,336" y="652" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,362" y="620" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Wait_for_responds">
+          <vertex>
+            <attributes>
+              <bounds x="1,840" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,808" y="664" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="T">
+          <vertex>
+            <attributes>
+              <bounds x="2,576" y="836" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,566" y="836" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Get_repair_station">
+          <vertex>
+            <attributes>
+              <bounds x="1,004" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="972" y="312" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Time_out_of_1_day">
+          <vertex>
+            <attributes>
+              <bounds x="1,844" y="708" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,812" y="740" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Preliminary_test_1">
+          <vertex>
+            <attributes>
+              <bounds x="1,412" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,384" y="312" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,443" y="280" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Take_repaired_PC">
+          <vertex>
+            <attributes>
+              <bounds x="3,116" y="360" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="3,084" y="392" w="96" h="36"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Preliminary_test">
+          <vertex>
+            <attributes>
+              <bounds x="1,396" y="104" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,368" y="136" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,427" y="104" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Try_to_repair_the_malfunctioning_component">
+          <vertex>
+            <attributes>
+              <bounds x="1,668" y="508" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,636" y="540" w="121" h="72"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Deliver_a_replacement_notebook_to_customer">
+          <vertex>
+            <attributes>
+              <bounds x="711" y="229" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="680" y="260" w="99" h="72"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Remove_malfunction_component">
+          <vertex>
+            <attributes>
+              <bounds x="1,356" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,324" y="664" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Start_to_repair">
+          <vertex>
+            <attributes>
+              <bounds x="1,088" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,056" y="312" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="OR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,119" y="280" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="1,078" y="280" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="OS_problem_finished">
+          <vertex>
+            <attributes>
+              <bounds x="1,728" y="264" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,692" y="296" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="1,718" y="264" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Log_hardware_solution">
+          <vertex>
+            <attributes>
+              <bounds x="2,476" y="357" w="32" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,445" y="389" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Discard_component">
+          <vertex>
+            <attributes>
+              <bounds x="2,092" y="351" w="33" h="33"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,056" y="384" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,082" y="351" w="12" h="33"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Customer_has_new_notebook_for_1_day">
+          <vertex>
+            <attributes>
+              <bounds x="920" y="420" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="888" y="452" w="96" h="72"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Get_response">
+          <vertex>
+            <attributes>
+              <bounds x="1,104" y="472" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,076" y="504" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="1,135" y="472" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Give_help">
+          <vertex>
+            <attributes>
+              <bounds x="844" y="672" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="812" y="704" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Inform_customer_about_repairing">
+          <vertex>
+            <attributes>
+              <bounds x="2,944" y="320" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,916" y="352" w="96" h="72"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="2,975" y="320" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Fix_software_problem">
+          <vertex>
+            <attributes>
+              <bounds x="1,320" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,288" y="312" w="96" h="54"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Send_request_to_3_suppliers">
+          <vertex>
+            <attributes>
+              <bounds x="1,712" y="632" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,676" y="664" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="1,702" y="632" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Give_up_the_repaired_laptop_and_get_discount">
+          <vertex>
+            <attributes>
+              <bounds x="3,116" y="444" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="3,084" y="476" w="96" h="90"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Create_a_request_for_quote_to_buy_a_replacement_component">
+          <vertex>
+            <attributes>
+              <bounds x="1,568" y="640" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,536" y="672" w="99" h="108"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Test_whole_system">
+          <vertex>
+            <attributes>
+              <bounds x="2,515" y="180" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,485" y="213" w="96" h="36"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="2,546" y="180" w="12" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="OR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,505" y="180" w="12" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Hardware_repair_finished">
+          <vertex>
+            <attributes>
+              <bounds x="2,448" y="445" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="2,413" y="477" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="2,438" y="445" w="12" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Customer_get_service_at_desk">
+          <vertex>
+            <attributes>
+              <bounds x="544" y="228" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="507" y="261" w="96" h="54"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="534" y="228" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="OS_problem">
+          <vertex>
+            <attributes>
+              <bounds x="1,228" y="280" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="1,196" y="312" w="96" h="18"/>
+            </attributes>
+          </label>
+        </container>
+        <flow source="Start_the_solution" target="Create_a_request_for_quote_to_buy_a_replacement_component">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Schedule_appointment_in_2-5_days" target="Prepare_an_employee_for_appointment">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="383" y="531.5"/>
+              <value x="460" y="531.5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Log_harddisk_solution" target="Test_whole_system">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Register_and_discuss_issues_of_notebook" target="Deliver_a_replacement_notebook_to_customer">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Negative" target="Offer_new_notebook">
+          <ports in="2" out="3"/>
+          <attributes>
+            <lineStyle>12</lineStyle>
+            <points>
+              <value x="1,285" y="799.5"/>
+              <value x="1,000" y="820"/>
+              <value x="1,020.894" y="674.363"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Cancel_repair_attempt" target="Receive_ordered_component">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Milestone" target="C_1">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C_1" target="Ask_customer_to_pick_up_repaired_notebook">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="takein_finshed" target="A">
+          <ports in="3" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Negative" target="Milestone">
+          <ports in="2" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Log_hardware_solution" target="Test_whole_system">
+          <ports in="10" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C" target="Receive_quote">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C_3" target="Customer_has_new_notebook_for_1_day">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Log_OS_solution" target="Test_whole_system">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Get_customer_appointment_via_email" target="Schedule_appointment_in_2-5_days">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Test_thoroughly" target="Discard_component">
+          <ports in="1" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Hardware_malfunction_problem" target="Remove_malfunction_component">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Preliminary_test_1" target="OS_problem_finished">
+          <ports in="1" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Create_a_request_for_quote_to_buy_a_replacement_component" target="Send_request_to_3_suppliers">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C_2" target="No_response">
+          <ports in="11" out="13"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Get_response" target="Positive">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Offer_new_notebook" target="C_2">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Offer_new_notebook" target="Get_response">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C_1" target="Break_out_support_call">
+          <ports in="12" out="4"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Place_new_component_in_notebook" target="Hardware_repair_finished">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Receive_ordered_component" target="Place_new_component_in_notebook">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Start_to_repair" target="Hardware_malfunction_problem">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Test_ok" target="Cancel_order">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Get_a_call" target="Give_help">
+          <ports in="11" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="New_customer" target="Customer_get_service_at_desk">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Send_request_to_3_suppliers" target="Wait_for_responds">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="takein_finshed" target="C_3">
+          <ports in="3" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Time_out_of_1_day" target="Send_request_to_3_suppliers">
+          <ports in="12" out="3"/>
+          <attributes>
+            <lineStyle>13</lineStyle>
+            <points>
+              <value x="1,844" y="723.5"/>
+              <value x="1,744" y="748"/>
+              <value x="1,702" y="655.25"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Return_replacement_laptop" target="Pay_the_bill">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Inform_customer_about_repairing" target="Return_replacement_laptop">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Deliver_a_replacement_notebook_to_customer" target="Place_customers_notebook_in_storage_cabinet">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Customer_has_new_notebook_for_1_day" target="Offer_new_notebook">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Give_help" target="A">
+          <ports in="12" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Start_to_repair" target="Hard_disk_problem">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Buy_the_replacement" target="Give_up_the_repaired_laptop_and_get_discount">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Pay_the_bill" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Start_to_repair" target="OS_problem">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Preliminary_test" target="Replace_hard_disk">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Reinstall_OS_and_all_applications" target="OS_problem_finished">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Positive" target="T">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Get_repair_station" target="Start_to_repair">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Buy_the_replacement" target="Take_repaired_PC">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Receive_quote" target="Place_order_with_best_quote">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Repair_hardware_finished" target="Hardware_repair_finished">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Start_the_solution" target="Try_to_repair_the_malfunctioning_component">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Pick_notebook_from_storage_cabinet" target="Get_repair_station">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Give_up_the_repaired_laptop_and_get_discount" target="Pay_the_bill">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Try_to_repair_the_malfunctioning_component" target="Deferred_choice">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Take_repaired_PC" target="Pay_the_bill">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="New_customer" target="Get_customer_appointment_via_email">
+          <ports in="3" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Break_out_support_call" target="Ask_customer_to_pick_up_repaired_notebook">
+          <ports in="4" out="4"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Time_out" target="Discard_component">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Put_back_the_component" target="Repair_hardware_finished">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="New_customer">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="OS_problem_finished" target="Log_OS_solution">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Deferred_choice" target="Time_out">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Hard_disk_problem" target="Filesystem_repair">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Cancel_order" target="Put_back_the_component">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="takein_finshed" target="Pick_notebook_from_storage_cabinet">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Fix_software_problem" target="Preliminary_test_1">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Hard_disk_problem_finished" target="Log_harddisk_solution">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="A" target="Get_a_call">
+          <ports in="4" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="A" target="Break_out_support_call">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Filesystem_repair" target="Preliminary_test">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Test_whole_system" target="Start_to_repair">
+          <ports in="1" out="4"/>
+          <attributes>
+            <lineStyle>13</lineStyle>
+            <points>
+              <value x="2,556.5" y="187.75"/>
+              <value x="1,337" y="257"/>
+              <value x="1,083" y="280"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Test_whole_system" target="Tesk_whole_ok">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Get_response" target="Negative">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Inform_customer_about_repairing" target="Buy_the_replacement">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Tesk_whole_ok" target="C_1">
+          <ports in="13" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Break_out_support_call" target="C_1">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Remove_malfunction_component" target="Start_the_solution">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="T" target="Ask_customer_to_pick_up_repaired_notebook">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="OS_problem" target="Fix_software_problem">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Discard_component" target="Repair_hardware_finished">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Customer_get_service_at_desk" target="Register_and_discuss_issues_of_notebook">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C_1" target="Milestone">
+          <ports in="11" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Ask_customer_to_pick_up_repaired_notebook" target="Inform_customer_about_repairing">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Deferred_choice" target="Test_thoroughly">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Hardware_repair_finished" target="Log_hardware_solution">
+          <ports in="10" out="11"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Preliminary_test" target="Hard_disk_problem_finished">
+          <ports in="3" out="3"/>
+          <attributes>
+            <lineStyle>13</lineStyle>
+            <points>
+              <value x="1,437" y="127.25"/>
+              <value x="1,664" y="176"/>
+              <value x="1,898" y="159.25"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Place_order_with_best_quote" target="Cancel_repair_attempt">
+          <ports in="1" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Test_thoroughly" target="Test_ok">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="1,909" y="519.5"/>
+              <value x="1,980" y="523.5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="C" target="Time_out_of_1_day">
+          <ports in="13" out="13"/>
+          <attributes>
+            <lineStyle>13</lineStyle>
+            <points>
+              <value x="1,947" y="647.5"/>
+              <value x="1,924" y="724"/>
+              <value x="1,875" y="723.5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Wait_for_responds" target="C">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Preliminary_test_1" target="Reinstall_OS_and_all_applications">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="1,453" y="303.25"/>
+              <value x="1,528" y="295.5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Prepare_an_employee_for_appointment" target="Customer_get_service_at_desk">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Replace_hard_disk" target="Hard_disk_problem_finished">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="No_response" target="Offer_new_notebook">
+          <ports in="12" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Milestone" target="T">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Place_customers_notebook_in_storage_cabinet" target="takein_finshed">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+      </net>
+    </specification>
+  </layout>
+</specificationSet>
