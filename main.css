@@ -20,6 +20,7 @@ h1 {
 
 .header {
 	padding: 20px;
+	max-width: 100%;
 }
 
 .header__logo {
@@ -28,6 +29,7 @@ h1 {
 	margin-right: auto;
 	width: calc(621px/2);
 	height: calc(317px/2);
+	max-width: 100%;
 }
 
 .block {
