@@ -1,0 +1,39 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-size: 16px;
+	margin: 0;
+	font-family: "Source Sans Pro", sans-serif;
+	background-color: whitesmoke;
+}
+
+a {
+	color: inherit;
+	font-weight: bold;
+}
+
+h1 {
+	text-transform: uppercase;
+}
+
+.header {
+	padding: 20px;
+}
+
+.header__logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: calc(621px/2);
+	height: calc(317px/2);
+}
+
+.block {
+	  max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+		padding: 20px 40px;
+		color: hsla(210, 29%, 24%, 1);
+}
