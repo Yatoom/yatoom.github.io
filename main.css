@@ -3,24 +3,31 @@
 }
 
 body {
-	font-size: 16px;
 	margin: 0;
-	font-family: "Source Sans Pro", sans-serif;
 	background-color: whitesmoke;
+	background: url('img/fabric_of_squares_gray.png');	
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+	padding-bottom: 40px;
 }
 
 a {
-	color: inherit;
+	cursor: pointer;
 	font-weight: bold;
+	color: inherit;
+	text-decoration: none;
+	border-bottom: 1px dotted;
 }
 
 h1 {
 	text-transform: uppercase;
+	font-size: 1.5rem;
+	border-bottom: 2px solid;
 }
 
 .header {
 	padding: 20px;
-	max-width: 100%;
 }
 
 .header__logo {
@@ -28,14 +35,45 @@ h1 {
 	margin-left: auto;
 	margin-right: auto;
 	width: calc(621px/2);
-	height: calc(317px/2);
+	height: auto;
 	max-width: 100%;
 }
 
 .block {
-	  max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-		padding: 20px 40px;
-		color: hsla(210, 29%, 24%, 1);
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 800px;
+	padding: 20px 40px;
+	color: hsla(210, 29%, 24%, 1);
+}
+
+.education {
+	display: inline-block;
+	position: relative;
+	margin-left: 3px;
+	width: 100%;
+	border-left: 3px solid;
+	padding-left: 1rem;
+	padding-bottom: 1rem;
+}
+
+.education:last-child {
+	padding-bottom: 0;
+}
+
+.education::before {
+	content: '';
+	position: absolute;
+	left: -6px;
+	top: 0.5rem;
+	height: 9px;
+	width: 9px;
+	border-radius: 9px;
+	background-color: hsla(210, 29%, 24%, 1);
+}
+
+.flat-list {
+	list-style-position: inside;
+	padding-left:0;
 }

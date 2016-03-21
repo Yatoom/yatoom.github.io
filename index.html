@@ -4,33 +4,163 @@
 			<meta charset='utf-8'>
 			<meta name='viewport' content='width=device-width, minimal-ui, initial-scale=1, maximum-scale=1, user-scalable=no'/>
 			<title>Jeroen van Hoof</title>
-			<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-			<link rel='stylesheet' href='main.css'>
 			<meta name='description' content='Personal site of Jeroen van Hoof.'>
 			<meta name='keywords' content='Jeroen van Hoof'>
-
+			<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+			<link rel='stylesheet' href='main.css'>
+			<script src='main.js' async></script>
 		</head>
 		<body>
 			<header class='header'>
-					<img src='jvh.png' class='header__logo'>
-			</header>
-			<article class='block'>
+					<img src='img/jvh.png' alt='personal logo' class='header__logo'>
+			</header>		
+				<navigation class='block'>
+					<h1>Index</h1>
+					<ol class='flat-list'>
+						<li><a href='#about'>About me</a></li>
+						<li><a href='#education'>Education</a></li>
+						<li><a href='#projects'>Projects</a></li>
+						<li><a href='#skills'>Skills</a></li>
+					</ol>
+				</navigation>
+			<section class='block' id='about'>
 				<h1>About me</h1>
-				Hello! I am Jeroen van Hoof. I am studying Computer Science at the <a href='//tue.nl'>Eindhoven University of Technology</a> and I work as a software developer at <a href='//ilysian.com'>Ilysian</a>. You can find me on <a href='//github.com/Yatoom'>Github</a> and <a href='https://nl.linkedin.com/in/jmapvhoof'>LinkedIn</a>.
+				Hello! I am Jeroen van Hoof. I am studying Computer Science at the <a href='//tue.nl'>Eindhoven University of Technology</a> and I work as a software developer at <a href='//ilysian.com'>Ilysian</a>. You can find me on <a href='//github.com/Yatoom'>Github</a> and <a href='https://nl.linkedin.com/in/jmapvhoof'>LinkedIn</a>. You can <a href='mailto:jvhnl@jeroenvanhoof.nl'>send me an e-mail</a> too.
 			
-			</article>
-			<article class='block'>
+			</section>
+			<section class='block' id='education'>
+				<h1>Education</h1>
+				<div class='education'>
+					<strong>2015 – ?</strong> <br> 
+					Eindhoven University of Technology <br>
+					Master’s degree, Computer Science & Engineering
+					<br><a onclick="toggle(this, 'master-courses')">Show courses</a>
+					<ul class='courses flat-list' id='master-courses' style='display:none'>
+						<li><strong>Core courses</strong>
+							<ul>
+								<li>Visualization</li>
+							</ul>
+						</li>
+						<li><strong>Specialization</strong>
+							<ul>
+								<li>Hacker's hut</li>
+							</ul>
+						</li>
+						<li><strong>Elective courses</strong>
+							<ul>
+								<li>Internet of things</li>
+								<li>Automated reasoning</li>
+							</ul>
+						</li>				
+						</ul>
+				</div>
+				<div class='education'>
+					<strong>2011 – 2015</strong><br>
+					Eindhoven University of Technology  <br>
+					Bachelor’s degree, Computer Science (Web Science) 
+					<br><a onclick="toggle(this, 'bachelor-courses')">Show courses</a>
+					<ul class='courses flat-list' id='bachelor-courses' style='display:none'>
+						<li><strong>Basic courses</strong>
+							<ul>
+								<li>Basic mathematics</li>
+								<li>Linear algebra</li>
+								<li>Applied physical sciences</li>
+								<li>Intro into modeling</li>
+								<li>Ethics and history of technology</li>
+								<li>Design for social innovation</li>
+								<li>Psychology and user project</li>
+							</ul>
+						</li>
+						<li><strong>Core courses</strong>
+							<ul>
+								<li>Programming</li>
+								<li>Psychology and user</li>
+								<li>Logic and set theory</li>
+								<li>Psychology of web science</li>						
+								<li>Data structures</li>
+								<li>Hypermedia and the web</li>
+								<li>Infonomics</li>
+								<li>Human technology interaction</li>
+								<li>Discrete structures</li>
+								<li>Data modeling and databases</li>
+								<li>Web technology</li>
+								<li>Programming methods</li>
+								<li>Probability theory and statistics</li>
+								<li>Computer networks and security</li>
+								<li>Business information systems</li>
+								<li>Automata and process theory</li>
+								<li>Software engineering</li>
+								<li>Web analytics</li>							
+								<li>App development project</li>
+								<li>Web engineering project</li>
+							</ul>
+						</li>
+						<li><strong>Interactive intelligent systems</strong>
+							<ul>
+								<li>Computer graphics</li>
+								<li>Artificial intelligence</li>
+								<li>Interactive intelligent systems</li>
+							</ul>
+						</li>
+						<li><strong>Design for games and play</strong>
+							<ul>
+								<li>Design for games and play 1: Introduction</li>
+								<li>Design for games and play 2: Serious games</li>
+								<li>Design for games and play 3: Ambient games</li>
+							</ul>
+						</li>
+						<li><strong>Human in technology</strong>
+							<ul>
+								<li>Human in technology</li>
+								<li>Risk and trust in social computing and social media</li>
+								<li>User experience for interactive systems</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class='education'>
+					<strong>2004 - 2011</strong> <br>
+					Willibrord Gymnasium Deurne <br>
+					High School, Science & Technology and Health & Nature
+					<br><a onclick="toggle(this, 'willibrord-courses')">Show courses</a>
+					<ul class='courses flat-list' id='willibrord-courses' style='display:none'>
+						<li>Latin language, literature and classical cultural education</li>
+						<li>Geography</li>
+						<li>Physics</li>
+						<li>History</li>
+						<li>Chemistry</li>
+						<li>Mathematics B</li>
+						<li>Dutch language and literature</li>
+						<li>English language and literature</li>
+						<li>Biology</li>
+						<li>Physical education</li>
+						<li>Philosophical education</li>
+						<li>Sociology</li>
+					</ul>
+				</div>
+			</section>
+			<section class='block' id='projects'>
 				<h1>Projects</h1>
 				A few of my projects.
-				<ul>
+				<ul class='flat-list'>
 					<li><a href='https://github.com/Yatoom/ElysiumCSS'>ElysiumCSS</a>, a SASS/CSS style guide.</li>
-					<li><a href='http://2cp.calllock.com/login'>Calllock Customer control panel</a>, a control panel for resellers of Calllock's vehicle share service.
-					<li><a href='http://www.balmoralcigars.com/'>Balmoral cigars</a>, a cigar brand.</li>
+					<li><a href='http://2cp.calllock.com/login'>Calllock Customer control panel</a>, a control panel for resellers of Calllock's vehicle share service, built with Laravel, AngularJS and Sass.
+					<li><a href='http://www.balmoralcigars.com/'>Balmoral cigars</a>, a website built with PHP, HTML5 and Sass.</li>
 					<li><a href='http://wwwis.win.tue.nl/2R690/projects/travelmatch/sum.pdf'>Travelmatch</a>, a smartphone/tablet app that creates a TravelDNA based on the liking and disliking of travel images.
-					<li><a href='http://team-beta.github.io/furry-sansa/'>Hello world!</a>, a platformer that teaches you how to program.</li>
-					<li><a href='http://cycle.atscripts.com/index.php'>The Cycle</a>, a point and click game.</li> 
-					<li><a href='http://www.skinperfection.nl/'>Skin Perfection</a>, a naturopathic medicine and beauty and wellness salon.</li>						
+					<li><a href='http://team-beta.github.io/furry-sansa/'>Hello world!</a>, a platform game built with <a href='http://phaser.io/'>Phaser</a> that teaches you how to program.</li>
+					<li><a href='http://cycle.atscripts.com/index.php'>The Cycle</a>, a point and click game built in HTML5, illustrations are made by me using Inkscape.</li> 
+					<li><a href='http://www.skinperfection.nl/'>Skin Perfection</a>, a website built on Wordpress.</li>						
 				</ul>
-			</article>
+			</section>
+			<section class='block' id='skills'>
+				<h1>Skills</h1>
+				I am good at front-end web development. I have worked with, among other things, <strong>Sass</strong>, 
+				<strong>AngularJS</strong>, <strong>Flask</strong>, <strong>Laravel</strong>, <strong>Linux</strong>, 
+				<strong>Ionic</strong> and <strong>Java</strong>.
+				 <!--I have also worked with PHP, Java, Python, JavaScript, Gulp, Grunt, HTML, Jade, Less, 
+				 CSS, jQuery, Bootstrap, Foundation, PureCSS, Bower, NPM, Jasmine, Karma, MySQL, SQLite, Wordpress, Docker, 
+				 LaTeX, Markdown, Jira, Inkscape, PHPStorm, Atom, Sublime Text, VSCode, VIM, Git, REST, XML, JSON, Ajax, D3, 
+				 Arduino, JOGL, Apache Corodova, and probably a lot more. -->
+			</section>
 		</body>
 		</html>
