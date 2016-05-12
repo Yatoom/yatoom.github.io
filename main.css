@@ -26,6 +26,10 @@ h1 {
 	border-bottom: 2px solid;
 }
 
+img {
+	max-width: 100%;
+}
+
 .header {
 	padding: 20px;
 }
@@ -36,7 +40,6 @@ h1 {
 	margin-right: auto;
 	width: calc(621px/2);
 	height: auto;
-	max-width: 100%;
 }
 
 .block {
@@ -71,6 +74,72 @@ h1 {
 	width: 9px;
 	border-radius: 9px;
 	background-color: hsla(210, 29%, 24%, 1);
+}
+
+.css-device--browser {
+  width: 100%;
+  max-width: 100%;
+  border-top: 2em solid rgba(230, 230, 230, 0.7);
+  box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4);
+  position: relative;
+  border-radius: 3px 3px 0 0;
+	margin: 1em 0;
+}
+
+.css-device--browser::before {
+  display: block;
+  position: absolute;
+  content: '';
+  top: -1.25em;
+  left: 1em;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: #f44;
+  box-shadow: 0 0 0 2px #f44, 1.5em 0 0 2px #9b3, 3em 0 0 2px #fb5;
+}
+
+.css-device--browser::after {
+  display: block;
+  position: absolute;
+  content: '';
+  top: -1.6em;
+  left: 5.5em;
+  width: calc(100% - 6em);
+  height: 1.2em;
+  border-radius: 2px;
+  background-color: white;
+}
+
+.shadow {
+	box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4);
+}
+
+.project {
+	margin-bottom: 2rem;
+}
+
+.flex { 
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.flex__item {
+    padding: 5px;
+    width: 180px;
+    height: auto;
+}
+
+.phone {
+	display: inline-block;
+	width: calc(25% - 20px);
+	/*margin: 10px;*/
+	box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4);
 }
 
 .flat-list {
