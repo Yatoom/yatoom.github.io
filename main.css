@@ -2,28 +2,29 @@
 	box-sizing: border-box;
 }
 
+html {
+	height: 100%;
+}
+
 body {
 	margin: 0;
-	background-color: whitesmoke;
-	background: url('img/fabric_of_squares_gray.png');	
-	font-family: "Source Sans Pro", sans-serif;
+	font-family: "Montserrat", sans-serif;
 	font-size: 16px;
 	line-height: 1.5;
-	padding-bottom: 40px;
+	height: 100%;
 }
 
 a {
 	cursor: pointer;
 	font-weight: bold;
-	color: inherit;
+	color: hsl(197, 0%, 32%);
 	text-decoration: none;
 	border-bottom: 1px dotted;
 }
 
 h1 {
-	text-transform: uppercase;
 	font-size: 1.5rem;
-	border-bottom: 2px solid;
+	color: hsl(197, 100%, 42%);
 }
 
 img {
@@ -32,6 +33,11 @@ img {
 
 .header {
 	padding: 20px;
+	background-color: hsl(197, 100%, 42%);
+	background-image: url('img/patterns/blueprint-7.png');
+	background-attachment: fixed;	
+	position: relative;
+	/*height: 100%;*/
 }
 
 .header__logo {
@@ -40,6 +46,15 @@ img {
 	margin-right: auto;
 	width: calc(621px/2);
 	height: auto;
+	/*top: calc(50% - 166px/2);
+	left: calc(50% - 621px/4);
+	position: absolute;*/
+}
+
+.photo {
+	float: left;
+	margin-right: 1rem;
+	height: 200px;
 }
 
 .block {
@@ -48,7 +63,8 @@ img {
 	margin-right: auto;
 	max-width: 800px;
 	padding: 20px 40px;
-	color: hsla(210, 29%, 24%, 1);
+	color: hsl(197, 0%, 42%);
+	overflow: auto;
 }
 
 .education {
@@ -73,7 +89,7 @@ img {
 	height: 9px;
 	width: 9px;
 	border-radius: 9px;
-	background-color: hsla(210, 29%, 24%, 1);
+	background-color: hsl(197, 0%, 32%);
 }
 
 .css-device--browser {
@@ -84,6 +100,10 @@ img {
   position: relative;
   border-radius: 3px 3px 0 0;
 	margin: 1em 0;
+}
+
+.u-box-shadow {
+	box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4)
 }
 
 .css-device--browser::before {
@@ -116,7 +136,7 @@ img {
 }
 
 .project {
-	margin-bottom: 2rem;
+	margin-bottom: 3rem;
 }
 
 .flex { 
