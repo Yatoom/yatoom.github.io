@@ -1,0 +1,422 @@
+/* =============================================================================
+  GLOBAL
+============================================================================= */
+/* =============================================================================
+  BRAND COLORS
+============================================================================= */
+/* =============================================================================
+  COLORS
+============================================================================= */
+/* =============================================================================
+  BREAKPOINTS
+============================================================================= */
+/* =============================================================================
+  STYLING FOR HTML ELEMENTS
+============================================================================= */
+* {
+  box-sizing: border-box; }
+
+html {
+  height: 100%; }
+
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+body {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  height: 100%;
+  background: #00728f;
+  color: white; }
+
+a {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none; }
+
+img {
+  max-width: 100%; }
+
+/* =============================================================================
+  FLEXBOX
+============================================================================= */
+.flex {
+  display: flex; }
+
+.flex--col {
+  flex-direction: column; }
+
+.flex--col-rev {
+  flex-direction: column-reverse; }
+
+.flex--rev {
+  flex-direction: row-reverse; }
+
+.fill {
+  flex-grow: 1;
+  flex-shrink: 0; }
+
+.pack {
+  flex-grow: 1;
+  flex-shrink: 1; }
+
+.auto {
+  flex-basis: auto; }
+
+.half {
+  flex-basis: 50%; }
+
+/* =============================================================================
+  LINKS
+============================================================================= */
+.link {
+  border-bottom: 1px dotted;
+  font-weight: bold; }
+
+.link:hover {
+  border-bottom: 1px solid; }
+
+/* =============================================================================
+  COMPONENTS
+============================================================================= */
+.logo {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 20px;
+  height: 150px; }
+
+.title {
+  text-align: center; }
+
+.content {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px;
+  max-width: 800px;
+  overflow: auto; }
+
+.photo {
+  float: left;
+  height: 150px;
+  margin: 0 20px 0 0; }
+
+.icons {
+  text-align: right;
+  margin-top: 20px; }
+
+.icon {
+  height: 30px;
+  width: 30px;
+  margin: 0 5px;
+  transition-duration: .8s; }
+
+.icon:hover {
+  transform: rotateZ(360deg); }
+
+/* =============================================================================
+  GENERIC PROJECT BLOCK
+============================================================================= */
+.project {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; }
+
+.project__screenshot {
+  padding: 40px;
+  flex: 1 1 100%; }
+  @media (min-width: 650px) {
+    .project__screenshot {
+      flex: 0 0 50%; } }
+
+.project__description {
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.1);
+  flex: 1 1 100%; }
+  @media (min-width: 650px) {
+    .project__description {
+      flex: 0 0 50%; } }
+
+/* =============================================================================
+  CUSTOMIZED BLOCK
+============================================================================= */
+.project:nth-child(2n+1) {
+  flex-direction: row-reverse; }
+
+.project--calllock {
+  background-color: #00728f;
+  color: white; }
+
+.project--skin-perfection {
+  background-color: #47ae74;
+  color: white; }
+
+.project--elysiumcss {
+  background-color: #424242;
+  color: white; }
+
+.project--balmoral {
+  background-color: #d3c75a;
+  color: white; }
+
+.project--cs-kochsysteme {
+  background-color: #49504d;
+  color: white; }
+
+.project--travelmatch {
+  background-color: #c83737;
+  color: white; }
+
+.project--jumper {
+  background-color: #006680;
+  color: white; }
+
+.project--cycle {
+  background-color: #ccb866;
+  color: white; }
+
+/* =============================================================================
+  COMMON STUFF FOR CSS DEVICES
+============================================================================= */
+.css-device {
+  position: relative;
+  margin: 0 auto; }
+
+.css-device__image {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto; }
+
+/* =============================================================================
+  BROWSER
+============================================================================= */
+.css-device--browser {
+  width: 100%;
+  max-width: 100%;
+  border-top: 2em solid rgba(230, 230, 230, 0.7);
+  box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4);
+  position: relative;
+  border-radius: 3px 3px 0 0; }
+
+.css-device--browser::before {
+  display: block;
+  position: absolute;
+  content: '';
+  top: -1.25em;
+  left: 1em;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: #f44;
+  box-shadow: 0 0 0 2px #f44, 1.5em 0 0 2px #9b3, 3em 0 0 2px #fb5; }
+
+.css-device--browser::after {
+  display: block;
+  position: absolute;
+  content: '';
+  top: -1.6em;
+  left: 5.5em;
+  width: calc(100% - 6em);
+  height: 1.2em;
+  border-radius: 2px;
+  background-color: white; }
+
+/* =============================================================================
+  TABLET
+============================================================================= */
+.css-device--tablet {
+  position: relative;
+  width: 264px;
+  border-top: solid 48px #ddd;
+  border-left: solid 12px #ddd;
+  border-right: solid 12px #ddd;
+  border-bottom: solid 48px #ddd;
+  border-radius: 12px; }
+
+.css-device--tablet::before {
+  display: block;
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  margin-left: -2px;
+  width: 4px;
+  height: 4px;
+  background-color: #bbb;
+  border-radius: 4px;
+  content: ""; }
+
+.css-device--tablet::after {
+  display: block;
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: #bbb;
+  border-radius: 12px;
+  content: ""; }
+
+@media all and (min-width: 720px) {
+  .css-device--tablet {
+    width: 396px;
+    border-top: solid 72px #ddd;
+    border-left: solid 18px #ddd;
+    border-right: solid 18px #ddd;
+    border-bottom: solid 72px #ddd;
+    border-radius: 18px; }
+  .css-device--tablet::before {
+    top: -39px;
+    margin-left: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px; }
+  .css-device--tablet::after {
+    bottom: -54px;
+    margin-left: -18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    content: ""; } }
+
+/* =============================================================================
+  MOBILE
+============================================================================= */
+.css-device--mobile {
+  width: 184px;
+  border-top: solid 24px #ddd;
+  border-left: solid 12px #ddd;
+  border-right: solid 12px #ddd;
+  border-bottom: solid 48px #ddd;
+  border-radius: 12px;
+  box-shadow: 0 0.1em 1em 0 rgba(0, 0, 0, 0.4); }
+
+.css-device--mobile::before {
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: -14px;
+  width: 2px;
+  height: 12px;
+  background-color: #bbb;
+  box-shadow: 0 0 0 0 #bbb, 0 24px 0 0 #bbb;
+  border-radius: 2px 0 0 2px;
+  content: ""; }
+
+.css-device--mobile::after {
+  display: block;
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: #bbb;
+  border-radius: 12px;
+  content: ""; }
+
+@media all and (min-width: 720px) {
+  .css-device--mobile {
+    width: 276px;
+    border-top: solid 36px #ddd;
+    border-left: solid 18px #ddd;
+    border-right: solid 18px #ddd;
+    border-bottom: solid 72px #ddd;
+    border-radius: 18px; }
+  .css-device--mobile::before {
+    top: 18px;
+    left: -21px;
+    width: 3px;
+    height: 18px;
+    background-color: #bbb;
+    box-shadow: 0 0 0 0 #bbb, 0 36px 0 0 #bbb;
+    border-radius: 3px 0 0 3px;
+    content: ""; }
+  .css-device--mobile::after {
+    bottom: -54px;
+    margin-left: -18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    content: ""; } }
+
+/* =============================================================================
+  TIMELINE
+============================================================================= */
+.timeline {
+  position: relative; }
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2px;
+  height: 100%;
+  width: 4px;
+  background: white; }
+  @media (min-width: 650px) {
+    .timeline::before {
+      left: calc(50% - 2px); } }
+
+.timeline__container {
+  position: relative;
+  color: #424242;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse; }
+
+.timeline__container::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: white; }
+  @media (min-width: 650px) {
+    .timeline__container::before {
+      left: calc(50% - 5px); } }
+
+.timeline__box {
+  position: relative;
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  flex: 0 0 calc(100% - 20px); }
+  @media (min-width: 650px) {
+    .timeline__box {
+      flex: 0 0 calc(50% - 20px); } }
+
+.timeline__box:after {
+  right: 100%;
+  top: 15px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.timeline__box:after {
+  border-color: transparent;
+  border-right-color: white;
+  border-width: 10px;
+  margin-top: -10px; }
+
+/* =============================================================================
+  TIMELINE ALTERNATING STRUCTURE
+============================================================================= */
+@media (min-width: 650px) {
+  .timeline__container:nth-child(2n+1) {
+    flex-direction: row; }
+    .timeline__container:nth-child(2n+1) .timeline__box:after {
+      left: 100%;
+      border-color: transparent;
+      border-left-color: white; } }

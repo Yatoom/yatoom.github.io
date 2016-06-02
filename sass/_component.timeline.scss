@@ -1,0 +1,92 @@
+/* =============================================================================
+  TIMELINE
+============================================================================= */
+
+.timeline {
+  position: relative;
+}
+
+// line
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -2px;
+    height: 100%;
+    width: 4px;
+    background: white;
+    
+    @media ($break-medium) {
+      left: calc(50% - 2px);
+    }
+}
+
+.timeline__container {
+  position: relative;
+  color: $black-text;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+// bullet
+.timeline__container::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: white;
+  
+  @media ($break-medium) {
+    left: calc(50% - 5px);
+  }
+}
+
+.timeline__box {
+	position: relative;
+	background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  flex: 0 0 calc(100% - 20px);
+  
+  @media ($break-medium) {
+    flex: 0 0 calc(50% - 20px);
+  }
+}
+
+// arrow
+.timeline__box:after {
+	right: 100%;
+	top: 15px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.timeline__box:after {
+	border-color: transparent;
+	border-right-color: white;
+	border-width: 10px;
+	margin-top: -10px;
+}
+
+/* =============================================================================
+  TIMELINE ALTERNATING STRUCTURE
+============================================================================= */
+@media ($break-medium) { 
+  .timeline__container:nth-child(2n+1) {
+    flex-direction: row;
+    
+    .timeline__box:after {
+      left: 100%;
+      border-color: transparent;
+      border-left-color: white;
+    }
+  }
+}

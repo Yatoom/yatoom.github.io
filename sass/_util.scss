@@ -1,0 +1,49 @@
+/* =============================================================================
+  FLEXBOX
+============================================================================= */
+.flex {
+  display: flex;
+}
+
+.flex--col {
+  flex-direction: column;
+}
+
+.flex--col-rev {
+  flex-direction: column-reverse;
+}
+
+.flex--rev {
+  flex-direction: row-reverse;
+}
+
+.fill {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.pack {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.auto {
+  flex-basis: auto;
+}
+
+.half {
+  flex-basis: 50%;
+}
+
+/* =============================================================================
+  LINKS
+============================================================================= */
+
+.link {
+  border-bottom: 1px dotted;
+  font-weight: bold;
+}
+
+.link:hover {
+  	border-bottom: 1px solid;
+}

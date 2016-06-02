@@ -1,0 +1,75 @@
+/* =============================================================================
+  GENERIC PROJECT BLOCK
+============================================================================= */
+
+.project {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.project__screenshot {
+  padding: 40px;
+  flex: 1 1 100%;
+  
+  @media ($break-medium) {
+    flex: 0 0 50%;
+  }
+}
+
+.project__description {
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.1);
+  flex: 1 1 100%;
+  
+  @media ($break-medium) {
+    flex: 0 0 50%;
+  }
+}
+
+/* =============================================================================
+  CUSTOMIZED BLOCK
+============================================================================= */
+.project:nth-child(2n+1) {
+  flex-direction: row-reverse;
+}
+
+.project--calllock {
+  background-color: $calllock-blue;
+  color: white;
+}
+
+.project--skin-perfection {
+  background-color: $skinperfection-green;
+  color: white;
+}
+
+.project--elysiumcss {
+  background-color: $elysiumcss-black;
+  color: white;
+}
+
+.project--balmoral {
+  background-color: $balmoral-gold;
+  color: white;
+}
+
+.project--cs-kochsysteme {
+  background-color: $cs-kochsysteme-black;
+  color: white;
+}
+
+.project--travelmatch {
+  background-color: $travelmatch-red;
+  color: white;
+}
+
+.project--jumper {
+  background-color: $jumper-blue;
+  color: white;
+}
+
+.project--cycle {
+  background-color: $cycle-sand;
+  color: white;
+}

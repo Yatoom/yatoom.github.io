@@ -1,0 +1,1501 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '-D',
+1 verbose cli   'concat-cli' ]
+2 info using npm@3.5.3
+3 info using node@v4.2.6
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData concat-cli
+8 silly fetchNamedPackageData concat-cli
+9 silly mapToRegistry name concat-cli
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry uri https://registry.npmjs.org/concat-cli
+13 verbose request uri https://registry.npmjs.org/concat-cli
+14 verbose request no auth needed
+15 info attempt registry request try #1 at 12:36:44 AM
+16 verbose request id 684de8c6238d7861
+17 http request GET https://registry.npmjs.org/concat-cli
+18 http 200 https://registry.npmjs.org/concat-cli
+19 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+19 verbose headers   etag: '"44MB1MJEAEL7H1Q3C23SPW737"',
+19 verbose headers   'content-type': 'application/json',
+19 verbose headers   'content-encoding': 'gzip',
+19 verbose headers   'cache-control': 'max-age=300',
+19 verbose headers   'content-length': '1770',
+19 verbose headers   'accept-ranges': 'bytes',
+19 verbose headers   date: 'Wed, 01 Jun 2016 22:36:44 GMT',
+19 verbose headers   via: '1.1 varnish',
+19 verbose headers   age: '0',
+19 verbose headers   connection: 'keep-alive',
+19 verbose headers   'x-served-by': 'cache-ams4130-AMS',
+19 verbose headers   'x-cache': 'MISS',
+19 verbose headers   'x-cache-hits': '0',
+19 verbose headers   'x-timer': 'S1464820604.728362,VS0,VE104',
+19 verbose headers   vary: 'Accept-Encoding' }
+20 silly get cb [ 200,
+20 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+20 silly get     etag: '"44MB1MJEAEL7H1Q3C23SPW737"',
+20 silly get     'content-type': 'application/json',
+20 silly get     'content-encoding': 'gzip',
+20 silly get     'cache-control': 'max-age=300',
+20 silly get     'content-length': '1770',
+20 silly get     'accept-ranges': 'bytes',
+20 silly get     date: 'Wed, 01 Jun 2016 22:36:44 GMT',
+20 silly get     via: '1.1 varnish',
+20 silly get     age: '0',
+20 silly get     connection: 'keep-alive',
+20 silly get     'x-served-by': 'cache-ams4130-AMS',
+20 silly get     'x-cache': 'MISS',
+20 silly get     'x-cache-hits': '0',
+20 silly get     'x-timer': 'S1464820604.728362,VS0,VE104',
+20 silly get     vary: 'Accept-Encoding' } ]
+21 verbose get saving concat-cli to /home/jeroen/.npm/registry.npmjs.org/concat-cli/.cache.json
+22 silly install normalizeTree
+23 silly loadCurrentTree Finishing
+24 silly loadIdealTree Starting
+25 silly install loadIdealTree
+26 silly cloneCurrentTree Starting
+27 silly install cloneCurrentTreeToIdealTree
+28 silly cloneCurrentTree Finishing
+29 silly loadShrinkwrap Starting
+30 silly install loadShrinkwrap
+31 silly loadShrinkwrap Finishing
+32 silly loadAllDepsIntoIdealTree Starting
+33 silly install loadAllDepsIntoIdealTree
+34 silly resolveWithNewModule concat-cli@4.0.0 checking installable status
+35 silly cache add args [ 'concat-cli', null ]
+36 verbose cache add spec concat-cli
+37 silly cache add parsed spec Result {
+37 silly cache add   raw: 'concat-cli',
+37 silly cache add   scope: null,
+37 silly cache add   name: 'concat-cli',
+37 silly cache add   rawSpec: '',
+37 silly cache add   spec: 'latest',
+37 silly cache add   type: 'tag' }
+38 silly addNamed concat-cli@latest
+39 verbose addNamed "latest" is being treated as a dist-tag for concat-cli
+40 info addNameTag [ 'concat-cli', 'latest' ]
+41 silly mapToRegistry name concat-cli
+42 silly mapToRegistry using default registry
+43 silly mapToRegistry registry https://registry.npmjs.org/
+44 silly mapToRegistry uri https://registry.npmjs.org/concat-cli
+45 verbose addNameTag registry:https://registry.npmjs.org/concat-cli not in flight; fetching
+46 verbose get https://registry.npmjs.org/concat-cli not expired, no request
+47 silly addNameTag next cb for concat-cli with tag latest
+48 silly addNamed concat-cli@4.0.0
+49 verbose addNamed "4.0.0" is a plain semver version for concat-cli
+50 silly mapToRegistry name concat-cli
+51 silly mapToRegistry using default registry
+52 silly mapToRegistry registry https://registry.npmjs.org/
+53 silly mapToRegistry uri https://registry.npmjs.org/concat-cli
+54 verbose addRemoteTarball https://registry.npmjs.org/concat-cli/-/concat-cli-4.0.0.tgz not in flight; adding
+55 verbose addRemoteTarball [ 'https://registry.npmjs.org/concat-cli/-/concat-cli-4.0.0.tgz',
+55 verbose addRemoteTarball   'a73a0fb0d18b25804ebe703bcc35922324dbf74d' ]
+56 info retry fetch attempt 1 at 12:36:45 AM
+57 info attempt registry request try #1 at 12:36:45 AM
+58 http fetch GET https://registry.npmjs.org/concat-cli/-/concat-cli-4.0.0.tgz
+59 http fetch 200 https://registry.npmjs.org/concat-cli/-/concat-cli-4.0.0.tgz
+60 silly fetchAndShaCheck shasum a73a0fb0d18b25804ebe703bcc35922324dbf74d
+61 verbose addTmpTarball /tmp/npm-20216-26367b0f/registry.npmjs.org/concat-cli/-/concat-cli-4.0.0.tgz not in flight; adding
+62 verbose addTmpTarball already have metadata; skipping unpack for concat-cli@4.0.0
+63 silly cache afterAdd concat-cli@4.0.0
+64 verbose afterAdd /home/jeroen/.npm/concat-cli/4.0.0/package/package.json not in flight; writing
+65 verbose afterAdd /home/jeroen/.npm/concat-cli/4.0.0/package/package.json written
+66 silly fetchNamedPackageData concat
+67 silly mapToRegistry name concat
+68 silly mapToRegistry using default registry
+69 silly mapToRegistry registry https://registry.npmjs.org/
+70 silly mapToRegistry uri https://registry.npmjs.org/concat
+71 verbose request uri https://registry.npmjs.org/concat
+72 verbose request no auth needed
+73 info attempt registry request try #1 at 12:36:45 AM
+74 http request GET https://registry.npmjs.org/concat
+75 http 200 https://registry.npmjs.org/concat
+76 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+76 verbose headers   etag: '"2DKRNNQ0TCVZ1043J9GV2A2ZV"',
+76 verbose headers   'content-type': 'application/json',
+76 verbose headers   'content-encoding': 'gzip',
+76 verbose headers   'cache-control': 'max-age=300',
+76 verbose headers   'content-length': '2686',
+76 verbose headers   'accept-ranges': 'bytes',
+76 verbose headers   date: 'Wed, 01 Jun 2016 22:36:45 GMT',
+76 verbose headers   via: '1.1 varnish',
+76 verbose headers   age: '0',
+76 verbose headers   connection: 'keep-alive',
+76 verbose headers   'x-served-by': 'cache-ams4142-AMS',
+76 verbose headers   'x-cache': 'MISS',
+76 verbose headers   'x-cache-hits': '0',
+76 verbose headers   'x-timer': 'S1464820605.598748,VS0,VE373',
+76 verbose headers   vary: 'Accept-Encoding' }
+77 silly get cb [ 200,
+77 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+77 silly get     etag: '"2DKRNNQ0TCVZ1043J9GV2A2ZV"',
+77 silly get     'content-type': 'application/json',
+77 silly get     'content-encoding': 'gzip',
+77 silly get     'cache-control': 'max-age=300',
+77 silly get     'content-length': '2686',
+77 silly get     'accept-ranges': 'bytes',
+77 silly get     date: 'Wed, 01 Jun 2016 22:36:45 GMT',
+77 silly get     via: '1.1 varnish',
+77 silly get     age: '0',
+77 silly get     connection: 'keep-alive',
+77 silly get     'x-served-by': 'cache-ams4142-AMS',
+77 silly get     'x-cache': 'MISS',
+77 silly get     'x-cache-hits': '0',
+77 silly get     'x-timer': 'S1464820605.598748,VS0,VE373',
+77 silly get     vary: 'Accept-Encoding' } ]
+78 verbose get saving concat to /home/jeroen/.npm/registry.npmjs.org/concat/.cache.json
+79 silly resolveWithNewModule concat@1.0.0 checking installable status
+80 silly cache add args [ 'concat@^1.0.0', null ]
+81 verbose cache add spec concat@^1.0.0
+82 silly cache add parsed spec Result {
+82 silly cache add   raw: 'concat@^1.0.0',
+82 silly cache add   scope: null,
+82 silly cache add   name: 'concat',
+82 silly cache add   rawSpec: '^1.0.0',
+82 silly cache add   spec: '>=1.0.0 <2.0.0',
+82 silly cache add   type: 'range' }
+83 silly addNamed concat@>=1.0.0 <2.0.0
+84 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for concat
+85 silly addNameRange { name: 'concat', range: '>=1.0.0 <2.0.0', hasData: false }
+86 silly mapToRegistry name concat
+87 silly mapToRegistry using default registry
+88 silly mapToRegistry registry https://registry.npmjs.org/
+89 silly mapToRegistry uri https://registry.npmjs.org/concat
+90 verbose addNameRange registry:https://registry.npmjs.org/concat not in flight; fetching
+91 verbose get https://registry.npmjs.org/concat not expired, no request
+92 silly addNameRange number 2 { name: 'concat', range: '>=1.0.0 <2.0.0', hasData: true }
+93 silly addNameRange versions [ 'concat',
+93 silly addNameRange   [ '2.0.0',
+93 silly addNameRange     '0.0.1-security',
+93 silly addNameRange     '0.0.0',
+93 silly addNameRange     '0.0.1',
+93 silly addNameRange     '0.0.2',
+93 silly addNameRange     '0.0.3',
+93 silly addNameRange     '0.0.4',
+93 silly addNameRange     '0.0.5',
+93 silly addNameRange     '0.0.6',
+93 silly addNameRange     '0.0.7',
+93 silly addNameRange     '0.0.8',
+93 silly addNameRange     '0.0.9',
+93 silly addNameRange     '0.2.0',
+93 silly addNameRange     '0.2.1',
+93 silly addNameRange     '0.2.2',
+93 silly addNameRange     '0.2.3',
+93 silly addNameRange     '0.2.4',
+93 silly addNameRange     '1.0.0' ] ]
+94 silly addNamed concat@1.0.0
+95 verbose addNamed "1.0.0" is a plain semver version for concat
+96 silly mapToRegistry name concat
+97 silly mapToRegistry using default registry
+98 silly mapToRegistry registry https://registry.npmjs.org/
+99 silly mapToRegistry uri https://registry.npmjs.org/concat
+100 verbose addRemoteTarball https://registry.npmjs.org/concat/-/concat-1.0.0.tgz not in flight; adding
+101 verbose addRemoteTarball [ 'https://registry.npmjs.org/concat/-/concat-1.0.0.tgz',
+101 verbose addRemoteTarball   '5f46c924e1de3b96b22d3dcf7939000695df028d' ]
+102 info retry fetch attempt 1 at 12:36:46 AM
+103 info attempt registry request try #1 at 12:36:46 AM
+104 http fetch GET https://registry.npmjs.org/concat/-/concat-1.0.0.tgz
+105 http fetch 200 https://registry.npmjs.org/concat/-/concat-1.0.0.tgz
+106 silly fetchAndShaCheck shasum 5f46c924e1de3b96b22d3dcf7939000695df028d
+107 verbose addTmpTarball /tmp/npm-20216-26367b0f/registry.npmjs.org/concat/-/concat-1.0.0.tgz not in flight; adding
+108 verbose addTmpTarball already have metadata; skipping unpack for concat@1.0.0
+109 silly cache afterAdd concat@1.0.0
+110 verbose afterAdd /home/jeroen/.npm/concat/1.0.0/package/package.json not in flight; writing
+111 verbose afterAdd /home/jeroen/.npm/concat/1.0.0/package/package.json written
+112 silly fetchNamedPackageData parallel-loop
+113 silly mapToRegistry name parallel-loop
+114 silly mapToRegistry using default registry
+115 silly mapToRegistry registry https://registry.npmjs.org/
+116 silly mapToRegistry uri https://registry.npmjs.org/parallel-loop
+117 silly fetchNamedPackageData serial-loop
+118 silly mapToRegistry name serial-loop
+119 silly mapToRegistry using default registry
+120 silly mapToRegistry registry https://registry.npmjs.org/
+121 silly mapToRegistry uri https://registry.npmjs.org/serial-loop
+122 verbose request uri https://registry.npmjs.org/parallel-loop
+123 verbose request no auth needed
+124 info attempt registry request try #1 at 12:36:46 AM
+125 http request GET https://registry.npmjs.org/parallel-loop
+126 verbose request uri https://registry.npmjs.org/serial-loop
+127 verbose request no auth needed
+128 info attempt registry request try #1 at 12:36:46 AM
+129 http request GET https://registry.npmjs.org/serial-loop
+130 http 200 https://registry.npmjs.org/serial-loop
+131 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+131 verbose headers   etag: '"AOUSFYP4KT6UDYYDHCG16MUKZ"',
+131 verbose headers   'content-type': 'application/json',
+131 verbose headers   'content-encoding': 'gzip',
+131 verbose headers   'cache-control': 'max-age=300',
+131 verbose headers   'content-length': '1302',
+131 verbose headers   'accept-ranges': 'bytes',
+131 verbose headers   date: 'Wed, 01 Jun 2016 22:36:46 GMT',
+131 verbose headers   via: '1.1 varnish',
+131 verbose headers   age: '0',
+131 verbose headers   connection: 'keep-alive',
+131 verbose headers   'x-served-by': 'cache-ams4121-AMS',
+131 verbose headers   'x-cache': 'MISS',
+131 verbose headers   'x-cache-hits': '0',
+131 verbose headers   'x-timer': 'S1464820606.359099,VS0,VE378',
+131 verbose headers   vary: 'Accept-Encoding' }
+132 silly get cb [ 200,
+132 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+132 silly get     etag: '"AOUSFYP4KT6UDYYDHCG16MUKZ"',
+132 silly get     'content-type': 'application/json',
+132 silly get     'content-encoding': 'gzip',
+132 silly get     'cache-control': 'max-age=300',
+132 silly get     'content-length': '1302',
+132 silly get     'accept-ranges': 'bytes',
+132 silly get     date: 'Wed, 01 Jun 2016 22:36:46 GMT',
+132 silly get     via: '1.1 varnish',
+132 silly get     age: '0',
+132 silly get     connection: 'keep-alive',
+132 silly get     'x-served-by': 'cache-ams4121-AMS',
+132 silly get     'x-cache': 'MISS',
+132 silly get     'x-cache-hits': '0',
+132 silly get     'x-timer': 'S1464820606.359099,VS0,VE378',
+132 silly get     vary: 'Accept-Encoding' } ]
+133 verbose get saving serial-loop to /home/jeroen/.npm/registry.npmjs.org/serial-loop/.cache.json
+134 silly resolveWithNewModule serial-loop@0.0.1 checking installable status
+135 silly cache add args [ 'serial-loop@0.0.1', null ]
+136 verbose cache add spec serial-loop@0.0.1
+137 silly cache add parsed spec Result {
+137 silly cache add   raw: 'serial-loop@0.0.1',
+137 silly cache add   scope: null,
+137 silly cache add   name: 'serial-loop',
+137 silly cache add   rawSpec: '0.0.1',
+137 silly cache add   spec: '0.0.1',
+137 silly cache add   type: 'version' }
+138 silly addNamed serial-loop@0.0.1
+139 verbose addNamed "0.0.1" is a plain semver version for serial-loop
+140 silly mapToRegistry name serial-loop
+141 silly mapToRegistry using default registry
+142 silly mapToRegistry registry https://registry.npmjs.org/
+143 silly mapToRegistry uri https://registry.npmjs.org/serial-loop
+144 verbose addNameVersion registry:https://registry.npmjs.org/serial-loop not in flight; fetching
+145 verbose get https://registry.npmjs.org/serial-loop not expired, no request
+146 silly mapToRegistry name serial-loop
+147 silly mapToRegistry using default registry
+148 silly mapToRegistry registry https://registry.npmjs.org/
+149 silly mapToRegistry uri https://registry.npmjs.org/serial-loop
+150 verbose addRemoteTarball https://registry.npmjs.org/serial-loop/-/serial-loop-0.0.1.tgz not in flight; adding
+151 verbose addRemoteTarball [ 'https://registry.npmjs.org/serial-loop/-/serial-loop-0.0.1.tgz',
+151 verbose addRemoteTarball   '472a8d7931084bacc17eb907d9aee002adb93b4c' ]
+152 info retry fetch attempt 1 at 12:36:46 AM
+153 info attempt registry request try #1 at 12:36:46 AM
+154 http fetch GET https://registry.npmjs.org/serial-loop/-/serial-loop-0.0.1.tgz
+155 http fetch 200 https://registry.npmjs.org/serial-loop/-/serial-loop-0.0.1.tgz
+156 silly fetchAndShaCheck shasum 472a8d7931084bacc17eb907d9aee002adb93b4c
+157 verbose addTmpTarball /tmp/npm-20216-26367b0f/registry.npmjs.org/serial-loop/-/serial-loop-0.0.1.tgz not in flight; adding
+158 verbose addTmpTarball already have metadata; skipping unpack for serial-loop@0.0.1
+159 silly cache afterAdd serial-loop@0.0.1
+160 verbose afterAdd /home/jeroen/.npm/serial-loop/0.0.1/package/package.json not in flight; writing
+161 verbose afterAdd /home/jeroen/.npm/serial-loop/0.0.1/package/package.json written
+162 http 200 https://registry.npmjs.org/parallel-loop
+163 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+163 verbose headers   etag: '"2LBG8F8SQ9E9E2LBEXT7XIQFV"',
+163 verbose headers   'content-type': 'application/json',
+163 verbose headers   'content-encoding': 'gzip',
+163 verbose headers   'cache-control': 'max-age=300',
+163 verbose headers   'content-length': '1462',
+163 verbose headers   'accept-ranges': 'bytes',
+163 verbose headers   date: 'Wed, 01 Jun 2016 22:36:47 GMT',
+163 verbose headers   via: '1.1 varnish',
+163 verbose headers   age: '0',
+163 verbose headers   connection: 'keep-alive',
+163 verbose headers   'x-served-by': 'cache-ams4121-AMS',
+163 verbose headers   'x-cache': 'MISS',
+163 verbose headers   'x-cache-hits': '0',
+163 verbose headers   'x-timer': 'S1464820606.322274,VS0,VE698',
+163 verbose headers   vary: 'Accept-Encoding' }
+164 silly get cb [ 200,
+164 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+164 silly get     etag: '"2LBG8F8SQ9E9E2LBEXT7XIQFV"',
+164 silly get     'content-type': 'application/json',
+164 silly get     'content-encoding': 'gzip',
+164 silly get     'cache-control': 'max-age=300',
+164 silly get     'content-length': '1462',
+164 silly get     'accept-ranges': 'bytes',
+164 silly get     date: 'Wed, 01 Jun 2016 22:36:47 GMT',
+164 silly get     via: '1.1 varnish',
+164 silly get     age: '0',
+164 silly get     connection: 'keep-alive',
+164 silly get     'x-served-by': 'cache-ams4121-AMS',
+164 silly get     'x-cache': 'MISS',
+164 silly get     'x-cache-hits': '0',
+164 silly get     'x-timer': 'S1464820606.322274,VS0,VE698',
+164 silly get     vary: 'Accept-Encoding' } ]
+165 verbose get saving parallel-loop to /home/jeroen/.npm/registry.npmjs.org/parallel-loop/.cache.json
+166 silly resolveWithNewModule parallel-loop@0.0.1 checking installable status
+167 silly cache add args [ 'parallel-loop@0.0.1', null ]
+168 verbose cache add spec parallel-loop@0.0.1
+169 silly cache add parsed spec Result {
+169 silly cache add   raw: 'parallel-loop@0.0.1',
+169 silly cache add   scope: null,
+169 silly cache add   name: 'parallel-loop',
+169 silly cache add   rawSpec: '0.0.1',
+169 silly cache add   spec: '0.0.1',
+169 silly cache add   type: 'version' }
+170 silly addNamed parallel-loop@0.0.1
+171 verbose addNamed "0.0.1" is a plain semver version for parallel-loop
+172 silly mapToRegistry name parallel-loop
+173 silly mapToRegistry using default registry
+174 silly mapToRegistry registry https://registry.npmjs.org/
+175 silly mapToRegistry uri https://registry.npmjs.org/parallel-loop
+176 verbose addNameVersion registry:https://registry.npmjs.org/parallel-loop not in flight; fetching
+177 verbose get https://registry.npmjs.org/parallel-loop not expired, no request
+178 silly mapToRegistry name parallel-loop
+179 silly mapToRegistry using default registry
+180 silly mapToRegistry registry https://registry.npmjs.org/
+181 silly mapToRegistry uri https://registry.npmjs.org/parallel-loop
+182 verbose addRemoteTarball https://registry.npmjs.org/parallel-loop/-/parallel-loop-0.0.1.tgz not in flight; adding
+183 verbose addRemoteTarball [ 'https://registry.npmjs.org/parallel-loop/-/parallel-loop-0.0.1.tgz',
+183 verbose addRemoteTarball   '6f42a5817a1ee379cb1fec4d3e2f2fedfee1858d' ]
+184 info retry fetch attempt 1 at 12:36:47 AM
+185 info attempt registry request try #1 at 12:36:47 AM
+186 http fetch GET https://registry.npmjs.org/parallel-loop/-/parallel-loop-0.0.1.tgz
+187 http fetch 200 https://registry.npmjs.org/parallel-loop/-/parallel-loop-0.0.1.tgz
+188 silly fetchAndShaCheck shasum 6f42a5817a1ee379cb1fec4d3e2f2fedfee1858d
+189 verbose addTmpTarball /tmp/npm-20216-26367b0f/registry.npmjs.org/parallel-loop/-/parallel-loop-0.0.1.tgz not in flight; adding
+190 verbose addTmpTarball already have metadata; skipping unpack for parallel-loop@0.0.1
+191 silly cache afterAdd parallel-loop@0.0.1
+192 verbose afterAdd /home/jeroen/.npm/parallel-loop/0.0.1/package/package.json not in flight; writing
+193 verbose afterAdd /home/jeroen/.npm/parallel-loop/0.0.1/package/package.json written
+194 silly fetchNamedPackageData fsevents
+195 silly mapToRegistry name fsevents
+196 silly mapToRegistry using default registry
+197 silly mapToRegistry registry https://registry.npmjs.org/
+198 silly mapToRegistry uri https://registry.npmjs.org/fsevents
+199 verbose request uri https://registry.npmjs.org/fsevents
+200 verbose request no auth needed
+201 info attempt registry request try #1 at 12:36:47 AM
+202 verbose etag "6WG2IHJ3R1KBCEVEQH5157IQJ"
+203 http request GET https://registry.npmjs.org/fsevents
+204 http 304 https://registry.npmjs.org/fsevents
+205 verbose headers { date: 'Wed, 01 Jun 2016 22:36:47 GMT',
+205 verbose headers   via: '1.1 varnish',
+205 verbose headers   'cache-control': 'max-age=300',
+205 verbose headers   etag: '"6WG2IHJ3R1KBCEVEQH5157IQJ"',
+205 verbose headers   age: '285',
+205 verbose headers   connection: 'keep-alive',
+205 verbose headers   'x-served-by': 'cache-ams4140-AMS',
+205 verbose headers   'x-cache': 'HIT',
+205 verbose headers   'x-cache-hits': '3',
+205 verbose headers   'x-timer': 'S1464820607.567235,VS0,VE0',
+205 verbose headers   vary: 'Accept-Encoding' }
+206 silly get cb [ 304,
+206 silly get   { date: 'Wed, 01 Jun 2016 22:36:47 GMT',
+206 silly get     via: '1.1 varnish',
+206 silly get     'cache-control': 'max-age=300',
+206 silly get     etag: '"6WG2IHJ3R1KBCEVEQH5157IQJ"',
+206 silly get     age: '285',
+206 silly get     connection: 'keep-alive',
+206 silly get     'x-served-by': 'cache-ams4140-AMS',
+206 silly get     'x-cache': 'HIT',
+206 silly get     'x-cache-hits': '3',
+206 silly get     'x-timer': 'S1464820607.567235,VS0,VE0',
+206 silly get     vary: 'Accept-Encoding' } ]
+207 verbose etag https://registry.npmjs.org/fsevents from cache
+208 verbose get saving fsevents to /home/jeroen/.npm/registry.npmjs.org/fsevents/.cache.json
+209 silly resolveWithNewModule fsevents@1.0.12 checking installable status
+210 silly loadAllDepsIntoIdealTree Finishing
+211 silly idealTree:prePrune jeroen@1.0.0
+211 silly idealTree:prePrune ├── abbrev@1.0.7
+211 silly idealTree:prePrune ├── ansi-regex@2.0.0
+211 silly idealTree:prePrune ├── ansi-styles@2.2.1
+211 silly idealTree:prePrune ├── ansi@0.3.1
+211 silly idealTree:prePrune ├── anymatch@1.3.0
+211 silly idealTree:prePrune ├── are-we-there-yet@1.1.2
+211 silly idealTree:prePrune ├── arr-diff@2.0.0
+211 silly idealTree:prePrune ├── arr-flatten@1.0.1
+211 silly idealTree:prePrune ├── array-find-index@1.0.1
+211 silly idealTree:prePrune ├── array-index@1.0.0
+211 silly idealTree:prePrune ├── array-unique@0.2.1
+211 silly idealTree:prePrune ├── arrify@1.0.1
+211 silly idealTree:prePrune ├── asn1@0.2.3
+211 silly idealTree:prePrune ├── assert-plus@0.2.0
+211 silly idealTree:prePrune ├── async-each@1.0.0
+211 silly idealTree:prePrune ├── async-foreach@0.1.3
+211 silly idealTree:prePrune ├── async@1.5.2
+211 silly idealTree:prePrune ├── aws-sign2@0.6.0
+211 silly idealTree:prePrune ├── aws4@1.4.1
+211 silly idealTree:prePrune ├── balanced-match@0.4.1
+211 silly idealTree:prePrune ├── binary-extensions@1.4.1
+211 silly idealTree:prePrune ├─┬ bl@1.1.2
+211 silly idealTree:prePrune │ └── readable-stream@2.0.6
+211 silly idealTree:prePrune ├── block-stream@0.0.9
+211 silly idealTree:prePrune ├── boom@2.10.1
+211 silly idealTree:prePrune ├── brace-expansion@1.1.4
+211 silly idealTree:prePrune ├── braces@1.8.5
+211 silly idealTree:prePrune ├── buffer-shims@1.0.0
+211 silly idealTree:prePrune ├── builtin-modules@1.1.1
+211 silly idealTree:prePrune ├── camelcase-keys@2.1.0
+211 silly idealTree:prePrune ├── camelcase@2.1.1
+211 silly idealTree:prePrune ├── caseless@0.11.0
+211 silly idealTree:prePrune ├── chalk@1.1.3
+211 silly idealTree:prePrune ├── chokidar@1.5.1
+211 silly idealTree:prePrune ├── cliui@3.2.0
+211 silly idealTree:prePrune ├── code-point-at@1.0.0
+211 silly idealTree:prePrune ├── combined-stream@1.0.5
+211 silly idealTree:prePrune ├── commander@2.9.0
+211 silly idealTree:prePrune ├── concat-cli@4.0.0
+211 silly idealTree:prePrune ├── concat-map@0.0.1
+211 silly idealTree:prePrune ├── concat@1.0.0
+211 silly idealTree:prePrune ├── configstore@1.4.0
+211 silly idealTree:prePrune ├── core-util-is@1.0.2
+211 silly idealTree:prePrune ├── cross-spawn-async@2.2.4
+211 silly idealTree:prePrune ├── cryptiles@2.0.5
+211 silly idealTree:prePrune ├── d@0.1.1
+211 silly idealTree:prePrune ├─┬ dashdash@1.13.1
+211 silly idealTree:prePrune │ └── assert-plus@1.0.0
+211 silly idealTree:prePrune ├── debug@2.2.0
+211 silly idealTree:prePrune ├── decamelize@1.2.0
+211 silly idealTree:prePrune ├── deep-extend@0.4.1
+211 silly idealTree:prePrune ├── delayed-stream@1.0.0
+211 silly idealTree:prePrune ├── delegates@1.0.0
+211 silly idealTree:prePrune ├── duplexer@0.1.1
+211 silly idealTree:prePrune ├── duplexify@3.4.3
+211 silly idealTree:prePrune ├── ecc-jsbn@0.1.1
+211 silly idealTree:prePrune ├── end-of-stream@1.0.0
+211 silly idealTree:prePrune ├── error-ex@1.3.0
+211 silly idealTree:prePrune ├── es5-ext@0.10.11
+211 silly idealTree:prePrune ├── es6-iterator@2.0.0
+211 silly idealTree:prePrune ├── es6-promise@3.2.1
+211 silly idealTree:prePrune ├── es6-symbol@3.0.2
+211 silly idealTree:prePrune ├── escape-string-regexp@1.0.5
+211 silly idealTree:prePrune ├── event-stream@3.3.2
+211 silly idealTree:prePrune ├── expand-brackets@0.1.5
+211 silly idealTree:prePrune ├── expand-range@1.8.2
+211 silly idealTree:prePrune ├── extend@3.0.0
+211 silly idealTree:prePrune ├── extglob@0.3.2
+211 silly idealTree:prePrune ├── extsprintf@1.0.2
+211 silly idealTree:prePrune ├── filename-regex@2.0.0
+211 silly idealTree:prePrune ├── fill-range@2.2.3
+211 silly idealTree:prePrune ├── find-up@1.1.2
+211 silly idealTree:prePrune ├── for-in@0.1.5
+211 silly idealTree:prePrune ├── for-own@0.1.4
+211 silly idealTree:prePrune ├── forever-agent@0.6.1
+211 silly idealTree:prePrune ├── form-data@1.0.0-rc4
+211 silly idealTree:prePrune ├── from@0.1.3
+211 silly idealTree:prePrune ├── fstream@1.0.9
+211 silly idealTree:prePrune ├── gauge@1.2.7
+211 silly idealTree:prePrune ├── gaze@1.0.0
+211 silly idealTree:prePrune ├── generate-function@2.0.0
+211 silly idealTree:prePrune ├── generate-object-property@1.2.0
+211 silly idealTree:prePrune ├── get-stdin@4.0.1
+211 silly idealTree:prePrune ├─┬ getpass@0.1.6
+211 silly idealTree:prePrune │ └── assert-plus@1.0.0
+211 silly idealTree:prePrune ├── glob-base@0.3.0
+211 silly idealTree:prePrune ├── glob-parent@2.0.0
+211 silly idealTree:prePrune ├─┬ glob@7.0.3
+211 silly idealTree:prePrune │ └── minimatch@3.0.0
+211 silly idealTree:prePrune ├─┬ globule@0.2.0
+211 silly idealTree:prePrune │ ├─┬ glob@3.2.11
+211 silly idealTree:prePrune │ │ └── minimatch@0.3.0
+211 silly idealTree:prePrune │ └── lru-cache@2.7.3
+211 silly idealTree:prePrune ├─┬ got@3.3.1
+211 silly idealTree:prePrune │ └── object-assign@3.0.0
+211 silly idealTree:prePrune ├── graceful-fs@4.1.4
+211 silly idealTree:prePrune ├── graceful-readlink@1.0.1
+211 silly idealTree:prePrune ├── har-validator@2.0.6
+211 silly idealTree:prePrune ├── has-ansi@2.0.0
+211 silly idealTree:prePrune ├── has-unicode@2.0.0
+211 silly idealTree:prePrune ├── hawk@3.1.3
+211 silly idealTree:prePrune ├── hoek@2.16.3
+211 silly idealTree:prePrune ├── hosted-git-info@2.1.5
+211 silly idealTree:prePrune ├── http-signature@1.1.1
+211 silly idealTree:prePrune ├── ignore-by-default@1.0.1
+211 silly idealTree:prePrune ├── imurmurhash@0.1.4
+211 silly idealTree:prePrune ├── in-publish@2.0.0
+211 silly idealTree:prePrune ├── indent-string@2.1.0
+211 silly idealTree:prePrune ├── infinity-agent@2.0.3
+211 silly idealTree:prePrune ├── inflight@1.0.5
+211 silly idealTree:prePrune ├── inherits@2.0.1
+211 silly idealTree:prePrune ├── ini@1.3.4
+211 silly idealTree:prePrune ├── invert-kv@1.0.0
+211 silly idealTree:prePrune ├── is-arrayish@0.2.1
+211 silly idealTree:prePrune ├── is-binary-path@1.0.1
+211 silly idealTree:prePrune ├── is-buffer@1.1.3
+211 silly idealTree:prePrune ├── is-builtin-module@1.0.0
+211 silly idealTree:prePrune ├── is-dotfile@1.0.2
+211 silly idealTree:prePrune ├── is-equal-shallow@0.1.3
+211 silly idealTree:prePrune ├── is-extendable@0.1.1
+211 silly idealTree:prePrune ├── is-extglob@1.0.0
+211 silly idealTree:prePrune ├── is-finite@1.0.1
+211 silly idealTree:prePrune ├── is-fullwidth-code-point@1.0.0
+211 silly idealTree:prePrune ├── is-glob@2.0.1
+211 silly idealTree:prePrune ├── is-my-json-valid@2.13.1
+211 silly idealTree:prePrune ├── is-npm@1.0.0
+211 silly idealTree:prePrune ├── is-number@2.1.0
+211 silly idealTree:prePrune ├── is-posix-bracket@0.1.1
+211 silly idealTree:prePrune ├── is-primitive@2.0.0
+211 silly idealTree:prePrune ├── is-property@1.0.2
+211 silly idealTree:prePrune ├── is-redirect@1.0.0
+211 silly idealTree:prePrune ├── is-stream@1.1.0
+211 silly idealTree:prePrune ├── is-typedarray@1.0.0
+211 silly idealTree:prePrune ├── is-utf8@0.2.1
+211 silly idealTree:prePrune ├── isarray@1.0.0
+211 silly idealTree:prePrune ├── isexe@1.1.2
+211 silly idealTree:prePrune ├── isobject@2.1.0
+211 silly idealTree:prePrune ├── isstream@0.1.2
+211 silly idealTree:prePrune ├── jodid25519@1.0.2
+211 silly idealTree:prePrune ├── jsbn@0.1.0
+211 silly idealTree:prePrune ├── json-schema@0.2.2
+211 silly idealTree:prePrune ├── json-stringify-safe@5.0.1
+211 silly idealTree:prePrune ├── jsonpointer@2.0.0
+211 silly idealTree:prePrune ├── jsprim@1.2.2
+211 silly idealTree:prePrune ├── kind-of@3.0.3
+211 silly idealTree:prePrune ├── latest-version@1.0.1
+211 silly idealTree:prePrune ├── lcid@1.0.0
+211 silly idealTree:prePrune ├── load-json-file@1.1.0
+211 silly idealTree:prePrune ├── lodash._baseassign@3.2.0
+211 silly idealTree:prePrune ├── lodash._basecopy@3.0.1
+211 silly idealTree:prePrune ├── lodash._baseslice@4.0.0
+211 silly idealTree:prePrune ├── lodash._basetostring@4.12.0
+211 silly idealTree:prePrune ├── lodash._bindcallback@3.0.1
+211 silly idealTree:prePrune ├── lodash._createassigner@3.1.1
+211 silly idealTree:prePrune ├── lodash._getnative@3.9.1
+211 silly idealTree:prePrune ├── lodash._isiterateecall@3.0.9
+211 silly idealTree:prePrune ├── lodash.assign@3.2.0
+211 silly idealTree:prePrune ├── lodash.defaults@3.1.2
+211 silly idealTree:prePrune ├── lodash.isarguments@3.0.8
+211 silly idealTree:prePrune ├── lodash.isarray@3.0.4
+211 silly idealTree:prePrune ├── lodash.keys@3.1.2
+211 silly idealTree:prePrune ├── lodash.pad@4.4.0
+211 silly idealTree:prePrune ├── lodash.padend@4.5.0
+211 silly idealTree:prePrune ├── lodash.padstart@4.5.0
+211 silly idealTree:prePrune ├── lodash.restparam@3.6.1
+211 silly idealTree:prePrune ├── lodash.tostring@4.1.3
+211 silly idealTree:prePrune ├── lodash@2.4.2
+211 silly idealTree:prePrune ├── loud-rejection@1.3.0
+211 silly idealTree:prePrune ├── lowercase-keys@1.0.0
+211 silly idealTree:prePrune ├── lru-cache@4.0.1
+211 silly idealTree:prePrune ├── map-obj@1.0.1
+211 silly idealTree:prePrune ├── map-stream@0.1.0
+211 silly idealTree:prePrune ├── meow@3.7.0
+211 silly idealTree:prePrune ├── micromatch@2.3.8
+211 silly idealTree:prePrune ├── mime-db@1.23.0
+211 silly idealTree:prePrune ├── mime-types@2.1.11
+211 silly idealTree:prePrune ├─┬ minimatch@0.2.14
+211 silly idealTree:prePrune │ └── lru-cache@2.7.3
+211 silly idealTree:prePrune ├── minimist@1.2.0
+211 silly idealTree:prePrune ├─┬ mkdirp@0.5.1
+211 silly idealTree:prePrune │ └── minimist@0.0.8
+211 silly idealTree:prePrune ├── ms@0.7.1
+211 silly idealTree:prePrune ├── nan@2.3.5
+211 silly idealTree:prePrune ├── nested-error-stacks@1.0.2
+211 silly idealTree:prePrune ├─┬ node-gyp@3.3.1
+211 silly idealTree:prePrune │ ├─┬ glob@4.5.3
+211 silly idealTree:prePrune │ │ └── minimatch@2.0.10
+211 silly idealTree:prePrune │ ├── lru-cache@2.7.3
+211 silly idealTree:prePrune │ └── minimatch@1.0.0
+211 silly idealTree:prePrune ├── node-sass@3.7.0
+211 silly idealTree:prePrune ├── node-uuid@1.4.7
+211 silly idealTree:prePrune ├─┬ nodemon@1.9.2
+211 silly idealTree:prePrune │ └── minimatch@3.0.0
+211 silly idealTree:prePrune ├── nopt@3.0.6
+211 silly idealTree:prePrune ├── normalize-package-data@2.3.5
+211 silly idealTree:prePrune ├── normalize-path@2.0.1
+211 silly idealTree:prePrune ├── npmlog@2.0.4
+211 silly idealTree:prePrune ├── number-is-nan@1.0.0
+211 silly idealTree:prePrune ├── oauth-sign@0.8.2
+211 silly idealTree:prePrune ├── object-assign@4.1.0
+211 silly idealTree:prePrune ├── object.omit@2.0.0
+211 silly idealTree:prePrune ├── once@1.3.3
+211 silly idealTree:prePrune ├── os-homedir@1.0.1
+211 silly idealTree:prePrune ├── os-locale@1.4.0
+211 silly idealTree:prePrune ├── os-tmpdir@1.0.1
+211 silly idealTree:prePrune ├── osenv@0.1.3
+211 silly idealTree:prePrune ├── package-json@1.2.0
+211 silly idealTree:prePrune ├── parallel-loop@0.0.1
+211 silly idealTree:prePrune ├── parse-glob@3.0.4
+211 silly idealTree:prePrune ├── parse-json@2.2.0
+211 silly idealTree:prePrune ├── path-array@1.0.1
+211 silly idealTree:prePrune ├── path-exists@2.1.0
+211 silly idealTree:prePrune ├── path-is-absolute@1.0.0
+211 silly idealTree:prePrune ├── path-type@1.1.0
+211 silly idealTree:prePrune ├── pause-stream@0.0.11
+211 silly idealTree:prePrune ├── pify@2.3.0
+211 silly idealTree:prePrune ├── pinkie-promise@2.0.1
+211 silly idealTree:prePrune ├── pinkie@2.0.4
+211 silly idealTree:prePrune ├── prepend-http@1.0.4
+211 silly idealTree:prePrune ├── preserve@0.2.0
+211 silly idealTree:prePrune ├── process-nextick-args@1.0.7
+211 silly idealTree:prePrune ├── ps-tree@1.1.0
+211 silly idealTree:prePrune ├── pseudomap@1.0.2
+211 silly idealTree:prePrune ├── qs@6.1.0
+211 silly idealTree:prePrune ├── randomatic@1.1.5
+211 silly idealTree:prePrune ├── rc@1.1.6
+211 silly idealTree:prePrune ├── read-all-stream@3.1.0
+211 silly idealTree:prePrune ├── read-pkg-up@1.0.1
+211 silly idealTree:prePrune ├── read-pkg@1.1.0
+211 silly idealTree:prePrune ├── readable-stream@2.1.4
+211 silly idealTree:prePrune ├─┬ readdirp@2.0.0
+211 silly idealTree:prePrune │ └── minimatch@2.0.10
+211 silly idealTree:prePrune ├── redent@1.0.0
+211 silly idealTree:prePrune ├── regex-cache@0.4.3
+211 silly idealTree:prePrune ├── registry-url@3.1.0
+211 silly idealTree:prePrune ├── repeat-element@1.1.2
+211 silly idealTree:prePrune ├── repeat-string@1.5.4
+211 silly idealTree:prePrune ├── repeating@2.0.1
+211 silly idealTree:prePrune ├── request@2.72.0
+211 silly idealTree:prePrune ├── rimraf@2.5.2
+211 silly idealTree:prePrune ├─┬ sass-graph@2.1.1
+211 silly idealTree:prePrune │ ├── glob@6.0.4
+211 silly idealTree:prePrune │ ├── lodash@4.13.1
+211 silly idealTree:prePrune │ └── minimatch@3.0.0
+211 silly idealTree:prePrune ├── semver-diff@2.1.0
+211 silly idealTree:prePrune ├── semver@5.1.0
+211 silly idealTree:prePrune ├── serial-loop@0.0.1
+211 silly idealTree:prePrune ├── sigmund@1.0.1
+211 silly idealTree:prePrune ├── signal-exit@2.1.2
+211 silly idealTree:prePrune ├── slide@1.1.6
+211 silly idealTree:prePrune ├── sntp@1.0.9
+211 silly idealTree:prePrune ├── spdx-correct@1.0.2
+211 silly idealTree:prePrune ├── spdx-exceptions@1.0.4
+211 silly idealTree:prePrune ├── spdx-expression-parse@1.0.2
+211 silly idealTree:prePrune ├── spdx-license-ids@1.2.1
+211 silly idealTree:prePrune ├── split@0.3.3
+211 silly idealTree:prePrune ├─┬ sshpk@1.8.3
+211 silly idealTree:prePrune │ └── assert-plus@1.0.0
+211 silly idealTree:prePrune ├── stream-combiner@0.0.4
+211 silly idealTree:prePrune ├── string_decoder@0.10.31
+211 silly idealTree:prePrune ├── string-length@1.0.1
+211 silly idealTree:prePrune ├── string-width@1.0.1
+211 silly idealTree:prePrune ├── stringstream@0.0.5
+211 silly idealTree:prePrune ├── strip-ansi@3.0.1
+211 silly idealTree:prePrune ├── strip-bom@2.0.0
+211 silly idealTree:prePrune ├── strip-indent@1.0.1
+211 silly idealTree:prePrune ├── strip-json-comments@1.0.4
+211 silly idealTree:prePrune ├── supports-color@2.0.0
+211 silly idealTree:prePrune ├── tar@2.2.1
+211 silly idealTree:prePrune ├── through@2.3.8
+211 silly idealTree:prePrune ├── timed-out@2.0.0
+211 silly idealTree:prePrune ├─┬ touch@1.0.0
+211 silly idealTree:prePrune │ └── nopt@1.0.10
+211 silly idealTree:prePrune ├── tough-cookie@2.2.2
+211 silly idealTree:prePrune ├── trim-newlines@1.0.0
+211 silly idealTree:prePrune ├── tunnel-agent@0.4.3
+211 silly idealTree:prePrune ├── tweetnacl@0.13.3
+211 silly idealTree:prePrune ├── undefsafe@0.0.3
+211 silly idealTree:prePrune ├─┬ update-notifier@0.5.0
+211 silly idealTree:prePrune │ └── repeating@1.1.3
+211 silly idealTree:prePrune ├── util-deprecate@1.0.2
+211 silly idealTree:prePrune ├── uuid@2.0.2
+211 silly idealTree:prePrune ├── validate-npm-package-license@3.0.1
+211 silly idealTree:prePrune ├── verror@1.3.6
+211 silly idealTree:prePrune ├── which@1.2.9
+211 silly idealTree:prePrune ├── window-size@0.1.4
+211 silly idealTree:prePrune ├── wrap-ansi@2.0.0
+211 silly idealTree:prePrune ├── wrappy@1.0.2
+211 silly idealTree:prePrune ├── write-file-atomic@1.1.4
+211 silly idealTree:prePrune ├── xdg-basedir@2.0.0
+211 silly idealTree:prePrune ├── xtend@4.0.1
+211 silly idealTree:prePrune ├── y18n@3.2.1
+211 silly idealTree:prePrune ├── yallist@2.0.0
+211 silly idealTree:prePrune └── yargs@3.32.0
+212 silly loadIdealTree Finishing
+213 silly currentTree jeroen@1.0.0
+213 silly currentTree ├── abbrev@1.0.7
+213 silly currentTree ├── ansi-regex@2.0.0
+213 silly currentTree ├── ansi-styles@2.2.1
+213 silly currentTree ├── ansi@0.3.1
+213 silly currentTree ├── anymatch@1.3.0
+213 silly currentTree ├── are-we-there-yet@1.1.2
+213 silly currentTree ├── arr-diff@2.0.0
+213 silly currentTree ├── arr-flatten@1.0.1
+213 silly currentTree ├── array-find-index@1.0.1
+213 silly currentTree ├── array-index@1.0.0
+213 silly currentTree ├── array-unique@0.2.1
+213 silly currentTree ├── arrify@1.0.1
+213 silly currentTree ├── asn1@0.2.3
+213 silly currentTree ├── assert-plus@0.2.0
+213 silly currentTree ├── async-each@1.0.0
+213 silly currentTree ├── async-foreach@0.1.3
+213 silly currentTree ├── async@1.5.2
+213 silly currentTree ├── aws-sign2@0.6.0
+213 silly currentTree ├── aws4@1.4.1
+213 silly currentTree ├── balanced-match@0.4.1
+213 silly currentTree ├── binary-extensions@1.4.1
+213 silly currentTree ├─┬ bl@1.1.2
+213 silly currentTree │ └── readable-stream@2.0.6
+213 silly currentTree ├── block-stream@0.0.9
+213 silly currentTree ├── boom@2.10.1
+213 silly currentTree ├── brace-expansion@1.1.4
+213 silly currentTree ├── braces@1.8.5
+213 silly currentTree ├── buffer-shims@1.0.0
+213 silly currentTree ├── builtin-modules@1.1.1
+213 silly currentTree ├── camelcase-keys@2.1.0
+213 silly currentTree ├── camelcase@2.1.1
+213 silly currentTree ├── caseless@0.11.0
+213 silly currentTree ├── chalk@1.1.3
+213 silly currentTree ├── chokidar@1.5.1
+213 silly currentTree ├── cliui@3.2.0
+213 silly currentTree ├── code-point-at@1.0.0
+213 silly currentTree ├── combined-stream@1.0.5
+213 silly currentTree ├── commander@2.9.0
+213 silly currentTree ├── concat-map@0.0.1
+213 silly currentTree ├── configstore@1.4.0
+213 silly currentTree ├── core-util-is@1.0.2
+213 silly currentTree ├── cross-spawn-async@2.2.4
+213 silly currentTree ├── cryptiles@2.0.5
+213 silly currentTree ├── d@0.1.1
+213 silly currentTree ├─┬ dashdash@1.13.1
+213 silly currentTree │ └── assert-plus@1.0.0
+213 silly currentTree ├── debug@2.2.0
+213 silly currentTree ├── decamelize@1.2.0
+213 silly currentTree ├── deep-extend@0.4.1
+213 silly currentTree ├── delayed-stream@1.0.0
+213 silly currentTree ├── delegates@1.0.0
+213 silly currentTree ├── duplexer@0.1.1
+213 silly currentTree ├── duplexify@3.4.3
+213 silly currentTree ├── ecc-jsbn@0.1.1
+213 silly currentTree ├── end-of-stream@1.0.0
+213 silly currentTree ├── error-ex@1.3.0
+213 silly currentTree ├── es5-ext@0.10.11
+213 silly currentTree ├── es6-iterator@2.0.0
+213 silly currentTree ├── es6-promise@3.2.1
+213 silly currentTree ├── es6-symbol@3.0.2
+213 silly currentTree ├── escape-string-regexp@1.0.5
+213 silly currentTree ├── event-stream@3.3.2
+213 silly currentTree ├── expand-brackets@0.1.5
+213 silly currentTree ├── expand-range@1.8.2
+213 silly currentTree ├── extend@3.0.0
+213 silly currentTree ├── extglob@0.3.2
+213 silly currentTree ├── extsprintf@1.0.2
+213 silly currentTree ├── filename-regex@2.0.0
+213 silly currentTree ├── fill-range@2.2.3
+213 silly currentTree ├── find-up@1.1.2
+213 silly currentTree ├── for-in@0.1.5
+213 silly currentTree ├── for-own@0.1.4
+213 silly currentTree ├── forever-agent@0.6.1
+213 silly currentTree ├── form-data@1.0.0-rc4
+213 silly currentTree ├── from@0.1.3
+213 silly currentTree ├── fstream@1.0.9
+213 silly currentTree ├── gauge@1.2.7
+213 silly currentTree ├── gaze@1.0.0
+213 silly currentTree ├── generate-function@2.0.0
+213 silly currentTree ├── generate-object-property@1.2.0
+213 silly currentTree ├── get-stdin@4.0.1
+213 silly currentTree ├─┬ getpass@0.1.6
+213 silly currentTree │ └── assert-plus@1.0.0
+213 silly currentTree ├── glob-base@0.3.0
+213 silly currentTree ├── glob-parent@2.0.0
+213 silly currentTree ├─┬ glob@7.0.3
+213 silly currentTree │ └── minimatch@3.0.0
+213 silly currentTree ├─┬ globule@0.2.0
+213 silly currentTree │ ├─┬ glob@3.2.11
+213 silly currentTree │ │ └── minimatch@0.3.0
+213 silly currentTree │ └── lru-cache@2.7.3
+213 silly currentTree ├─┬ got@3.3.1
+213 silly currentTree │ └── object-assign@3.0.0
+213 silly currentTree ├── graceful-fs@4.1.4
+213 silly currentTree ├── graceful-readlink@1.0.1
+213 silly currentTree ├── har-validator@2.0.6
+213 silly currentTree ├── has-ansi@2.0.0
+213 silly currentTree ├── has-unicode@2.0.0
+213 silly currentTree ├── hawk@3.1.3
+213 silly currentTree ├── hoek@2.16.3
+213 silly currentTree ├── hosted-git-info@2.1.5
+213 silly currentTree ├── http-signature@1.1.1
+213 silly currentTree ├── ignore-by-default@1.0.1
+213 silly currentTree ├── imurmurhash@0.1.4
+213 silly currentTree ├── in-publish@2.0.0
+213 silly currentTree ├── indent-string@2.1.0
+213 silly currentTree ├── infinity-agent@2.0.3
+213 silly currentTree ├── inflight@1.0.5
+213 silly currentTree ├── inherits@2.0.1
+213 silly currentTree ├── ini@1.3.4
+213 silly currentTree ├── invert-kv@1.0.0
+213 silly currentTree ├── is-arrayish@0.2.1
+213 silly currentTree ├── is-binary-path@1.0.1
+213 silly currentTree ├── is-buffer@1.1.3
+213 silly currentTree ├── is-builtin-module@1.0.0
+213 silly currentTree ├── is-dotfile@1.0.2
+213 silly currentTree ├── is-equal-shallow@0.1.3
+213 silly currentTree ├── is-extendable@0.1.1
+213 silly currentTree ├── is-extglob@1.0.0
+213 silly currentTree ├── is-finite@1.0.1
+213 silly currentTree ├── is-fullwidth-code-point@1.0.0
+213 silly currentTree ├── is-glob@2.0.1
+213 silly currentTree ├── is-my-json-valid@2.13.1
+213 silly currentTree ├── is-npm@1.0.0
+213 silly currentTree ├── is-number@2.1.0
+213 silly currentTree ├── is-posix-bracket@0.1.1
+213 silly currentTree ├── is-primitive@2.0.0
+213 silly currentTree ├── is-property@1.0.2
+213 silly currentTree ├── is-redirect@1.0.0
+213 silly currentTree ├── is-stream@1.1.0
+213 silly currentTree ├── is-typedarray@1.0.0
+213 silly currentTree ├── is-utf8@0.2.1
+213 silly currentTree ├── isarray@1.0.0
+213 silly currentTree ├── isexe@1.1.2
+213 silly currentTree ├── isobject@2.1.0
+213 silly currentTree ├── isstream@0.1.2
+213 silly currentTree ├── jodid25519@1.0.2
+213 silly currentTree ├── jsbn@0.1.0
+213 silly currentTree ├── json-schema@0.2.2
+213 silly currentTree ├── json-stringify-safe@5.0.1
+213 silly currentTree ├── jsonpointer@2.0.0
+213 silly currentTree ├── jsprim@1.2.2
+213 silly currentTree ├── kind-of@3.0.3
+213 silly currentTree ├── latest-version@1.0.1
+213 silly currentTree ├── lcid@1.0.0
+213 silly currentTree ├── load-json-file@1.1.0
+213 silly currentTree ├── lodash._baseassign@3.2.0
+213 silly currentTree ├── lodash._basecopy@3.0.1
+213 silly currentTree ├── lodash._baseslice@4.0.0
+213 silly currentTree ├── lodash._basetostring@4.12.0
+213 silly currentTree ├── lodash._bindcallback@3.0.1
+213 silly currentTree ├── lodash._createassigner@3.1.1
+213 silly currentTree ├── lodash._getnative@3.9.1
+213 silly currentTree ├── lodash._isiterateecall@3.0.9
+213 silly currentTree ├── lodash.assign@3.2.0
+213 silly currentTree ├── lodash.defaults@3.1.2
+213 silly currentTree ├── lodash.isarguments@3.0.8
+213 silly currentTree ├── lodash.isarray@3.0.4
+213 silly currentTree ├── lodash.keys@3.1.2
+213 silly currentTree ├── lodash.pad@4.4.0
+213 silly currentTree ├── lodash.padend@4.5.0
+213 silly currentTree ├── lodash.padstart@4.5.0
+213 silly currentTree ├── lodash.restparam@3.6.1
+213 silly currentTree ├── lodash.tostring@4.1.3
+213 silly currentTree ├── lodash@2.4.2
+213 silly currentTree ├── loud-rejection@1.3.0
+213 silly currentTree ├── lowercase-keys@1.0.0
+213 silly currentTree ├── lru-cache@4.0.1
+213 silly currentTree ├── map-obj@1.0.1
+213 silly currentTree ├── map-stream@0.1.0
+213 silly currentTree ├── meow@3.7.0
+213 silly currentTree ├── micromatch@2.3.8
+213 silly currentTree ├── mime-db@1.23.0
+213 silly currentTree ├── mime-types@2.1.11
+213 silly currentTree ├─┬ minimatch@0.2.14
+213 silly currentTree │ └── lru-cache@2.7.3
+213 silly currentTree ├── minimist@1.2.0
+213 silly currentTree ├─┬ mkdirp@0.5.1
+213 silly currentTree │ └── minimist@0.0.8
+213 silly currentTree ├── ms@0.7.1
+213 silly currentTree ├── nan@2.3.5
+213 silly currentTree ├── nested-error-stacks@1.0.2
+213 silly currentTree ├─┬ node-gyp@3.3.1
+213 silly currentTree │ ├─┬ glob@4.5.3
+213 silly currentTree │ │ └── minimatch@2.0.10
+213 silly currentTree │ ├── lru-cache@2.7.3
+213 silly currentTree │ └── minimatch@1.0.0
+213 silly currentTree ├── node-sass@3.7.0
+213 silly currentTree ├── node-uuid@1.4.7
+213 silly currentTree ├─┬ nodemon@1.9.2
+213 silly currentTree │ └── minimatch@3.0.0
+213 silly currentTree ├── nopt@3.0.6
+213 silly currentTree ├── normalize-package-data@2.3.5
+213 silly currentTree ├── normalize-path@2.0.1
+213 silly currentTree ├── npmlog@2.0.4
+213 silly currentTree ├── number-is-nan@1.0.0
+213 silly currentTree ├── oauth-sign@0.8.2
+213 silly currentTree ├── object-assign@4.1.0
+213 silly currentTree ├── object.omit@2.0.0
+213 silly currentTree ├── once@1.3.3
+213 silly currentTree ├── os-homedir@1.0.1
+213 silly currentTree ├── os-locale@1.4.0
+213 silly currentTree ├── os-tmpdir@1.0.1
+213 silly currentTree ├── osenv@0.1.3
+213 silly currentTree ├── package-json@1.2.0
+213 silly currentTree ├── parse-glob@3.0.4
+213 silly currentTree ├── parse-json@2.2.0
+213 silly currentTree ├── path-array@1.0.1
+213 silly currentTree ├── path-exists@2.1.0
+213 silly currentTree ├── path-is-absolute@1.0.0
+213 silly currentTree ├── path-type@1.1.0
+213 silly currentTree ├── pause-stream@0.0.11
+213 silly currentTree ├── pify@2.3.0
+213 silly currentTree ├── pinkie-promise@2.0.1
+213 silly currentTree ├── pinkie@2.0.4
+213 silly currentTree ├── prepend-http@1.0.4
+213 silly currentTree ├── preserve@0.2.0
+213 silly currentTree ├── process-nextick-args@1.0.7
+213 silly currentTree ├── ps-tree@1.1.0
+213 silly currentTree ├── pseudomap@1.0.2
+213 silly currentTree ├── qs@6.1.0
+213 silly currentTree ├── randomatic@1.1.5
+213 silly currentTree ├── rc@1.1.6
+213 silly currentTree ├── read-all-stream@3.1.0
+213 silly currentTree ├── read-pkg-up@1.0.1
+213 silly currentTree ├── read-pkg@1.1.0
+213 silly currentTree ├── readable-stream@2.1.4
+213 silly currentTree ├─┬ readdirp@2.0.0
+213 silly currentTree │ └── minimatch@2.0.10
+213 silly currentTree ├── redent@1.0.0
+213 silly currentTree ├── regex-cache@0.4.3
+213 silly currentTree ├── registry-url@3.1.0
+213 silly currentTree ├── repeat-element@1.1.2
+213 silly currentTree ├── repeat-string@1.5.4
+213 silly currentTree ├── repeating@2.0.1
+213 silly currentTree ├── request@2.72.0
+213 silly currentTree ├── rimraf@2.5.2
+213 silly currentTree ├─┬ sass-graph@2.1.1
+213 silly currentTree │ ├── glob@6.0.4
+213 silly currentTree │ ├── lodash@4.13.1
+213 silly currentTree │ └── minimatch@3.0.0
+213 silly currentTree ├── semver-diff@2.1.0
+213 silly currentTree ├── semver@5.1.0
+213 silly currentTree ├── sigmund@1.0.1
+213 silly currentTree ├── signal-exit@2.1.2
+213 silly currentTree ├── slide@1.1.6
+213 silly currentTree ├── sntp@1.0.9
+213 silly currentTree ├── spdx-correct@1.0.2
+213 silly currentTree ├── spdx-exceptions@1.0.4
+213 silly currentTree ├── spdx-expression-parse@1.0.2
+213 silly currentTree ├── spdx-license-ids@1.2.1
+213 silly currentTree ├── split@0.3.3
+213 silly currentTree ├─┬ sshpk@1.8.3
+213 silly currentTree │ └── assert-plus@1.0.0
+213 silly currentTree ├── stream-combiner@0.0.4
+213 silly currentTree ├── string_decoder@0.10.31
+213 silly currentTree ├── string-length@1.0.1
+213 silly currentTree ├── string-width@1.0.1
+213 silly currentTree ├── stringstream@0.0.5
+213 silly currentTree ├── strip-ansi@3.0.1
+213 silly currentTree ├── strip-bom@2.0.0
+213 silly currentTree ├── strip-indent@1.0.1
+213 silly currentTree ├── strip-json-comments@1.0.4
+213 silly currentTree ├── supports-color@2.0.0
+213 silly currentTree ├── tar@2.2.1
+213 silly currentTree ├── through@2.3.8
+213 silly currentTree ├── timed-out@2.0.0
+213 silly currentTree ├─┬ touch@1.0.0
+213 silly currentTree │ └── nopt@1.0.10
+213 silly currentTree ├── tough-cookie@2.2.2
+213 silly currentTree ├── trim-newlines@1.0.0
+213 silly currentTree ├── tunnel-agent@0.4.3
+213 silly currentTree ├── tweetnacl@0.13.3
+213 silly currentTree ├── undefsafe@0.0.3
+213 silly currentTree ├─┬ update-notifier@0.5.0
+213 silly currentTree │ └── repeating@1.1.3
+213 silly currentTree ├── util-deprecate@1.0.2
+213 silly currentTree ├── uuid@2.0.2
+213 silly currentTree ├── validate-npm-package-license@3.0.1
+213 silly currentTree ├── verror@1.3.6
+213 silly currentTree ├── which@1.2.9
+213 silly currentTree ├── window-size@0.1.4
+213 silly currentTree ├── wrap-ansi@2.0.0
+213 silly currentTree ├── wrappy@1.0.2
+213 silly currentTree ├── write-file-atomic@1.1.4
+213 silly currentTree ├── xdg-basedir@2.0.0
+213 silly currentTree ├── xtend@4.0.1
+213 silly currentTree ├── y18n@3.2.1
+213 silly currentTree ├── yallist@2.0.0
+213 silly currentTree └── yargs@3.32.0
+214 silly idealTree jeroen@1.0.0
+214 silly idealTree ├── abbrev@1.0.7
+214 silly idealTree ├── ansi-regex@2.0.0
+214 silly idealTree ├── ansi-styles@2.2.1
+214 silly idealTree ├── ansi@0.3.1
+214 silly idealTree ├── anymatch@1.3.0
+214 silly idealTree ├── are-we-there-yet@1.1.2
+214 silly idealTree ├── arr-diff@2.0.0
+214 silly idealTree ├── arr-flatten@1.0.1
+214 silly idealTree ├── array-find-index@1.0.1
+214 silly idealTree ├── array-index@1.0.0
+214 silly idealTree ├── array-unique@0.2.1
+214 silly idealTree ├── arrify@1.0.1
+214 silly idealTree ├── asn1@0.2.3
+214 silly idealTree ├── assert-plus@0.2.0
+214 silly idealTree ├── async-each@1.0.0
+214 silly idealTree ├── async-foreach@0.1.3
+214 silly idealTree ├── async@1.5.2
+214 silly idealTree ├── aws-sign2@0.6.0
+214 silly idealTree ├── aws4@1.4.1
+214 silly idealTree ├── balanced-match@0.4.1
+214 silly idealTree ├── binary-extensions@1.4.1
+214 silly idealTree ├─┬ bl@1.1.2
+214 silly idealTree │ └── readable-stream@2.0.6
+214 silly idealTree ├── block-stream@0.0.9
+214 silly idealTree ├── boom@2.10.1
+214 silly idealTree ├── brace-expansion@1.1.4
+214 silly idealTree ├── braces@1.8.5
+214 silly idealTree ├── buffer-shims@1.0.0
+214 silly idealTree ├── builtin-modules@1.1.1
+214 silly idealTree ├── camelcase-keys@2.1.0
+214 silly idealTree ├── camelcase@2.1.1
+214 silly idealTree ├── caseless@0.11.0
+214 silly idealTree ├── chalk@1.1.3
+214 silly idealTree ├── chokidar@1.5.1
+214 silly idealTree ├── cliui@3.2.0
+214 silly idealTree ├── code-point-at@1.0.0
+214 silly idealTree ├── combined-stream@1.0.5
+214 silly idealTree ├── commander@2.9.0
+214 silly idealTree ├── concat-cli@4.0.0
+214 silly idealTree ├── concat-map@0.0.1
+214 silly idealTree ├── concat@1.0.0
+214 silly idealTree ├── configstore@1.4.0
+214 silly idealTree ├── core-util-is@1.0.2
+214 silly idealTree ├── cross-spawn-async@2.2.4
+214 silly idealTree ├── cryptiles@2.0.5
+214 silly idealTree ├── d@0.1.1
+214 silly idealTree ├─┬ dashdash@1.13.1
+214 silly idealTree │ └── assert-plus@1.0.0
+214 silly idealTree ├── debug@2.2.0
+214 silly idealTree ├── decamelize@1.2.0
+214 silly idealTree ├── deep-extend@0.4.1
+214 silly idealTree ├── delayed-stream@1.0.0
+214 silly idealTree ├── delegates@1.0.0
+214 silly idealTree ├── duplexer@0.1.1
+214 silly idealTree ├── duplexify@3.4.3
+214 silly idealTree ├── ecc-jsbn@0.1.1
+214 silly idealTree ├── end-of-stream@1.0.0
+214 silly idealTree ├── error-ex@1.3.0
+214 silly idealTree ├── es5-ext@0.10.11
+214 silly idealTree ├── es6-iterator@2.0.0
+214 silly idealTree ├── es6-promise@3.2.1
+214 silly idealTree ├── es6-symbol@3.0.2
+214 silly idealTree ├── escape-string-regexp@1.0.5
+214 silly idealTree ├── event-stream@3.3.2
+214 silly idealTree ├── expand-brackets@0.1.5
+214 silly idealTree ├── expand-range@1.8.2
+214 silly idealTree ├── extend@3.0.0
+214 silly idealTree ├── extglob@0.3.2
+214 silly idealTree ├── extsprintf@1.0.2
+214 silly idealTree ├── filename-regex@2.0.0
+214 silly idealTree ├── fill-range@2.2.3
+214 silly idealTree ├── find-up@1.1.2
+214 silly idealTree ├── for-in@0.1.5
+214 silly idealTree ├── for-own@0.1.4
+214 silly idealTree ├── forever-agent@0.6.1
+214 silly idealTree ├── form-data@1.0.0-rc4
+214 silly idealTree ├── from@0.1.3
+214 silly idealTree ├── fstream@1.0.9
+214 silly idealTree ├── gauge@1.2.7
+214 silly idealTree ├── gaze@1.0.0
+214 silly idealTree ├── generate-function@2.0.0
+214 silly idealTree ├── generate-object-property@1.2.0
+214 silly idealTree ├── get-stdin@4.0.1
+214 silly idealTree ├─┬ getpass@0.1.6
+214 silly idealTree │ └── assert-plus@1.0.0
+214 silly idealTree ├── glob-base@0.3.0
+214 silly idealTree ├── glob-parent@2.0.0
+214 silly idealTree ├─┬ glob@7.0.3
+214 silly idealTree │ └── minimatch@3.0.0
+214 silly idealTree ├─┬ globule@0.2.0
+214 silly idealTree │ ├─┬ glob@3.2.11
+214 silly idealTree │ │ └── minimatch@0.3.0
+214 silly idealTree │ └── lru-cache@2.7.3
+214 silly idealTree ├─┬ got@3.3.1
+214 silly idealTree │ └── object-assign@3.0.0
+214 silly idealTree ├── graceful-fs@4.1.4
+214 silly idealTree ├── graceful-readlink@1.0.1
+214 silly idealTree ├── har-validator@2.0.6
+214 silly idealTree ├── has-ansi@2.0.0
+214 silly idealTree ├── has-unicode@2.0.0
+214 silly idealTree ├── hawk@3.1.3
+214 silly idealTree ├── hoek@2.16.3
+214 silly idealTree ├── hosted-git-info@2.1.5
+214 silly idealTree ├── http-signature@1.1.1
+214 silly idealTree ├── ignore-by-default@1.0.1
+214 silly idealTree ├── imurmurhash@0.1.4
+214 silly idealTree ├── in-publish@2.0.0
+214 silly idealTree ├── indent-string@2.1.0
+214 silly idealTree ├── infinity-agent@2.0.3
+214 silly idealTree ├── inflight@1.0.5
+214 silly idealTree ├── inherits@2.0.1
+214 silly idealTree ├── ini@1.3.4
+214 silly idealTree ├── invert-kv@1.0.0
+214 silly idealTree ├── is-arrayish@0.2.1
+214 silly idealTree ├── is-binary-path@1.0.1
+214 silly idealTree ├── is-buffer@1.1.3
+214 silly idealTree ├── is-builtin-module@1.0.0
+214 silly idealTree ├── is-dotfile@1.0.2
+214 silly idealTree ├── is-equal-shallow@0.1.3
+214 silly idealTree ├── is-extendable@0.1.1
+214 silly idealTree ├── is-extglob@1.0.0
+214 silly idealTree ├── is-finite@1.0.1
+214 silly idealTree ├── is-fullwidth-code-point@1.0.0
+214 silly idealTree ├── is-glob@2.0.1
+214 silly idealTree ├── is-my-json-valid@2.13.1
+214 silly idealTree ├── is-npm@1.0.0
+214 silly idealTree ├── is-number@2.1.0
+214 silly idealTree ├── is-posix-bracket@0.1.1
+214 silly idealTree ├── is-primitive@2.0.0
+214 silly idealTree ├── is-property@1.0.2
+214 silly idealTree ├── is-redirect@1.0.0
+214 silly idealTree ├── is-stream@1.1.0
+214 silly idealTree ├── is-typedarray@1.0.0
+214 silly idealTree ├── is-utf8@0.2.1
+214 silly idealTree ├── isarray@1.0.0
+214 silly idealTree ├── isexe@1.1.2
+214 silly idealTree ├── isobject@2.1.0
+214 silly idealTree ├── isstream@0.1.2
+214 silly idealTree ├── jodid25519@1.0.2
+214 silly idealTree ├── jsbn@0.1.0
+214 silly idealTree ├── json-schema@0.2.2
+214 silly idealTree ├── json-stringify-safe@5.0.1
+214 silly idealTree ├── jsonpointer@2.0.0
+214 silly idealTree ├── jsprim@1.2.2
+214 silly idealTree ├── kind-of@3.0.3
+214 silly idealTree ├── latest-version@1.0.1
+214 silly idealTree ├── lcid@1.0.0
+214 silly idealTree ├── load-json-file@1.1.0
+214 silly idealTree ├── lodash._baseassign@3.2.0
+214 silly idealTree ├── lodash._basecopy@3.0.1
+214 silly idealTree ├── lodash._baseslice@4.0.0
+214 silly idealTree ├── lodash._basetostring@4.12.0
+214 silly idealTree ├── lodash._bindcallback@3.0.1
+214 silly idealTree ├── lodash._createassigner@3.1.1
+214 silly idealTree ├── lodash._getnative@3.9.1
+214 silly idealTree ├── lodash._isiterateecall@3.0.9
+214 silly idealTree ├── lodash.assign@3.2.0
+214 silly idealTree ├── lodash.defaults@3.1.2
+214 silly idealTree ├── lodash.isarguments@3.0.8
+214 silly idealTree ├── lodash.isarray@3.0.4
+214 silly idealTree ├── lodash.keys@3.1.2
+214 silly idealTree ├── lodash.pad@4.4.0
+214 silly idealTree ├── lodash.padend@4.5.0
+214 silly idealTree ├── lodash.padstart@4.5.0
+214 silly idealTree ├── lodash.restparam@3.6.1
+214 silly idealTree ├── lodash.tostring@4.1.3
+214 silly idealTree ├── lodash@2.4.2
+214 silly idealTree ├── loud-rejection@1.3.0
+214 silly idealTree ├── lowercase-keys@1.0.0
+214 silly idealTree ├── lru-cache@4.0.1
+214 silly idealTree ├── map-obj@1.0.1
+214 silly idealTree ├── map-stream@0.1.0
+214 silly idealTree ├── meow@3.7.0
+214 silly idealTree ├── micromatch@2.3.8
+214 silly idealTree ├── mime-db@1.23.0
+214 silly idealTree ├── mime-types@2.1.11
+214 silly idealTree ├─┬ minimatch@0.2.14
+214 silly idealTree │ └── lru-cache@2.7.3
+214 silly idealTree ├── minimist@1.2.0
+214 silly idealTree ├─┬ mkdirp@0.5.1
+214 silly idealTree │ └── minimist@0.0.8
+214 silly idealTree ├── ms@0.7.1
+214 silly idealTree ├── nan@2.3.5
+214 silly idealTree ├── nested-error-stacks@1.0.2
+214 silly idealTree ├─┬ node-gyp@3.3.1
+214 silly idealTree │ ├─┬ glob@4.5.3
+214 silly idealTree │ │ └── minimatch@2.0.10
+214 silly idealTree │ ├── lru-cache@2.7.3
+214 silly idealTree │ └── minimatch@1.0.0
+214 silly idealTree ├── node-sass@3.7.0
+214 silly idealTree ├── node-uuid@1.4.7
+214 silly idealTree ├─┬ nodemon@1.9.2
+214 silly idealTree │ └── minimatch@3.0.0
+214 silly idealTree ├── nopt@3.0.6
+214 silly idealTree ├── normalize-package-data@2.3.5
+214 silly idealTree ├── normalize-path@2.0.1
+214 silly idealTree ├── npmlog@2.0.4
+214 silly idealTree ├── number-is-nan@1.0.0
+214 silly idealTree ├── oauth-sign@0.8.2
+214 silly idealTree ├── object-assign@4.1.0
+214 silly idealTree ├── object.omit@2.0.0
+214 silly idealTree ├── once@1.3.3
+214 silly idealTree ├── os-homedir@1.0.1
+214 silly idealTree ├── os-locale@1.4.0
+214 silly idealTree ├── os-tmpdir@1.0.1
+214 silly idealTree ├── osenv@0.1.3
+214 silly idealTree ├── package-json@1.2.0
+214 silly idealTree ├── parallel-loop@0.0.1
+214 silly idealTree ├── parse-glob@3.0.4
+214 silly idealTree ├── parse-json@2.2.0
+214 silly idealTree ├── path-array@1.0.1
+214 silly idealTree ├── path-exists@2.1.0
+214 silly idealTree ├── path-is-absolute@1.0.0
+214 silly idealTree ├── path-type@1.1.0
+214 silly idealTree ├── pause-stream@0.0.11
+214 silly idealTree ├── pify@2.3.0
+214 silly idealTree ├── pinkie-promise@2.0.1
+214 silly idealTree ├── pinkie@2.0.4
+214 silly idealTree ├── prepend-http@1.0.4
+214 silly idealTree ├── preserve@0.2.0
+214 silly idealTree ├── process-nextick-args@1.0.7
+214 silly idealTree ├── ps-tree@1.1.0
+214 silly idealTree ├── pseudomap@1.0.2
+214 silly idealTree ├── qs@6.1.0
+214 silly idealTree ├── randomatic@1.1.5
+214 silly idealTree ├── rc@1.1.6
+214 silly idealTree ├── read-all-stream@3.1.0
+214 silly idealTree ├── read-pkg-up@1.0.1
+214 silly idealTree ├── read-pkg@1.1.0
+214 silly idealTree ├── readable-stream@2.1.4
+214 silly idealTree ├─┬ readdirp@2.0.0
+214 silly idealTree │ └── minimatch@2.0.10
+214 silly idealTree ├── redent@1.0.0
+214 silly idealTree ├── regex-cache@0.4.3
+214 silly idealTree ├── registry-url@3.1.0
+214 silly idealTree ├── repeat-element@1.1.2
+214 silly idealTree ├── repeat-string@1.5.4
+214 silly idealTree ├── repeating@2.0.1
+214 silly idealTree ├── request@2.72.0
+214 silly idealTree ├── rimraf@2.5.2
+214 silly idealTree ├─┬ sass-graph@2.1.1
+214 silly idealTree │ ├── glob@6.0.4
+214 silly idealTree │ ├── lodash@4.13.1
+214 silly idealTree │ └── minimatch@3.0.0
+214 silly idealTree ├── semver-diff@2.1.0
+214 silly idealTree ├── semver@5.1.0
+214 silly idealTree ├── serial-loop@0.0.1
+214 silly idealTree ├── sigmund@1.0.1
+214 silly idealTree ├── signal-exit@2.1.2
+214 silly idealTree ├── slide@1.1.6
+214 silly idealTree ├── sntp@1.0.9
+214 silly idealTree ├── spdx-correct@1.0.2
+214 silly idealTree ├── spdx-exceptions@1.0.4
+214 silly idealTree ├── spdx-expression-parse@1.0.2
+214 silly idealTree ├── spdx-license-ids@1.2.1
+214 silly idealTree ├── split@0.3.3
+214 silly idealTree ├─┬ sshpk@1.8.3
+214 silly idealTree │ └── assert-plus@1.0.0
+214 silly idealTree ├── stream-combiner@0.0.4
+214 silly idealTree ├── string_decoder@0.10.31
+214 silly idealTree ├── string-length@1.0.1
+214 silly idealTree ├── string-width@1.0.1
+214 silly idealTree ├── stringstream@0.0.5
+214 silly idealTree ├── strip-ansi@3.0.1
+214 silly idealTree ├── strip-bom@2.0.0
+214 silly idealTree ├── strip-indent@1.0.1
+214 silly idealTree ├── strip-json-comments@1.0.4
+214 silly idealTree ├── supports-color@2.0.0
+214 silly idealTree ├── tar@2.2.1
+214 silly idealTree ├── through@2.3.8
+214 silly idealTree ├── timed-out@2.0.0
+214 silly idealTree ├─┬ touch@1.0.0
+214 silly idealTree │ └── nopt@1.0.10
+214 silly idealTree ├── tough-cookie@2.2.2
+214 silly idealTree ├── trim-newlines@1.0.0
+214 silly idealTree ├── tunnel-agent@0.4.3
+214 silly idealTree ├── tweetnacl@0.13.3
+214 silly idealTree ├── undefsafe@0.0.3
+214 silly idealTree ├─┬ update-notifier@0.5.0
+214 silly idealTree │ └── repeating@1.1.3
+214 silly idealTree ├── util-deprecate@1.0.2
+214 silly idealTree ├── uuid@2.0.2
+214 silly idealTree ├── validate-npm-package-license@3.0.1
+214 silly idealTree ├── verror@1.3.6
+214 silly idealTree ├── which@1.2.9
+214 silly idealTree ├── window-size@0.1.4
+214 silly idealTree ├── wrap-ansi@2.0.0
+214 silly idealTree ├── wrappy@1.0.2
+214 silly idealTree ├── write-file-atomic@1.1.4
+214 silly idealTree ├── xdg-basedir@2.0.0
+214 silly idealTree ├── xtend@4.0.1
+214 silly idealTree ├── y18n@3.2.1
+214 silly idealTree ├── yallist@2.0.0
+214 silly idealTree └── yargs@3.32.0
+215 silly generateActionsToTake Starting
+216 silly install generateActionsToTake
+217 silly generateActionsToTake Finishing
+218 silly diffTrees action count 4
+219 silly diffTrees add parallel-loop@0.0.1
+220 silly diffTrees add serial-loop@0.0.1
+221 silly diffTrees add concat@1.0.0
+222 silly diffTrees add concat-cli@4.0.0
+223 silly decomposeActions action count 32
+224 silly decomposeActions fetch parallel-loop@0.0.1
+225 silly decomposeActions extract parallel-loop@0.0.1
+226 silly decomposeActions test parallel-loop@0.0.1
+227 silly decomposeActions preinstall parallel-loop@0.0.1
+228 silly decomposeActions build parallel-loop@0.0.1
+229 silly decomposeActions install parallel-loop@0.0.1
+230 silly decomposeActions postinstall parallel-loop@0.0.1
+231 silly decomposeActions finalize parallel-loop@0.0.1
+232 silly decomposeActions fetch serial-loop@0.0.1
+233 silly decomposeActions extract serial-loop@0.0.1
+234 silly decomposeActions test serial-loop@0.0.1
+235 silly decomposeActions preinstall serial-loop@0.0.1
+236 silly decomposeActions build serial-loop@0.0.1
+237 silly decomposeActions install serial-loop@0.0.1
+238 silly decomposeActions postinstall serial-loop@0.0.1
+239 silly decomposeActions finalize serial-loop@0.0.1
+240 silly decomposeActions fetch concat@1.0.0
+241 silly decomposeActions extract concat@1.0.0
+242 silly decomposeActions test concat@1.0.0
+243 silly decomposeActions preinstall concat@1.0.0
+244 silly decomposeActions build concat@1.0.0
+245 silly decomposeActions install concat@1.0.0
+246 silly decomposeActions postinstall concat@1.0.0
+247 silly decomposeActions finalize concat@1.0.0
+248 silly decomposeActions fetch concat-cli@4.0.0
+249 silly decomposeActions extract concat-cli@4.0.0
+250 silly decomposeActions test concat-cli@4.0.0
+251 silly decomposeActions preinstall concat-cli@4.0.0
+252 silly decomposeActions build concat-cli@4.0.0
+253 silly decomposeActions install concat-cli@4.0.0
+254 silly decomposeActions postinstall concat-cli@4.0.0
+255 silly decomposeActions finalize concat-cli@4.0.0
+256 silly executeActions Starting
+257 silly install executeActions
+258 silly doSerial global-install 0
+259 silly doParallel fetch 4
+260 verbose lock using /home/jeroen/.npm/_locks/staging-2985eb4f13aa4494.lock for /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging
+261 silly doParallel extract 4
+262 silly extract parallel-loop@0.0.1
+263 silly extract serial-loop@0.0.1
+264 silly extract concat@1.0.0
+265 silly extract concat-cli@4.0.0
+266 verbose unbuild node_modules/.staging/parallel-loop-25797a7b
+267 verbose unbuild node_modules/.staging/serial-loop-b5ec4524
+268 verbose unbuild node_modules/.staging/concat-32f23b3c
+269 verbose unbuild node_modules/.staging/concat-cli-339d855b
+270 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b is being purged from base /home/jeroen/Documents/Projects/Jeroen3
+271 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b
+272 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524 is being purged from base /home/jeroen/Documents/Projects/Jeroen3
+273 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524
+274 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c is being purged from base /home/jeroen/Documents/Projects/Jeroen3
+275 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c
+276 verbose tar unpack /home/jeroen/.npm/parallel-loop/0.0.1/package.tgz
+277 verbose tar unpacking to /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b
+278 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b is being purged
+279 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b
+280 verbose tar unpack /home/jeroen/.npm/serial-loop/0.0.1/package.tgz
+281 verbose tar unpacking to /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524
+282 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524 is being purged
+283 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524
+284 verbose tar unpack /home/jeroen/.npm/concat/1.0.0/package.tgz
+285 verbose tar unpacking to /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c
+286 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c is being purged
+287 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c
+288 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b is being purged from base /home/jeroen/Documents/Projects/Jeroen3
+289 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b
+290 silly gunzTarPerm modes [ '775', '664' ]
+291 silly gunzTarPerm modes [ '775', '664' ]
+292 silly gunzTarPerm modes [ '775', '664' ]
+293 verbose tar unpack /home/jeroen/.npm/concat-cli/4.0.0/package.tgz
+294 verbose tar unpacking to /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b
+295 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b is being purged
+296 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b
+297 silly gunzTarPerm modes [ '775', '664' ]
+298 silly gunzTarPerm extractEntry package.json
+299 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+300 silly gunzTarPerm extractEntry package.json
+301 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+302 silly gunzTarPerm extractEntry package.json
+303 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+304 silly gunzTarPerm extractEntry package.json
+305 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+306 silly gunzTarPerm extractEntry .npmignore
+307 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+308 silly gunzTarPerm extractEntry README.md
+309 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+310 silly gunzTarPerm extractEntry .npmignore
+311 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+312 silly gunzTarPerm extractEntry README.md
+313 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+314 silly gunzTarPerm extractEntry .npmignore
+315 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+316 silly gunzTarPerm extractEntry README.md
+317 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+318 silly gunzTarPerm extractEntry .npmignore
+319 silly gunzTarPerm modified mode [ '.npmignore', 420, 436 ]
+320 silly gunzTarPerm extractEntry README.md
+321 silly gunzTarPerm modified mode [ 'README.md', 420, 436 ]
+322 silly gunzTarPerm extractEntry index.js
+323 silly gunzTarPerm modified mode [ 'index.js', 420, 436 ]
+324 silly gunzTarPerm extractEntry index.js
+325 silly gunzTarPerm modified mode [ 'index.js', 420, 436 ]
+326 silly gunzTarPerm extractEntry index.js
+327 silly gunzTarPerm modified mode [ 'index.js', 420, 436 ]
+328 silly gunzTarPerm extractEntry index.js
+329 silly gunzTarPerm modified mode [ 'index.js', 493, 509 ]
+330 silly gunzTarPerm extractEntry concatFunctions/index.js
+331 silly gunzTarPerm modified mode [ 'concatFunctions/index.js', 420, 436 ]
+332 silly gunzTarPerm extractEntry test/concat.unit.test.js
+333 silly gunzTarPerm modified mode [ 'test/concat.unit.test.js', 420, 436 ]
+334 silly gunzTarPerm extractEntry test/index.integration.test.js
+335 silly gunzTarPerm modified mode [ 'test/index.integration.test.js', 420, 436 ]
+336 silly gunzTarPerm extractEntry test/dest/bundle.css
+337 silly gunzTarPerm modified mode [ 'test/dest/bundle.css', 420, 436 ]
+338 silly gunzTarPerm extractEntry test/files/a.css
+339 silly gunzTarPerm modified mode [ 'test/files/a.css', 420, 436 ]
+340 silly gunzTarPerm extractEntry test/files/b.css
+341 silly gunzTarPerm modified mode [ 'test/files/b.css', 420, 436 ]
+342 silly gunzTarPerm extractEntry test/files/c.css
+343 silly gunzTarPerm modified mode [ 'test/files/c.css', 420, 436 ]
+344 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524/node_modules is being purged
+345 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524/node_modules
+346 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b/node_modules is being purged
+347 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b/node_modules
+348 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c/node_modules is being purged
+349 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c/node_modules
+350 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b/node_modules is being purged
+351 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b/node_modules
+352 silly doParallel preinstall 4
+353 silly preinstall parallel-loop@0.0.1 /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/parallel-loop-25797a7b
+354 info lifecycle parallel-loop@0.0.1~preinstall: parallel-loop@0.0.1
+355 silly preinstall serial-loop@0.0.1 /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/serial-loop-b5ec4524
+356 info lifecycle serial-loop@0.0.1~preinstall: serial-loop@0.0.1
+357 silly preinstall concat@1.0.0 /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-32f23b3c
+358 info lifecycle concat@1.0.0~preinstall: concat@1.0.0
+359 silly preinstall concat-cli@4.0.0 /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging/concat-cli-339d855b
+360 info lifecycle concat-cli@4.0.0~preinstall: concat-cli@4.0.0
+361 silly lifecycle parallel-loop@0.0.1~preinstall: no script for preinstall, continuing
+362 silly lifecycle serial-loop@0.0.1~preinstall: no script for preinstall, continuing
+363 silly lifecycle concat@1.0.0~preinstall: no script for preinstall, continuing
+364 silly lifecycle concat-cli@4.0.0~preinstall: no script for preinstall, continuing
+365 silly doReverseSerial remove 0
+366 silly doSerial move 0
+367 silly doSerial finalize 4
+368 silly finalize /home/jeroen/Documents/Projects/Jeroen3/node_modules/parallel-loop
+369 silly finalize /home/jeroen/Documents/Projects/Jeroen3/node_modules/serial-loop
+370 silly finalize /home/jeroen/Documents/Projects/Jeroen3/node_modules/concat
+371 silly finalize /home/jeroen/Documents/Projects/Jeroen3/node_modules/concat-cli
+372 silly doSerial build 4
+373 silly build parallel-loop@0.0.1
+374 info linkStuff parallel-loop@0.0.1
+375 silly linkStuff parallel-loop@0.0.1 has /home/jeroen/Documents/Projects/Jeroen3/node_modules as its parent node_modules
+376 verbose linkBins parallel-loop@0.0.1
+377 verbose linkMans parallel-loop@0.0.1
+378 silly build serial-loop@0.0.1
+379 info linkStuff serial-loop@0.0.1
+380 silly linkStuff serial-loop@0.0.1 has /home/jeroen/Documents/Projects/Jeroen3/node_modules as its parent node_modules
+381 verbose linkBins serial-loop@0.0.1
+382 verbose linkMans serial-loop@0.0.1
+383 silly build concat@1.0.0
+384 info linkStuff concat@1.0.0
+385 silly linkStuff concat@1.0.0 has /home/jeroen/Documents/Projects/Jeroen3/node_modules as its parent node_modules
+386 verbose linkBins concat@1.0.0
+387 verbose linkMans concat@1.0.0
+388 silly build concat-cli@4.0.0
+389 info linkStuff concat-cli@4.0.0
+390 silly linkStuff concat-cli@4.0.0 has /home/jeroen/Documents/Projects/Jeroen3/node_modules as its parent node_modules
+391 verbose linkBins concat-cli@4.0.0
+392 verbose link bins [ { 'concat-cli': './index.js' },
+392 verbose link bins   '/home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin',
+392 verbose link bins   false ]
+393 verbose linkMans concat-cli@4.0.0
+394 silly gentlyRm /home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli is being purged
+395 verbose gentlyRm don't care about contents; nuking /home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli
+396 verbose unlock done using /home/jeroen/.npm/_locks/staging-2985eb4f13aa4494.lock for /home/jeroen/Documents/Projects/Jeroen3/node_modules/.staging
+397 silly rollbackFailedOptional Starting
+398 silly rollbackFailedOptional Finishing
+399 silly runTopLevelLifecycles Starting
+400 silly runTopLevelLifecycles Finishing
+401 silly install printInstalled
+402 warn optional Skipping failed optional dependency /chokidar/fsevents:
+403 warn notsup Not compatible with your operating system or architecture: fsevents@1.0.12
+404 verbose stack Error: EACCES: permission denied, symlink '../concat-cli/index.js' -> '/home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli'
+404 verbose stack     at Error (native)
+405 verbose cwd /home/jeroen/Documents/Projects/Jeroen3/build/css
+406 error Linux 4.4.0-22-generic
+407 error argv "/usr/bin/nodejs" "/usr/local/bin/npm" "install" "-D" "concat-cli"
+408 error node v4.2.6
+409 error npm  v3.5.3
+410 error path ../concat-cli/index.js
+411 error code EACCES
+412 error errno -13
+413 error syscall symlink
+414 error Error: EACCES: permission denied, symlink '../concat-cli/index.js' -> '/home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli'
+414 error     at Error (native)
+414 error  { [Error: EACCES: permission denied, symlink '../concat-cli/index.js' -> '/home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli']
+414 error   errno: -13,
+414 error   code: 'EACCES',
+414 error   syscall: 'symlink',
+414 error   path: '../concat-cli/index.js',
+414 error   dest: '/home/jeroen/Documents/Projects/Jeroen3/node_modules/.bin/concat-cli',
+414 error   parent: 'jeroen' }
+415 error Please try running this command again as root/Administrator.
+416 verbose exit [ -13, true ]

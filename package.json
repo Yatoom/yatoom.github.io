@@ -1,0 +1,25 @@
+{
+  "name": "jeroen",
+  "version": "1.0.0",
+  "description": "personal website",
+  "main": "index.js",
+  "scripts": {
+    "builder": "node-sass --include-path sass sass/main.scss build/css/main.css && cat node_modules/scrollreveal/dist/scrollreveal.min.js js/* > build/js/main.js",
+    "watcher": "nodemon -e scss -x \"npm run builder\"",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/yatoom/yatoom.github.io"
+  },
+  "keywords": [
+    "personal",
+    "website"
+  ],
+  "author": "Jeroen van Hoof",
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^3.7.0",
+    "nodemon": "^1.9.2"
+  }
+}

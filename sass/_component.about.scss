@@ -1,0 +1,42 @@
+.logo {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 20px;
+  height: 150px;
+}
+
+.title {
+  text-align: center;
+}
+
+.content {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px;
+  max-width: 800px;
+  overflow: auto;
+}
+
+.photo {
+  float: left;
+  height: 150px;
+  margin: 0 20px 0 0;
+}
+
+.icons {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.icon {
+  height: 30px;
+  width: 30px;
+  margin: 0 5px;
+  transition-duration:.8s;
+}
+
+.icon:hover {
+  transform: rotateZ(360deg);
+}
