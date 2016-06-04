@@ -21,5 +21,8 @@
   "devDependencies": {
     "node-sass": "^3.7.0",
     "nodemon": "^1.9.2"
+  },
+  "dependencies": {
+    "scrollreveal": "^3.1.4"
   }
 }

@@ -48,13 +48,16 @@
 .timeline__box {
 	position: relative;
 	background: white;
-  padding: 20px;
   margin-bottom: 20px;
   flex: 0 0 calc(100% - 20px);
   
   @media ($break-medium) {
     flex: 0 0 calc(50% - 20px);
   }
+}
+
+.timeline__description {
+  padding: 20px;
 }
 
 // arrow
@@ -89,4 +92,20 @@
       border-left-color: white;
     }
   }
+}
+
+
+/* =============================================================================
+  PHOTO FILTERS
+============================================================================= */
+.filter {
+  position: relative;
+  -webkit-filter: sepia(1) hue-rotate(180deg) invert(0.1);
+  filter: sepia(1) hue-rotate(180deg) invert(0.1);
+  transition-duration: 500ms;
+}
+
+.filter:hover {
+  -webkit-filter: none;
+  filter: none;
 }
