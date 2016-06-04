@@ -433,7 +433,10 @@ img {
   position: relative;
   -webkit-filter: sepia(1) hue-rotate(180deg) invert(0.1);
   filter: sepia(1) hue-rotate(180deg) invert(0.1);
-  transition-duration: 500ms; }
+  transition-duration: 500ms;
+  width: 100%; }
+  .filter img {
+    width: 100%; }
 
 .filter:hover {
   -webkit-filter: none;
