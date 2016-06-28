@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- <section data-background-video="https://media.giphy.com/media/h2yKBjJZZ47xm/giphy.mp4" data-background-video-loop="true"> -->
+				<section data-background-video="https://fat.gfycat.com/GlumRecklessCats.webm" data-background-video-loop="true">
+					<h1>Chess Edge</h1>
+					Hub Coumans, Marc Craenen &amp; Jeroen van Hoof
+				</section>
+				<section>
+					<h2>Links</h2>
+					<a href="http://www.chesscorner.com/tutorial/learn.htm" data-preview-link>Chess Corner</a> -
+					<a href="http://gale.win.tue.nl:10080/gale/concept/gale://gale.tue.nl/course/grapple/GRAPPLE">Old interface</a> -
+					<a href="http://gale.win.tue.nl:10080/gale/concept/http://wwwis.win.tue.nl/~as3_2016/build/Chess" data-preview-link>Chess Edge</a>
+				</section>
+				<section>
+					<h2>Improvements of interface</h2>
+					<ul>
+						<li>We created a minimalistic and modern interface.</li>
+						<li>We placed arrows next to items so the user knows that there is something there and can explore it.</li>
+						<li>We placed subtopics in a box to the right of the page.</li>
+						<li>We added a navigation footer with arrows to the left and right and the title of the subject.</li>
+						<li>We used headroom.js so that the header and the footer get out of the way when you don't need them.</li>
+						<li>We made it all responsive.</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Making the system adaptive</h2>
+					<ul>
+						<li>We added quizes to test the user's knowledge.</li>
+						<li>Fragments of a topic that relate to another topic are only shown when both topics have been studied. For example, castling appears only when both the rook and the king have been studied.</li>
+						<li>We recommend topics based on previous knowledge.</li>
+					</ul>
+				</section>
+				<section>
+					<h2>End summary</h2>
+					<ul>
+						<li>Responsive, minimalistic and modern interface</li>
+						<li>Dropdown arrows</li>
+						<li>Subtopics in a box to the right</li>
+						<li>Navigation footer with arrows plus subject title</li>
+						<li>Header and the footer get out of the way</li>
+						<li>Quizes test the user's knowledge</li>
+						<li>Fragments with relation to other topic only shown when both studied</li>
+						<li>Recommend topics based on previous knowledge</li>
+					</ul>
+				</section>
+				<!-- <section data-background-video="https://zippy.gfycat.com/HarmfulVainIndigobunting.webm" data-background-video-loop="true">
+				</section> -->
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
