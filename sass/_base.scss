@@ -19,16 +19,17 @@ body {
 	margin: 0;
 	font-family: "Montserrat", sans-serif;
 	font-size: 16px;
+	font-weight: 400;
 	line-height: 1.5;
 	height: 100%;
-  background: $calllock-blue;
-  color: $text-color;
+	background: $calllock-blue;
+	color: $text-color;
 }
 
 a {
 	cursor: pointer;
 	color: inherit;
-  text-decoration: none;
+  	text-decoration: none;
 }
 
 // h1 {
