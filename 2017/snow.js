@@ -16,6 +16,7 @@ var i = 0;
 function create() {
 
     game.add.image(0, 0, 'sky');
+    game.stage.backgroundColor = "#e6e6e6";
 
     back_emitter = game.add.emitter(game.world.centerX, -32, 600);
     back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
