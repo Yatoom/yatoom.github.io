@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="51.058205mm"
-   height="20.463116mm"
-   viewBox="0 0 51.058205 20.463116"
+   width="155.18062"
+   height="39.545631"
+   viewBox="0 0 41.058205 10.463115"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r"
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="86.563532"
-     inkscape:cy="48.035931"
+     inkscape:cx="67.665894"
+     inkscape:cy="29.138287"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,15 +36,16 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:snap-bbox-midpoints="true"
-     fit-margin-top="5"
-     fit-margin-left="5"
-     fit-margin-right="5"
-     fit-margin-bottom="5"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
      inkscape:window-width="1600"
      inkscape:window-height="819"
      inkscape:window-x="0"
      inkscape:window-y="25"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     units="px" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -61,7 +62,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-35.270611,-84.317499)">
+     transform="translate(-40.270611,-89.317499)">
     <path
        inkscape:connector-curvature="0"
        id="path4614"
