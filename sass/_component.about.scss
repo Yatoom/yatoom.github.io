@@ -6,6 +6,97 @@
   height: 150px;
 }
 
+.me {
+  border-radius: 100%;
+  display: block;
+  height: 300px;
+  margin: 50px auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+
+@keyframes spanier {
+    0% {
+        left: -33.33333%;
+    }
+
+    100% {
+        left: 133.33333%;
+    }
+}
+
+.hero__background {
+  top: -55%;
+  z-index: -1;
+  //background: linear-gradient(to bottom, #26A69A, #4FC3F7);
+  //background: $hero;
+  background: linear-gradient(45deg, $hero 25%, #9b3);
+  width: 100%;
+  height: 100%;
+  transform: skewY(-12deg);
+  position: absolute;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+
+  span {
+    height: 80px;
+    display: block;
+
+    left: -33.33333%;
+    position: absolute;
+
+    animation-name: spanier;
+    animation-duration: 20s;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  span:nth-child(1) {
+    width: 33.33333%;
+    bottom: 320px;
+    background: rgba(255, 255, 255, 0.05);
+
+    animation-duration: 10s;
+  }
+
+  span:nth-child(2) {
+    width: 20%;
+    bottom: 240px;
+    background: rgba(255, 255, 255, 0.30);
+
+    animation-duration: 7s;
+  }
+
+  span:nth-child(3) {
+    width: 33.33333%;
+    bottom: 160px;
+    background: rgba(255, 255, 255, 0.15);
+
+    animation-duration: 15s;
+  }
+
+  span:nth-child(4) {
+    width: 10%;
+    bottom: 80px;
+    background: rgba(255, 255, 255, 0.10);
+
+    animation-duration: 5s;
+  }
+
+  span:nth-child(5) {
+    width: 33.33333%;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+
+    animation-duration: 20s;
+  }
+}
+
 .title {
   text-align: center;
 }

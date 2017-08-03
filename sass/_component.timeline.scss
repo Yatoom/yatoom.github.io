@@ -54,6 +54,10 @@
   @media ($break-medium) {
     flex: 0 0 calc(50% - 20px);
   }
+
+  i {
+    color: gray;
+  }
 }
 
 .timeline__description {
@@ -100,13 +104,11 @@
 ============================================================================= */
 
 .figure-container {
-  background-color: $calllock-blue;
+  background-color: $hero;
 }
 
 .filter {
   position: relative;
-  //-webkit-filter: sepia(1) hue-rotate(180deg) invert(0.1);
-  //filter: sepia(1) hue-rotate(180deg) invert(0.1);
   -webkit-filter: grayscale(1) opacity(0.75);
   filter: grayscale(1) opacity(0.75);
   transition-duration: 500ms;

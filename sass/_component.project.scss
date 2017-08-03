@@ -6,6 +6,11 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  color: white;
+
+  h2 {
+    display: flex;
+  }
 }
 
 .project__screenshot {
@@ -19,7 +24,7 @@
 
 .project__description {
   padding: 40px;
-  background-color: rgba(0, 0, 0, 0.1);
+  //background-color: rgba(0, 0, 0, 0.1);
   flex: 1 1 100%;
   
   @media ($break-medium) {
@@ -30,46 +35,72 @@
 /* =============================================================================
   CUSTOMIZED BLOCK
 ============================================================================= */
+.arrow::before {
+  content: "▲";
+  color: $hero;
+
+  @media ($break-medium) {
+    content: "◀";
+    padding-right: 1rem;
+  }
+}
+
 .project:nth-child(2n+1) {
   flex-direction: row-reverse;
+
+  @media ($break-medium) {
+    text-align: right;
+
+    h2 {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .arrow::before {
+    @media ($break-medium) {
+      content: "▶";
+      padding-left: 1rem;
+      padding-right: 0rem;
+    }
+  }
 }
 
-.project--calllock {
-  background-color: $calllock-blue;
-  color: white;
-}
-
-.project--skin-perfection {
-  background-color: $skinperfection-green;
-  color: white;
-}
-
-.project--elysiumcss {
-  background-color: $elysiumcss-black;
-  color: white;
-}
-
-.project--balmoral {
-  background-color: $balmoral-gold;
-  color: white;
-}
-
-.project--cs-kochsysteme {
-  background-color: $cs-kochsysteme-black;
-  color: white;
-}
-
-.project--travelmatch {
-  background-color: $travelmatch-red;
-  color: white;
-}
-
-.project--jumper {
-  background-color: $jumper-blue;
-  color: white;
-}
-
-.project--cycle {
-  background-color: $cycle-sand;
-  color: white;
-}
+//.project--calllock {
+//  background-color: $calllock-blue;
+//  color: white;
+//}
+//
+//.project--skin-perfection {
+//  background-color: $skinperfection-green;
+//  color: white;
+//}
+//
+//.project--elysiumcss {
+//  background-color: $elysiumcss-black;
+//  color: white;
+//}
+//
+//.project--balmoral {
+//  background-color: $balmoral-gold;
+//  color: white;
+//}
+//
+//.project--cs-kochsysteme {
+//  background-color: $cs-kochsysteme-black;
+//  color: white;
+//}
+//
+//.project--travelmatch {
+//  background-color: $travelmatch-red;
+//  color: white;
+//}
+//
+//.project--jumper {
+//  background-color: $jumper-blue;
+//  color: white;
+//}
+//
+//.project--cycle {
+//  background-color: $cycle-sand;
+//  color: white;
+//}

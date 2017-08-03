@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* =============================================================================
   GLOBAL
 ============================================================================= */
@@ -30,7 +31,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   height: 100%;
-  background: #00728f;
+  background: #2B3F4C;
   color: white; }
 
 a {
@@ -93,6 +94,68 @@ img {
   padding: 20px;
   height: 150px; }
 
+.me {
+  border-radius: 100%;
+  display: block;
+  height: 300px;
+  margin: 50px auto; }
+
+.hero {
+  position: relative;
+  overflow: hidden; }
+
+@keyframes spanier {
+  0% {
+    left: -33.33333%; }
+  100% {
+    left: 133.33333%; } }
+
+.hero__background {
+  top: -55%;
+  z-index: -1;
+  background: linear-gradient(45deg, #73a7cc 25%, #9b3);
+  width: 100%;
+  height: 100%;
+  transform: skewY(-12deg);
+  position: absolute;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); }
+  .hero__background span {
+    height: 80px;
+    display: block;
+    left: -33.33333%;
+    position: absolute;
+    animation-name: spanier;
+    animation-duration: 20s;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate; }
+  .hero__background span:nth-child(1) {
+    width: 33.33333%;
+    bottom: 320px;
+    background: rgba(255, 255, 255, 0.05);
+    animation-duration: 10s; }
+  .hero__background span:nth-child(2) {
+    width: 20%;
+    bottom: 240px;
+    background: rgba(255, 255, 255, 0.3);
+    animation-duration: 7s; }
+  .hero__background span:nth-child(3) {
+    width: 33.33333%;
+    bottom: 160px;
+    background: rgba(255, 255, 255, 0.15);
+    animation-duration: 15s; }
+  .hero__background span:nth-child(4) {
+    width: 10%;
+    bottom: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    animation-duration: 5s; }
+  .hero__background span:nth-child(5) {
+    width: 33.33333%;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    animation-duration: 20s; }
+
 .title {
   text-align: center; }
 
@@ -128,7 +191,10 @@ img {
 .project {
   padding: 0;
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  color: white; }
+  .project h2 {
+    display: flex; }
 
 .project__screenshot {
   padding: 40px;
@@ -139,7 +205,6 @@ img {
 
 .project__description {
   padding: 40px;
-  background-color: rgba(0, 0, 0, 0.1);
   flex: 1 1 100%; }
   @media (min-width: 650px) {
     .project__description {
@@ -148,40 +213,26 @@ img {
 /* =============================================================================
   CUSTOMIZED BLOCK
 ============================================================================= */
+.arrow::before {
+  content: "▲";
+  color: #73a7cc; }
+  @media (min-width: 650px) {
+    .arrow::before {
+      content: "◀";
+      padding-right: 1rem; } }
+
 .project:nth-child(2n+1) {
   flex-direction: row-reverse; }
-
-.project--calllock {
-  background-color: #00728f;
-  color: white; }
-
-.project--skin-perfection {
-  background-color: #47ae74;
-  color: white; }
-
-.project--elysiumcss {
-  background-color: #424242;
-  color: white; }
-
-.project--balmoral {
-  background-color: #d3c75a;
-  color: white; }
-
-.project--cs-kochsysteme {
-  background-color: #49504d;
-  color: white; }
-
-.project--travelmatch {
-  background-color: #c83737;
-  color: white; }
-
-.project--jumper {
-  background-color: #006680;
-  color: white; }
-
-.project--cycle {
-  background-color: #ccb866;
-  color: white; }
+  @media (min-width: 650px) {
+    .project:nth-child(2n+1) {
+      text-align: right; }
+      .project:nth-child(2n+1) h2 {
+        flex-direction: row-reverse; } }
+  @media (min-width: 650px) {
+    .project:nth-child(2n+1) .arrow::before {
+      content: "▶";
+      padding-left: 1rem;
+      padding-right: 0rem; } }
 
 /* =============================================================================
   COMMON STUFF FOR CSS DEVICES
@@ -396,6 +447,8 @@ img {
   @media (min-width: 650px) {
     .timeline__box {
       flex: 0 0 calc(50% - 20px); } }
+  .timeline__box i {
+    color: gray; }
 
 .timeline__description {
   padding: 20px; }
@@ -431,7 +484,7 @@ img {
   PHOTO FILTERS
 ============================================================================= */
 .figure-container {
-  background-color: #00728f; }
+  background-color: #73a7cc; }
 
 .filter {
   position: relative;
