@@ -215,11 +215,11 @@ img {
 ============================================================================= */
 .arrow::before {
   content: "▲";
-  color: #73a7cc; }
+  color: #73a7cc;
+  padding-right: 1rem; }
   @media (min-width: 650px) {
     .arrow::before {
-      content: "◀";
-      padding-right: 1rem; } }
+      content: "◀"; } }
 
 .project:nth-child(2n+1) {
   flex-direction: row-reverse; }

@@ -38,10 +38,10 @@
 .arrow::before {
   content: "▲";
   color: $hero;
+  padding-right: 1rem;
 
   @media ($break-medium) {
     content: "◀";
-    padding-right: 1rem;
   }
 }
 
