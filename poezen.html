@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stamboom</title>
+    <style type="text/css">
+       li { list-style: none;  margin: 0; }
+       p { margin: 0; }
+
+       span.l { color: red; font-weight: bold; }
+
+       a.mapnode:link {text-decoration: none; color: black; }
+       a.mapnode:visited {text-decoration: none; color: black; }
+       a.mapnode:active {text-decoration: none; color: black; }
+       a.mapnode:hover {text-decoration: none; color: black; background: #eeeee0; }
+
+        .clt, .clt ul, .clt li {
+            position: relative;
+        }
+
+        .card {
+            display: inline-block;
+            background: black;
+            color: white;
+            margin-top: 9px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .card__name {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .card__image {
+            padding: 0;
+            vertical-align: bottom;
+            margin: 0 0 10px;
+        }
+
+        .clt ul {
+           list-style: none;
+           padding-left: 32px;
+           margin-top: 0;
+        }
+
+        .clt li::before, .clt li::after {
+           content: "";
+           position: absolute;
+           left: -12px;
+        }
+
+        .clt li::before {
+           border-top: 1px solid #000;
+           top: 9px;
+           width: 8px;
+           height: 0;
+        }
+
+        .clt li::after {
+           border-left: 1px solid #000;
+           height: 100%;
+           width: 0px;
+           top: 2px;
+        }
+
+        .clt ul > li:last-child::after {
+           height: 8px;
+        }
+
+        .clt img {
+            max-width: 200px;
+        }
+
+        ul ul {
+            display: none;
+        }
+
+        ul .visible {
+            display: block;
+        }
+
+    </style>
+    <!-- ^ Position is not set to relative / absolute here because of Mozilla -->
+</head>
+<body>
+    <div class="clt">
+        Stamboom
+        <ul>
+            <li>Soesje</li>
+            <li>Ginny
+                <ul>
+                    <li>Ruby</li>
+                </ul>
+            </li>
+            <li>Safira <a href="#" onclick="show(this)">[+]</a>
+                <ul>
+                    <li>Roosje</li>
+                    <li>Midnight</li>
+                    <li>Sparkle</li>
+                    <li>Lieffie</li>
+                    <li>Lily <a href="#" onclick="show(this)">[+]</a>
+                        <ul>
+                            <li>Speedy <a href="#" onclick="show(this)">[+]</a>
+                                <ul>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Flip</span>
+                                            <img class="card__image" src="katten/flip.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Fjoepie</span>
+                                            <img class="card__image" src="katten/fjoepie.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Spilly</span>
+                                            <img class="card__image" src="katten/spilly.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Noodle</span>
+                                            <img class="card__image" src="katten/noodle.jpg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Nibbit</span>
+                                            <img class="card__image" src="katten/nibbit.jpeg">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Piraatje <a href="#" onclick="show(this)">[+]</a>
+                                <ul>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Streepje</span>
+                                            <img class="card__image" src="katten/streepje.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Ziva</span>
+                                            <img class="card__image" src="katten/ziva.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Zara</span>
+                                            <img class="card__image" src="katten/zara.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Sunny</span>
+                                            <img class="card__image" src="katten/sunny.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Sneeuwvlokje</span>
+                                            <img class="card__image" src="katten/sneeuwvlokje.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Oreo</span>
+                                            <img class="card__image" src="katten/oreo.jpeg">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Bloesempje <a href="#" onclick="show(this)">[+]</a>
+                                <ul>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Bambi</span>
+                                            <img class="card__image" src="katten/bambi.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Shadow</span>
+                                            <img class="card__image" src="katten/shadow.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Charlie</span>
+                                            <img class="card__image" src="katten/charlie.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Noortje</span>
+                                            <img class="card__image" src="katten/noortje.jpeg">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="card">
+                                            <span class="card__name">Snowy</span>
+                                            <img class="card__image" src="katten/snowy.jpeg">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="card">
+                                    <span class="card__name">Schatje</span>
+                                    <img class="card__image" src="katten/schatje.jpeg">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="card">
+                                    <span class="card__name">Lillifee</span>
+                                    <img class="card__image" src="katten/lillifee.jpeg">
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="card">
+                            <span class="card__name">Royke</span>
+                            <img class="card__image" src="katten/royke.jpeg">
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+
+<script>
+    img = document.querySelectorAll("img").forEach(function(elem) {
+        elem.addEventListener('click', function() {
+            window.open(elem.src);
+        });
+    });
+
+    function show(elem) {
+        if (elem.innerHTML === "[+]") {
+            elem.innerHTML = "[-]";
+        } else {
+            elem.innerHTML = "[+]";
+        }
+        elem.parentNode.querySelector("ul").classList.toggle("visible")
+    }
+</script>
+</html>
