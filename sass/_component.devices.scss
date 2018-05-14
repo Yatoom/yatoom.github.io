@@ -4,14 +4,17 @@
 .css-device {
   position: relative;
   margin: 0 auto;
+  background: white;
 }
 
 .css-device__image {
   display: block;
   margin: 0;
   padding: 0;
-  width: 100%;
+  max-width: 100%;
   height: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* =============================================================================
@@ -117,6 +120,7 @@
     content: "";
   }
 }
+
 /* =============================================================================
   MOBILE
 ============================================================================= */

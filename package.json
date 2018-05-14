@@ -19,10 +19,10 @@
   "author": "Jeroen van Hoof",
   "license": "ISC",
   "devDependencies": {
-    "node-sass": "^3.7.0",
-    "nodemon": "^1.9.2"
+    "node-sass": "^4.9.0",
+    "nodemon": "^1.17.4"
   },
   "dependencies": {
-    "scrollreveal": "^3.1.4"
+    "scrollreveal": "^3.4.0"
   }
 }
