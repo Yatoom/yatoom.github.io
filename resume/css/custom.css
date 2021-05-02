@@ -85,13 +85,17 @@ section {
     /* font-family: 'Crimson Text', serif; */
 }
 
-.type, .date, .duration, .location {
-    display: inline-block;
+.property {
+    display: contents;
     color: #888;
 }
 
-.type::after, .date::after, .duration::after{
+.property::after {
     content: " |"
+}
+
+.info .property:last-of-type::after {
+    content: ""
 }
 
 
