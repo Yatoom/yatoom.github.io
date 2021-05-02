@@ -149,3 +149,35 @@ h1, h2, h3, h4, h5, h6 {
 .logo img {
     width: 100px;
 }
+
+@media (max-width: 1600px) {
+    .split {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .split .column {
+        padding: 20px;
+    }
+    
+}
+
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .card {
+        grid-template-columns: 1fr;
+    }
+
+    .logo img {
+        width: 100px;
+        margin-left: auto;
+        display: block;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+}
