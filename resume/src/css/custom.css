@@ -114,6 +114,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .pills {
+    display: contents;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -183,5 +184,53 @@ h1, h2, h3, h4, h5, h6 {
         display: block;
         margin-right: auto;
         margin-bottom: 20px;
+    }
+}
+
+.thumbnails {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    margin: 5px 0;
+}
+
+.thumbnails img {
+    display: inline-block;
+    width: auto;
+}
+
+.glightbox-clean .gslide-title {
+    color: white;
+}
+
+.glightbox-clean .gslide-description {
+    background: transparent;
+}
+
+@media print {
+    .me {
+        display: none;
+    }
+    .split {
+        display: block;
+        padding: 20px;
+    }
+
+    .container {
+        display: block;
+    }
+
+    a[href]::after {
+        content: none !important;
+    }
+
+    .screen-only {
+        display: none;
+    }
+}
+
+@media screen {
+    .print-only {
+        display: none;
     }
 }

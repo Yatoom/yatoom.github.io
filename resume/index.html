@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Resume</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -14,10 +14,9 @@
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/custom.css">
   <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro|Open+Sans:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
 
   <meta name="theme-color" content="#fafafa">
 </head>
@@ -29,11 +28,10 @@
     <section class="split">
       <div class="column">
         <h1>About me</h1>
-        Hi there! I am Jeroen, born in 1992 just outside of Gemert, a small village in the south of the Netherlands that was once under rule of the Teutonic order.
-        And currently living in Almere, a city built on an artificial island  below sea level.<br><br>
-        I am a software engineer with a background in Computer Science and experience as a web developer, data scientist, machine learning engineer and data engineer.<br><br>
-        People usually describe my personality as patient and understanding, and my work as structured and organized.<br><br>
-        In my free time I like to code, learn something new, go for a short road trip, play a game or watch something.
+        <p>Hi there! I am Jeroen, born in 1992 just outside of <a href="https://www.google.nl/maps/place/Gemert/@52.1830417,5.0669578,8z/data=!4m5!3m4!1s0x47c7189a98240297:0x7f75ed4c9f25473b!8m2!3d51.5552886!4d5.690366">Gemert</a>, and currently living in <a href="https://www.google.nl/maps/place/Almere/@52.1770512,5.0625562,8.01z/data=!4m5!3m4!1s0x47c616e3d4cb2cf5:0x23dba3457b40cff8!8m2!3d52.3507849!4d5.2647016">Almere</a>.</p>
+        <p>I have a background in Computer Science and experience with data engineering, data science, machine learning and web development.</p>
+        <p>People usually describe my personality as patient and understanding, and my work as structured and organized.</p>
+        <p>I am familiar with the Scrum methodology and Azure.</p>
       </div>
       <div class="column me">
       </div>
@@ -57,15 +55,15 @@
       <!-- Master -->
       <div class="job card">
         <div class="logo">
-          <img src="img/tuelogo.svg">
+          <img src="src/img/tuelogo.svg">
         </div>
         <div class="info">
-          <span class="role">TU/e - Master Web Science</span>
+          <span class="role">TU/e - Master Computer Science</span>
           <span class="date property">2015 – 2018</span>
           <span class="location property">Eindhoven, Netherlands</span>
   
           <div class="description">
-            Next to standard computer science courses, a large part of this program was focused on machine learning, deep learning, data mining, and data engineering. I did my thesis on the subject of automated machine learning, which is the process of automating the time consuming, iterative tasks of machine learning model development that data scientists normally have to go through.
+            A large part of this program was focused on machine learning, deep learning, data mining, and data engineering.
           </div>
   
           <div class="stack">
@@ -76,7 +74,8 @@
               <li>Machine Learning</li>
               <li>Data Mining</li>
               <li>Visualization</li>
-              <li>Algorithms</li>
+              <li>Geometric Algorithms</li>
+              <li>Database Technology</li>
             </ul>
             
           </div>
@@ -86,7 +85,7 @@
       <!-- Bachelor -->
       <div class="job card">
         <div class="logo">
-          <img src="img/tuelogo.svg">
+          <img src="src/img/tuelogo.svg">
         </div>
         <div class="info">
           <span class="role">TU/e - Bachelor Web Science</span>
@@ -105,26 +104,20 @@
               <li>Web Analytics</li>
               <li>Software Engineering</li>
               <li>Algorithms</li>
-              <li>Artificial Intellligence</li>            
+              <li>Artificial Intellligence</li>      
+              <li>Interactive Intelligent Systems</li>      
             </ul>
           </div>
         </div>
       </div>
     </section>
-
-
-
-    
-  </div>
-
-  <div class="col2">
-    <section>
+    <section style="page-break-before: always">
       <h1>Work Experience</h1>
   
       <!-- ABN Amro -->
       <div class="job card">
         <div class="logo">
-          <img src="img/abn.png">
+          <img src="src/img/abn.png">
         </div>
         <div class="info">
           <span class="role">ABN AMRO - Data Engineer</span>
@@ -158,7 +151,7 @@
       <!-- ABN Amro -->
       <div class="job card">
         <div class="logo">
-          <img src="img/abn.png">
+          <img src="src/img/abn.png">
         </div>
         <div class="info">
           <span class="role">ABN AMRO - Machine Learning Engineer</span>
@@ -189,7 +182,7 @@
       <!-- Wolfpack -->
       <div class="job card">
         <div class="logo">
-          <img src="img/wolfpack.jpeg">
+          <img src="src/img/wolfpack.jpeg">
         </div>
         <div class="info">
           <span class="role">Wolfpack - Data Scientist</span>
@@ -212,13 +205,18 @@
               <li>Google Cloud Vision</li>
             </ul>
           </div>
+
+          <p>
+            <b>Article:</b><br/>
+            <a href="https://medapp.nu/medapp-ontwikkeling-kunstmatige-intelligentie/">MedApp development of AI</a>
+          </p>
         </div>
       </div>
   
       <!-- The Line -->
       <div class="job card">
         <div class="logo">
-          <img src="img/the-line.png">
+          <img src="src/img/the-line.png">
         </div>
         <div class="info">
           <span class="role">The-Line Smart Solutions - Web developer</span>
@@ -242,20 +240,45 @@
               <li>JS</li>
             </ul>
           </div>
+          <br><b>Examples:</b>
+          <div class="project thumbnails screen-only">
+            <a href="src/img/calllock.png" class="glightbox" data-glightbox="title:Calllock Customer control panel, a control panel for resellers of Calllock's vehicle share service, built with Laravel, AngularJS and Sass.">
+              <img src="src/img/calllock.png" alt="image" />
+            </a>
+            <a href="src/img/balmoral.png" class="glightbox" data-glightbox="title: Balmoral cigars, a website built with PHP, HTML5 and Sass.">
+              <img src="src/img/balmoral.png" alt="image" />
+            </a>
+            <a href="src/img/cs-kochsysteme.png" class="glightbox" data-glightbox="title: CS-Kochsysteme, a webshop for kitchen supplies. Rebuilt the front-end to be more maintainable and responsive.">
+              <img src="src/img/cs-kochsysteme.png" alt="image" />
+            </a>
+          </div>
+          <div class="project thumbnails print-only">
+              
+            <img src="src/img/calllock.png" alt="image" />
+            <img src="src/img/balmoral.png" alt="image" />
+            <img src="src/img/cs-kochsysteme.png" alt="image" />
+          
+        </div>
         </div>
       </div>
       <!-- <div class="card">
-        <img src="img/tuelogo.svg">
+        <img src="src/img/tuelogo.svg">
       </div> -->
     </section>
 
-    <section>
+
+
+    
+  </div>
+
+  <div class="col2">
+    <section style="page-break-before: always">
       <h1>Certifications</h1>
 
       <!-- Quantexa -->
       <div class="job card">
         <div class="logo">
-          <img src="img/quantexa.png">
+          <img src="src/img/quantexa.png">
         </div>
         <div class="info">
           <span class="role">Quantexa Technology Academy</span>
@@ -271,7 +294,7 @@
       <!-- Coursera -->
       <div class="job card">
         <div class="logo">
-          <img src="img/coursera.jpeg">
+          <img src="src/img/coursera.jpeg">
         </div>
         <div class="info">
           <span class="role">Big data analysis with Scala and Spark</span>
@@ -288,7 +311,7 @@
       <!-- Azure fundamentals -->
       <div class="job card">
         <div class="logo">
-          <img src="img/microsoft.svg">
+          <img src="src/img/microsoft.svg">
         </div>
         <div class="info">
           <span class="role">Azure Fundamentals</span>
@@ -302,22 +325,134 @@
         </div>
       </div>
     </section>
+    <section style="page-break-before: always">
+      <h1>Projects</h1>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/github.png">
+        </div>
+        <div class="info">
+          <span class="role">Open Source Project: Foronoi</span>
+          <span class="property"><a href="https://github.com/Yatoom/foronoi">Github</a></span>
+          <span class="property"><a href="https://voronoi.readthedocs.io/en/latest/">Documentation</a></span>
+          <span class="property"><a href="https://pypi.org/project/foronoi/">Pypi</a></span>
+          <div class="description">
+            Foronoi is a Python package that I developed that implements a sweep line algorithm for Voronoi diagrams. It scans top down over a set of points and traces out the borders along the way while scanning for the next point. My package includes a visualization API, the ability to clip the diagram inside polygon bounding-boxes and some other extras.
+          </div>
+      </div>
+      </div>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/thesis.svg">
+        </div>
+        <div class="info">
+          <span class="role">Master Thesis: Automated Machine Learning</span>
+          <span class="property"><a href="https://github.com/Yatoom/Hyperboost/tree/develop">Github</a></span>
+          <span class="property"><a href="https://research.tue.nl/en/studentTheses/automated-machine-learning-with-gradient-boosting-and-meta-learni">Thesis</a></span>
+          <div class="description">
+            <p>
+            My master thesis was on the topic of Automated Machine Learning, which is the field that strives to automate the data scientist's process of finding and optimizing the right machine learning model.
+            We do so by testing machine learning models with different configurations and observing their performance to determine interesting configurations to test next.
+            This can be done in many different ways: genetic programming, bayesian optimization, bracket-wise competition, etc.
+            </p>
+            <p>
+            I developed a new method closely related to bayesian optimization that uses much less time to decide interesting configurations, and converges faster to the optimum.
+            </p>
+          </div>
+      </div>
+      </div>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/document.svg">
+        </div>
+        <div class="info">
+          <span class="role">Course Project: Recommender Systems course project</span>
+          <!-- <span class="date property">Feb. 2018 - Apr. 2018</span> -->
+          <div class="description">
+            Generated neural representations for images using a pretrained network. Used a joint model for image and text representations to retrieve image captions for the Micrisoft COCO (Common Objects in Context) database.
+            Other topics and assignments in this course included: <ul class="pills">
+              <li>Representation Learning</li>
+              <li>Auto encoders</li>
+              <li>One-shot learning</li>
+              <li>Word2Vec</li>
+              <li>Image captioning</li>
+            </ul>
+              <div class="stack">
+                <b>Technology:</b>
+                <ul class="pills">
+                  <li>Keras</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+          </div>
+      </div>
+      </div>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/document.svg">
+        </div>
+        <div class="info">
+          <span class="role">Course Project: Data Engineering</span>
+          <!-- <span class="date property">Apr. 2017 - Jun. 2017</span> -->
+          <div class="description">
+            Analyzed large datasets using Apache Flink about the behavior of Wikipedia edits across linguistic communities and the temporal relations between similar articles.
+              <div class="stack">
+                <b>Technology:</b>
+                <ul class="pills">
+                  <li>Apache Flink</li>
+                  <li>Java</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+          </div>
+      </div>
+      </div>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/document.svg">
+        </div>
+        <div class="info">
+          <span class="role">Course Project: Visualization</span>
+          <!-- <span class="date property">Feb. 2017 - Apr. 2017</span> -->
+          <div class="description">
+            Developed a dashboard with interactive treemaps to break down Dutch and German government budget allocation, combined with an iterative timeline. 
+
+              <div class="stack">
+                <b>Technology:</b>
+                <ul class="pills">
+                  <li>D3.js</li>
+                </ul>
+              </div>
+          </div>
+      </div>
+      </div>
+      <div class="job card">
+        <div class="logo">
+          <img src="src/img/document.svg">
+        </div>
+        <div class="info">
+          <span class="role">Bachelor End Project: TravelMatch</span>
+          <div class="description">
+              Developed an Android/iOS app that learns what your personal "travel DNA" is, based on the liking and disliking of travel images, and then recommends holiday destinations using affiliate links.
+
+              <div class="stack">
+                <b>Technology:</b>
+                <ul class="pills">
+                  <li>Ionic</li>
+                  <li>Angular</li>
+                  <li>Django</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+          </div>
+      </div>
+      </div>
+    </section>
 
   </div>
 </div>
 
-  
-  
-  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
-
-  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
-  <script>
-    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
-  </script>
-  <script src="https://www.google-analytics.com/analytics.js" async></script>
+<script src="dist/bundle.js"></script>
 </body>
 
 </html>

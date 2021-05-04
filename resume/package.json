@@ -1,17 +1,24 @@
 {
-  "name": " ",
-  "version": "0.0.1",
+  "name": "webpack-resume",
+  "version": "1.0.0",
   "description": "",
-  "keywords": "",
-  "license": "",
-  "author": "",
+  "private": true,
   "scripts": {
-    "build": "parcel build index.html",
-    "dev": "parcel index.html --open",
-    "start": "npm run build && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack serve --open"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "css-loader": "^5.2.4",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "glightbox": "^3.0.8"
   }
 }

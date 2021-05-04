@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="512pt" version="1.1" viewBox="0 0 512 512" width="512pt">
+<g id="surface1">
+<path d="M 512 256 C 512 397.386719 397.386719 512 256 512 C 114.613281 512 0 397.386719 0 256 C 0 114.613281 114.613281 0 256 0 C 397.386719 0 512 114.613281 512 256 Z M 512 256 " style=" stroke:none;fill-rule:nonzero;fill:rgb(25.490196%,28.627451%,32.156863%);fill-opacity:1;" />
+<path d="M 512 256 C 512 241.085938 510.710938 226.476562 508.261719 212.261719 L 380.5 84.5 L 131.5 427.5 L 212.261719 508.261719 C 226.476562 510.710938 241.085938 512 256 512 C 397.386719 512 512 397.386719 512 256 Z M 512 256 " style=" stroke:none;fill-rule:nonzero;fill:rgb(13.72549%,15.294118%,16.862745%);fill-opacity:1;" />
+<path d="M 131.5 84.5 L 380.5 84.5 L 380.5 427.5 L 131.5 427.5 Z M 131.5 84.5 " style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" />
+<path d="M 255.761719 84.5 L 380.5 84.5 L 380.5 427.5 L 255.761719 427.5 Z M 255.761719 84.5 " style=" stroke:none;fill-rule:nonzero;fill:rgb(94.901961%,96.470588%,98.823529%);fill-opacity:1;" />
+<path d="M 131.5 84.5 L 171 84.5 L 171 427.5 L 131.5 427.5 Z M 131.5 84.5 " style=" stroke:none;fill-rule:nonzero;fill:rgb(29.019608%,47.843137%,100%);fill-opacity:1;" />
+<path d="M 352 186 L 326 166 L 300 186 L 300 84.5 L 352 84.5 Z M 352 186 " style=" stroke:none;fill-rule:nonzero;fill:rgb(98.039216%,36.470588%,5.882353%);fill-opacity:1;" />
+<path d="M 352 84.5 L 326.59375 84.5 L 326.59375 166.457031 L 352 186 Z M 352 84.5 " style=" stroke:none;fill-rule:nonzero;fill:rgb(93.72549%,21.960784%,0%);fill-opacity:1;" />
+<path d="M 202.234375 207.71875 L 344.234375 207.71875 L 344.234375 262.570312 L 202.234375 262.570312 Z M 202.234375 207.71875 " style=" stroke:none;fill-rule:nonzero;fill:rgb(86.27451%,88.235294%,92.156863%);fill-opacity:1;" />
+<path d="M 255.761719 207.71875 L 344.234375 207.71875 L 344.234375 262.570312 L 255.761719 262.570312 Z M 255.761719 207.71875 " style=" stroke:none;fill-rule:nonzero;fill:rgb(80.392157%,82.352941%,88.235294%);fill-opacity:1;" />
+</g>
+</svg>
