@@ -113,6 +113,21 @@ h1, h2, h3, h4, h5, h6 {
     
 }
 
+.progress {
+    width: 100px;
+    height: 5px;
+    background: #ddd;
+    display: inline-block;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.bar {
+    background: #019286;
+    height: 100%;
+    display: block;
+}
+
 .pills {
     display: contents;
     list-style: none;
