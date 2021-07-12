@@ -12,7 +12,9 @@
   <meta property="og:url" content="">
   <meta property="og:image" content="">
 
-  <link rel="manifest" href="site.webmanifest">
+  <link rel="icon" 
+      type="image/png" 
+      href="src/img/thesis.svg">
   <link rel="apple-touch-icon" href="icon.png">
   <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro|Open+Sans:400,700" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -30,8 +32,8 @@
         <h1>About me</h1>
         <p>Hi there! I am Jeroen, born in 1992 just outside of <a href="https://www.google.nl/maps/place/Gemert/@52.1830417,5.0669578,8z/data=!4m5!3m4!1s0x47c7189a98240297:0x7f75ed4c9f25473b!8m2!3d51.5552886!4d5.690366">Gemert</a>, and currently living in <a href="https://www.google.nl/maps/place/Almere/@52.1770512,5.0625562,8.01z/data=!4m5!3m4!1s0x47c616e3d4cb2cf5:0x23dba3457b40cff8!8m2!3d52.3507849!4d5.2647016">Almere</a>.</p>
         <p>I have a background in Computer Science and experience with data engineering, data science, machine learning and web development.</p>
-        <p>People usually describe my personality as patient and understanding, and my work as structured and organized.</p>
-        <p>I am familiar with the Scrum methodology and Azure.</p>
+        <!-- <p>People usually describe my personality as patient and understanding, and my work as structured and organized.</p>
+        <p>I am familiar with the Scrum methodology and Azure.</p> -->
         <p class="print-only">You can find an online version of this resume <a href="http://jeroenvanhoof.nl/resume/">here</a></p>
       </div>
       <div class="column me">
@@ -131,7 +133,7 @@
             <ul>
             <li>Work involved a mix of data engineering, DevOps and data science.</li>
             <li>Used entity resolution and graph analytics methods to build a model that helps us to create a more complete and detailed overview of each client, and provides better insights to do risk scoring, for the purpose of customer due diligence.</li>
-            <li>Coordinated the implementation of controls related to continuous integration, deli-very, testing, monitoring and operations and security, to ensure that the applicationand the team is in control and complies with all the standards of the bank.</li>
+            <li>Coordinated the implementation of controls related to continuous integration, delivery, testing, monitoring and operations and security, to ensure that the application and the team is in control and complies with all the standards of the bank.</li>
             </ul>
           </div>
   
@@ -276,8 +278,43 @@
     <section style="page-break-before: always">
       <h1>Certifications</h1>
 
-      <!-- Quantexa -->
+      <!-- ITIL v4 -->
       <div class="job card">
+        <div class="logo">
+          <img src="src/img/axelos.png">
+        </div>
+        <div class="info">
+          <span class="role">ITIL v4 Foundations</span>
+          <span class="date property">Jul 2021</span>
+          <span class="location property">Microsoft</span>
+          <span class="property">Credential ID: GR671286166JV</span>
+
+          <div class="description">
+            IT service management through an end-to-end operating model for the creation, delivery and continual improvement of tech-enabled products and services.<br/>
+            <a href="https://www.peoplecert.org/for-corporations/certificate-verification-service">Validate credential</a>
+          </div>
+        </div>
+      </div>
+
+        <!-- Azure Data Engineering Certificate -->
+        <div class="job card">
+          <div class="logo">
+            <img src="src/img/dp-203.png">
+          </div>
+          <div class="info">
+            <span class="role">Azure Data Engineering Associate</span>
+            <span class="date property">Jun 2021</span>
+            <span class="location property">Microsoft</span>
+  
+            <div class="description">
+              Skills and expertise in integrating, transforming, and consolidating data from various structured and unstructured data systems into structures that are suitable for building analytics solutions. <br>
+              <a href="https://www.credly.com/badges/5a47eb6d-be97-4c2d-9109-516f6f989e77">See credential</a>
+            </div>
+          </div>
+        </div>
+
+      <!-- Quantexa -->
+      <!-- <div class="job card">
         <div class="logo">
           <img src="src/img/quantexa.png">
         </div>
@@ -289,7 +326,7 @@
             <a href="https://www.quantexa.com/">Quantexa</a> is a generic framework to resolve entities from different data sources and create graphs that show how these entities relate to each other.
           </div>
         </div>
-      </div>
+      </div> -->
 
   
       <!-- Coursera -->
@@ -310,9 +347,9 @@
       </div>
 
       <!-- Azure fundamentals -->
-      <div class="job card">
+      <!-- <div class="job card">
         <div class="logo">
-          <img src="src/img/microsoft.svg">
+          <img src="src/img/az-900.png">
         </div>
         <div class="info">
           <span class="role">Azure Fundamentals</span>
@@ -321,133 +358,10 @@
   
           <div class="description">
             Foundational knowledge of cloud services and Microsoft Azure. <br>
-            <a href="https://www.youracclaim.com/badges/89431c2d-e644-4f33-bc80-7faecd99755f/linked_in_profile">See credential</a>
+            <a href="https://www.youracclaim.com/badges/89431c2d-e644-4f33-bc80-7faecd99755f">See credential</a>
           </div>
         </div>
-      </div>
-    </section>
-    <section style="page-break-before: always">
-      <h1>Projects</h1>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/github.png">
-        </div>
-        <div class="info">
-          <span class="role">Open Source Project: Foronoi</span>
-          <span class="property"><a href="https://github.com/Yatoom/foronoi">Github</a></span>
-          <span class="property"><a href="https://voronoi.readthedocs.io/en/latest/">Documentation</a></span>
-          <span class="property"><a href="https://pypi.org/project/foronoi/">Pypi</a></span>
-          <div class="description">
-            Foronoi is a Python package that I developed that implements a sweep line algorithm for Voronoi diagrams. It scans top down over a set of points and traces out the borders along the way while scanning for the next point. My package includes a visualization API, the ability to clip the diagram inside polygon bounding-boxes and some other extras.
-          </div>
-      </div>
-      </div>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/thesis.svg">
-        </div>
-        <div class="info">
-          <span class="role">Master Thesis: Automated Machine Learning</span>
-          <span class="property"><a href="https://github.com/Yatoom/Hyperboost/tree/develop">Github</a></span>
-          <span class="property"><a href="https://research.tue.nl/en/studentTheses/automated-machine-learning-with-gradient-boosting-and-meta-learni">Thesis</a></span>
-          <div class="description">
-            <p>
-            My master thesis was on the topic of Automated Machine Learning, which is the field that strives to automate the data scientist's process of finding and optimizing the right machine learning model.
-            We do so by testing machine learning models with different configurations and observing their performance to determine interesting configurations to test next.
-            This can be done in many different ways: genetic programming, bayesian optimization, bracket-wise competition, etc.
-            </p>
-            <p>
-            I developed a new method closely related to bayesian optimization that uses much less time to decide interesting configurations, and converges faster to the optimum.
-            </p>
-          </div>
-      </div>
-      </div>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/document.svg">
-        </div>
-        <div class="info">
-          <span class="role">Course Project: Recommender Systems course project</span>
-          <!-- <span class="date property">Feb. 2018 - Apr. 2018</span> -->
-          <div class="description">
-            Generated neural representations for images using a pretrained network. Used a joint model for image and text representations to retrieve image captions for the Micrisoft COCO (Common Objects in Context) database.
-            Other topics and assignments in this course included: <ul class="pills">
-              <li>Representation Learning</li>
-              <li>Auto encoders</li>
-              <li>One-shot learning</li>
-              <li>Word2Vec</li>
-              <li>Image captioning</li>
-            </ul>
-              <div class="stack">
-                <b>Technology:</b>
-                <ul class="pills">
-                  <li>Keras</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-          </div>
-      </div>
-      </div>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/document.svg">
-        </div>
-        <div class="info">
-          <span class="role">Course Project: Data Engineering</span>
-          <!-- <span class="date property">Apr. 2017 - Jun. 2017</span> -->
-          <div class="description">
-            Analyzed large datasets using Apache Flink about the behavior of Wikipedia edits across linguistic communities and the temporal relations between similar articles.
-              <div class="stack">
-                <b>Technology:</b>
-                <ul class="pills">
-                  <li>Apache Flink</li>
-                  <li>Java</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-          </div>
-      </div>
-      </div>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/document.svg">
-        </div>
-        <div class="info">
-          <span class="role">Course Project: Visualization</span>
-          <!-- <span class="date property">Feb. 2017 - Apr. 2017</span> -->
-          <div class="description">
-            Developed a dashboard with interactive treemaps to break down Dutch and German government budget allocation, combined with an iterative timeline. 
-
-              <div class="stack">
-                <b>Technology:</b>
-                <ul class="pills">
-                  <li>D3.js</li>
-                </ul>
-              </div>
-          </div>
-      </div>
-      </div>
-      <div class="job card">
-        <div class="logo">
-          <img src="src/img/document.svg">
-        </div>
-        <div class="info">
-          <span class="role">Bachelor End Project: TravelMatch</span>
-          <div class="description">
-              Developed an Android/iOS app that learns what your personal "travel DNA" is, based on the liking and disliking of travel images, and then recommends holiday destinations using affiliate links.
-
-              <div class="stack">
-                <b>Technology:</b>
-                <ul class="pills">
-                  <li>Ionic</li>
-                  <li>Angular</li>
-                  <li>Django</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-          </div>
-      </div>
-      </div>
+      </div> -->
     </section>
     <section style="page-break-before: always">
       <h1>Skills</h1>
@@ -475,15 +389,71 @@
               <td>Databases</td><td>NoSQL (MongoDB), SQL (MySQL, MariaDB, PostgresQL, T-SQL)</td>
             </tr>
             <tr>
-              <td>Data Engineering</td><td>Spark, ETL, Airflow</td>
+              <td>Data Engineering</td><td>Spark, ETL, SQL, Data Factory, Databricks, Airflow </td>
             </tr>
           </table>            
           </div>
-      </div>
     </section>
-
+      <section style="page-break-before: always">
+        <h1>Projects</h1>
+        <div class="job card">
+          <div class="logo">
+            <img src="src/img/github.png">
+          </div>
+          <div class="info">
+            <span class="role">Open Source Project: Foronoi</span>
+            <span class="property"><a href="https://github.com/Yatoom/foronoi">Github</a></span>
+            <span class="property"><a href="https://voronoi.readthedocs.io/en/latest/">Documentation</a></span>
+            <span class="property"><a href="https://pypi.org/project/foronoi/">Pypi</a></span>
+            <div class="description">
+              Foronoi is a Python package that I developed that implements a sweep line algorithm for Voronoi diagrams. It scans top down over a set of points and traces out the borders along the way while scanning for the next point. My package includes a visualization API, the ability to clip the diagram inside polygon bounding-boxes and some other extras.
+            </div>
+        </div>
+        </div>
+        <div class="job card">
+          <div class="logo">
+            <img src="src/img/thesis.svg">
+          </div>
+          <div class="info">
+            <span class="role">Master Thesis: Automated Machine Learning</span>
+            <span class="property"><a href="https://github.com/Yatoom/Hyperboost/tree/develop">Github</a></span>
+            <span class="property"><a href="https://research.tue.nl/en/studentTheses/automated-machine-learning-with-gradient-boosting-and-meta-learni">Thesis</a></span>
+            <div class="description">
+              <p>
+              My master thesis was on the topic of Automated Machine Learning, which is the field that strives to automate the data scientist's process of finding and optimizing the right machine learning model.
+              We do so by testing machine learning models with different configurations and observing their performance to determine interesting configurations to test next.
+              This can be done in many different ways: genetic programming, bayesian optimization, bracket-wise competition, etc.
+              </p>
+              <p>
+              I developed a new method closely related to bayesian optimization that uses much less time to decide interesting configurations, and converges faster to the optimum.
+              </p>
+            </div>
+        </div>
+        </div>
+        <div class="job card">
+          <div class="logo">
+            <img src="src/img/document.svg">
+          </div>
+          <div class="info">
+            <span class="role">Bachelor End Project: TravelMatch</span>
+            <div class="description">
+                Developed an Android/iOS app that learns what your personal "travel DNA" is, based on the liking and disliking of travel images, and then recommends holiday destinations using affiliate links.
+  
+                <div class="stack">
+                  <b>Technology:</b>
+                  <ul class="pills">
+                    <li>Ionic</li>
+                    <li>Angular</li>
+                    <li>Django</li>
+                    <li>Python</li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+      </section>
+    </div>
   </div>
-</div>
 
 <script src="dist/bundle.js"></script>
 </body>

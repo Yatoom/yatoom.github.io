@@ -3,7 +3,8 @@
   }
 
 body {
-    background: linear-gradient(45deg, #ed356b, #009286);
+    /* background: linear-gradient(45deg, #ed356b, #009286); */
+    background: #eee;
 }
 
 img {
