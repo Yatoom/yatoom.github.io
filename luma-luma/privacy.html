@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Luma Luma</title>
+    <meta name="description" content="Privacy Policy for Luma Luma — Master the Grid.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lumaluma.app/privacy.html">
+    <meta property="og:title" content="Privacy Policy — Luma Luma">
+    <meta property="og:description" content="Privacy Policy for Luma Luma.">
+    <meta property="og:image" content="https://lumaluma.app/assets/og-image.png">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#3B82F6',
+                        accentHover: '#2563EB',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .gradient-bg {
+            background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+        }
+        .dark .gradient-bg {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+        }
+
+        /* Scroll reveal utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+
+        /* Focus visible */
+        *:focus-visible {
+            outline: 2px solid #3B82F6;
+            outline-offset: 2px;
+        }
+    </style>
+
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="group flex items-center gap-3 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+                <img src="assets/logo.png" alt="Luma Luma" class="h-10 w-10 rounded-lg shadow-md transition group-hover:scale-105" loading="lazy">
+                <span class="hidden sm:block font-bold text-xl tracking-tight text-slate-900 dark:text-white">Luma Luma</span>
+            </a>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-x-8">
+            <a href="index.html#how-to-play" class="text-sm font-semibold leading-6 hover:text-accent transition">How to Play</a>
+            <a href="index.html#features" class="text-sm font-semibold leading-6 hover:text-accent transition">Features</a>
+            <a href="index.html#screenshots" class="text-sm font-semibold leading-6 hover:text-accent transition">Screenshots</a>
+            <a href="index.html#faq" class="text-sm font-semibold leading-6 hover:text-accent transition">FAQ</a>
+            <a href="privacy.html" class="text-sm font-semibold leading-6 text-accent transition">Privacy</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open menu" aria-expanded="false">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+
+            <!-- Dark Mode Toggle -->
+            <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div class="flex flex-col p-4 gap-3">
+            <a href="index.html#how-to-play" class="text-sm font-semibold p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">How to Play</a>
+            <a href="index.html#features" class="text-sm font-semibold p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Features</a>
+            <a href="index.html#screenshots" class="text-sm font-semibold p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Screenshots</a>
+            <a href="index.html#faq" class="text-sm font-semibold p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">FAQ</a>
+            <a href="privacy.html" class="text-sm font-semibold p-2 rounded-lg bg-slate-100 dark:bg-slate-800 transition">Privacy Policy</a>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-16">
+    <div class="relative isolate overflow-hidden gradient-bg min-h-[40vh] flex items-center">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8 text-center reveal">
+            <img src="assets/logo.png" alt="Luma Luma" class="mx-auto h-20 w-20 rounded-2xl shadow-xl mb-8 animate-float">
+            <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">Privacy Policy</h1>
+            <p class="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                Your privacy is important to us. Learn how Luma Luma handles your data.
+            </p>
+        </div>
+    </div>
+
+    <div class="py-24 sm:py-32">
+        <div class="mx-auto max-w-3xl px-6 lg:px-8">
+            <div class="space-y-12 text-slate-600 dark:text-slate-400 leading-relaxed reveal">
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Introduction</h2>
+                    <p>
+                        Luma Luma ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share information when you use our mobile application.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Information We Collect</h2>
+                    <div class="space-y-4">
+                        <p>
+                            <strong class="text-slate-900 dark:text-white">Personal Information:</strong> We do not collect any personally identifiable information (such as your name, email address, or phone number) unless you explicitly provide it to us for support purposes.
+                        </p>
+                        <p>
+                            <strong class="text-slate-900 dark:text-white">Usage Data:</strong> We may collect anonymous usage data to improve the game experience. This includes game statistics, device type, and operating system version.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Firebase and Google Services</h2>
+                    <p>
+                        Our app uses Firebase (Authentication, Firestore, Analytics) and Google Play Services to provide core functionality. These services may collect information according to their own privacy policies.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Advertising</h2>
+                    <p>
+                        We may display advertisements through the Google Mobile Ads SDK. These ads may use identifiers to serve personalized content. You can manage your ad preferences in your device settings.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Changes to This Policy</h2>
+                    <p>
+                        We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Contact Us</h2>
+                    <p>
+                        If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@lumaluma.app" class="text-accent hover:underline">support@lumaluma.app</a>.
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+            <img src="assets/logo.png" alt="Luma Luma" class="h-10 w-10 rounded-lg shadow-sm" loading="lazy">
+            <div>
+                <p class="text-sm font-bold text-slate-900 dark:text-white">
+                    <span class="text-blue-500">L</span><span class="text-red-500">u</span><span class="text-yellow-500">m</span><span class="text-green-500">a</span> <span class="text-purple-500">L</span><span class="text-orange-500">u</span><span class="text-blue-500">m</span><span class="text-green-500">a</span>
+                </p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+            <a href="privacy.html" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Privacy Policy</a>
+            <a href="#" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Terms</a>
+            <a href="mailto:support@lumaluma.app" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Support</a>
+            <a href="index.html#faq" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">FAQ</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Theme Toggle
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        themeToggleLightIcon.classList.remove('hidden');
+    } else {
+        themeToggleDarkIcon.classList.remove('hidden');
+    }
+
+    themeToggleBtn.addEventListener('click', function() {
+        themeToggleDarkIcon.classList.toggle('hidden');
+        themeToggleLightIcon.classList.toggle('hidden');
+
+        if (localStorage.getItem('color-theme')) {
+            if (localStorage.getItem('color-theme') === 'light') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            }
+        } else {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        }
+    });
+
+    // Mobile Menu
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        if (isOpen) {
+            mobileMenu.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        } else {
+            mobileMenu.classList.remove('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        }
+    });
+
+    // Current Year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Scroll Reveal Observer
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
