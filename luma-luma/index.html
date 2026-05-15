@@ -103,14 +103,25 @@
         .demo-cell.filled-green { background: #22C55E; }
         .demo-cell.filled-yellow { background: #EAB308; }
         .demo-cell.filled-orange { background: #F97316; }
-        .demo-cell.moon::after {
-            content: '★';
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            font-size: 10px;
-            color: white;
+        .grid-cell.moon:not(:has(.cross))::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9s9-4.03 9-9c0-.46-.04-.92-.1-1.36-1.27 1.4-3.08 2.27-5.07 2.27-3.59 0-6.5-2.91-6.5-6.5 0-1.99.87-3.81 2.27-5.07-.44-.06-.9-.1-1.36-.1z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9s9-4.03 9-9c0-.46-.04-.92-.1-1.36-1.27 1.4-3.08 2.27-5.07 2.27-3.59 0-6.5-2.91-6.5-6.5 0-1.99.87-3.81 2.27-5.07-.44-.06-.9-.1-1.36-.1z'/%3E%3C/svg%3E");
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            z-index: 1;
+        }
+        .grid-cell.moon .cross {
+            z-index: 2;
         }
 
         .rainbow-gradient {
@@ -236,6 +247,38 @@
             background: rgba(234, 179, 8, 0.15);
             border-color: #EAB308;
             color: #EAB308;
+        }
+
+        .color-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            color: white;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .color-placeholder {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: rgba(148, 163, 184, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-progress-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: currentColor;
+            opacity: 0.5;
+            transition: height 0.3s ease;
         }
 
         .grid-cell .cross.black {
@@ -449,41 +492,41 @@
                     <!-- 5x5 Zoomed Grid Example -->
                     <div class="mt-6 bg-slate-100 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700/50">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Connect</span>
-                        <div class="grid grid-cols-5 gap-0.5 w-full max-w-[160px] mx-auto aspect-square">
+                        <div class="grid grid-cols-5 gap-0.5 w-max mx-auto">
                             <!-- Row 0 -->
-                            <div class="grid-cell" style="background-color: #3B82F6;"></div>
-                            <div class="grid-cell" style="background-color: #3B82F6;"></div>
-                            <div class="grid-cell" style="background-color: #3B82F6;"></div>
-                            <div class="grid-cell" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #3B82F6;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #3B82F6;"></div>
+                            <div class="grid-cell w-9 h-9 moon" style="background-color: #3B82F6;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
 
                             <!-- Row 1 -->
-                            <div class="grid-cell" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1400ms">✕</div></div>
-                            <div class="grid-cell" style="background-color: #3B82F6;"></div>
-                            <div class="grid-cell" style="background-color: #3B82F6;"></div>
-                            <div class="grid-cell" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1400ms">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #3B82F6;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #3B82F6;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EAB308;"><div class="cross black">✕</div></div>
 
                             <!-- Row 2 -->
-                            <div class="grid-cell" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1400ms">✕</div></div>
-                            <div class="grid-cell" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1200ms">✕</div></div>
-                            <div class="grid-cell" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1000ms">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1400ms">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1200ms">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #22C55E;"><div class="cross animate-cross" style="animation-delay: 1000ms">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
 
                             <!-- Row 3 -->
-                            <div class="grid-cell" style="background-color: #22C55E;"></div>
-                            <div class="grid-cell" style="background-color: #A855F7;"></div>
-                            <div class="grid-cell" style="background-color: #A855F7;"></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9 moon" style="background-color: #22C55E;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #A855F7;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #A855F7;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
 
                             <!-- Row 4 -->
-                            <div class="grid-cell" style="background-color: #22C55E;"></div>
-                            <div class="grid-cell" style="background-color: #A855F7;"></div>
-                            <div class="grid-cell" style="background-color: #A855F7;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
-                            <div class="grid-cell" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #22C55E;"></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #A855F7;"></div>
+                            <div class="grid-cell w-9 h-9 moon" style="background-color: #A855F7;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
+                            <div class="grid-cell w-9 h-9" style="background-color: #EF4444;"><div class="cross black">✕</div></div>
                         </div>
                     </div>
                 </div>
@@ -500,7 +543,7 @@
                             <div class="flex items-center justify-between gap-1 max-w-[240px] mx-auto">
                                 <div class="flex flex-col items-center gap-2">
                                     <div class="score-button score-primary">3</div>
-                                    <div class="text-[10px] font-bold text-green-600 dark:text-green-400 text-center leading-tight">YOU<br>FIRST</div>
+                                    <div class="text-[10px] font-bold text-green-600 dark:text-green-400 text-center leading-tight uppercase">YOU<br>FIRST</div>
                                 </div>
                                 <div class="flex flex-col items-center gap-2 opacity-30">
                                     <div class="h-[36px] flex items-center">
@@ -510,7 +553,7 @@
                                 </div>
                                 <div class="flex flex-col items-center gap-2">
                                     <div class="score-button score-other">2</div>
-                                    <div class="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 text-center leading-tight">THEY<br>FIRST</div>
+                                    <div class="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 text-center leading-tight uppercase">THEY<br>FIRST</div>
                                 </div>
                                 <div class="flex flex-col items-center gap-2 opacity-30">
                                     <div class="h-[36px] flex items-center">
@@ -520,7 +563,7 @@
                                 </div>
                                 <div class="flex flex-col items-center gap-2">
                                     <div class="score-button score-secondary">2</div>
-                                    <div class="text-[10px] font-bold text-green-600/70 dark:text-green-400/70 text-center leading-tight">YOU<br>LATER</div>
+                                    <div class="text-[10px] font-bold text-green-600/70 dark:text-green-400/70 text-center leading-tight uppercase">YOU<br>LATER</div>
                                 </div>
                             </div>
                             <div class="flex gap-1 justify-center pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
@@ -534,14 +577,50 @@
                     </div>
                 </div>
 
-                <!-- Step 4 -->
-                <div class="group relative bg-white dark:bg-slate-800/40 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 reveal" style="transition-delay: 300ms">
+                <!-- Step 4 - Color Bonus -->
+                <div class="group relative bg-white dark:bg-slate-800/40 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 reveal" style="transition-delay: 250ms">
                     <div class="absolute -top-4 left-8 bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-accent/30">04</div>
+                    <h3 class="mt-4 text-xl font-bold text-slate-900 dark:text-white mb-3">Color Bonuses</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Complete all cells of one color to claim its bonus. Primary claims are worth <span class="font-semibold text-slate-900 dark:text-white">5 points</span>, secondary claims <span class="font-semibold text-slate-900 dark:text-white">3 points</span>.</p>
+
+                    <div class="mt-6 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700/30">
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-3">Color Claims</span>
+                                <div class="flex items-center gap-4">
+                                    <div class="flex flex-col items-center gap-1">
+                                        <div class="color-badge" style="background-color: #3B82F6;">5</div>
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase">Primary</span>
+                                    </div>
+                                    <div class="flex flex-col items-center gap-1">
+                                        <div class="color-badge" style="background-color: #EF4444;">3</div>
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase">Secondary</span>
+                                    </div>
+                                    <div class="flex flex-col items-center gap-1">
+                                        <div class="color-placeholder text-green-500">
+                                            <div class="color-progress-fill" style="height: 65%;"></div>
+                                        </div>
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase">Working</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-slate-200/50 dark:border-slate-700/50">
+                                <p class="text-[11px] leading-snug text-slate-500 dark:text-slate-400">
+                                    The game ends as soon as anyone claims their <span class="font-bold text-slate-700 dark:text-white">second</span> color bonus.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="group relative bg-white dark:bg-slate-800/40 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 reveal" style="transition-delay: 300ms">
+                    <div class="absolute -top-4 left-8 bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-accent/30">05</div>
                     <h3 class="mt-4 text-xl font-bold text-slate-900 dark:text-white mb-3">Jokers</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Stuck? Use a joker to pick any color or number. They are limited, and each use costs <span class="font-semibold text-slate-900 dark:text-white">1 point</span> — use them wisely.</p>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Stuck? Use a joker to pick any color or number. They are limited, and each use costs <span class="font-semibold text-slate-900 dark:text-white">1 point</span> at the end of the game.</p>
                     <div class="mt-6 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700/30">
                         <div class="space-y-3">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Jokers</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Joker Usage</span>
                             <div class="flex gap-4">
                                 <div class="relative flex-shrink-0">
                                     <div class="w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-[12px] bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm aspect-square">
@@ -554,6 +633,36 @@
                                         ✕
                                     </div>
                                     <div class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center text-[9px] font-black text-white shadow-sm">-1</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="group relative bg-white dark:bg-slate-800/40 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 reveal" style="transition-delay: 350ms">
+                    <div class="absolute -top-4 left-8 bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-accent/30">06</div>
+                    <h3 class="mt-4 text-xl font-bold text-slate-900 dark:text-white mb-3">Watch the Moons</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Some cells contain moons. Every moon left unmarked at the end of the game costs you <span class="font-semibold text-slate-900 dark:text-white">2 points</span>.</p>
+                    <div class="mt-6 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700/30">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Moon Penalties</span>
+                            <div class="flex items-center justify-between gap-1 max-w-[240px] mx-auto">
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="grid-cell moon w-9 h-9 bg-[#3B82F6] shadow-sm"></div>
+                                    <div class="text-[10px] font-bold text-red-500 text-center leading-tight uppercase">UNMARKED<br>-2 PTS</div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 opacity-30">
+                                    <div class="h-[36px] flex items-center">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                                    </div>
+                                    <div class="h-4"></div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="grid-cell moon w-9 h-9 bg-[#3B82F6] shadow-sm">
+                                        <div class="cross">✕</div>
+                                    </div>
+                                    <div class="text-[10px] font-bold text-green-600 dark:text-green-400 text-center leading-tight uppercase">MARKED<br>SAFE</div>
                                 </div>
                             </div>
                         </div>
