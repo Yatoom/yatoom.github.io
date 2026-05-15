@@ -194,6 +194,50 @@
             animation: crossAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
 
+        /* Score row button styles */
+        .score-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px; /* App-accurate text size */
+            border: 1px solid;
+            transition: all 0.2s ease;
+        }
+
+        .score-available {
+            background: #F1F5F9;
+            border-color: #E2E8F0;
+            color: #79C0FF;
+        }
+
+        .dark .score-available {
+            background: #1E293B;
+            border-color: #334155;
+            color: #79C0FF;
+        }
+
+        .score-primary {
+            background: rgba(34, 197, 94, 0.25);
+            border-color: #22C55E;
+            color: #22C55E;
+        }
+
+        .score-secondary {
+            background: transparent;
+            border-color: #22C55E;
+            color: #22C55E;
+        }
+
+        .score-other {
+            background: rgba(234, 179, 8, 0.15);
+            border-color: #EAB308;
+            color: #EAB308;
+        }
+
         .grid-cell .cross.black {
             color: black;
         }
@@ -318,7 +362,7 @@
                 </p>
 
                 <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <a href="https://groups.google.com/g/luma-luma-testers/c/l-zBj-RgEGw" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent/25 hover:bg-accentHover transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3">
+                    <a href="https://groups.google.com/g/luma-luma-testers/c/OPY-JQWAm_o" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent/25 hover:bg-accentHover transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <div class="flex flex-col items-start">
                             <span class="text-[10px] uppercase tracking-wider opacity-90 leading-none mb-0.5">Closed Testing</span>
@@ -448,7 +492,46 @@
                 <div class="group relative bg-white dark:bg-slate-800/40 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 reveal" style="transition-delay: 200ms">
                     <div class="absolute -top-4 left-8 bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-accent/30">03</div>
                     <h3 class="mt-4 text-xl font-bold text-slate-900 dark:text-white mb-3">Score Big</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Be the first to complete a color for <span class="font-semibold text-slate-900 dark:text-white">5 points</span> (others get 3). Complete columns first for higher rewards and capture <span class="font-semibold text-slate-900 dark:text-white">moons</span> for +2 bonus points.</p>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Be the first to complete columns for higher rewards. If someone else is first, points are reduced for everyone else.</p>
+
+                    <div class="mt-6 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700/30">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">The Scoring Race</span>
+                            <div class="flex items-center justify-between gap-1 max-w-[240px] mx-auto">
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="score-button score-primary">3</div>
+                                    <div class="text-[10px] font-bold text-green-600 dark:text-green-400 text-center leading-tight">YOU<br>FIRST</div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 opacity-30">
+                                    <div class="h-[36px] flex items-center">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                                    </div>
+                                    <div class="h-4"></div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="score-button score-other">2</div>
+                                    <div class="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 text-center leading-tight">THEY<br>FIRST</div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 opacity-30">
+                                    <div class="h-[36px] flex items-center">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                                    </div>
+                                    <div class="h-4"></div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="score-button score-secondary">2</div>
+                                    <div class="text-[10px] font-bold text-green-600/70 dark:text-green-400/70 text-center leading-tight">YOU<br>LATER</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-1 justify-center pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                                <div class="score-button score-primary">5</div>
+                                <div class="score-button score-available">3</div>
+                                <div class="score-button score-other">2</div>
+                                <div class="score-button score-secondary">2</div>
+                                <div class="score-button score-available">1</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Step 4 -->
@@ -662,7 +745,7 @@
         <div class="relative mx-auto max-w-4xl px-6 lg:px-8 text-center reveal">
             <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl mb-6">Ready to Master the Grid?</h2>
             <p class="text-lg text-slate-600 dark:text-slate-400 mb-10 max-w-xl mx-auto">Luma Luma is currently in closed testing. Join our tester group to get early access and help shape the final experience.</p>
-            <a href="https://groups.google.com/g/luma-luma-testers/c/l-zBj-RgEGw" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-xl bg-accent px-8 py-4 text-base font-semibold text-white shadow-xl shadow-accent/30 hover:bg-accentHover transition-all hover:shadow-2xl hover:-translate-y-1">
+            <a href="https://groups.google.com/g/luma-luma-testers/c/OPY-JQWAm_o" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-xl bg-accent px-8 py-4 text-base font-semibold text-white shadow-xl shadow-accent/30 hover:bg-accentHover transition-all hover:shadow-2xl hover:-translate-y-1">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <div class="flex flex-col items-start">
                     <span class="text-[10px] uppercase tracking-wider opacity-90 leading-none mb-0.5">Closed Testing</span>
@@ -697,7 +780,7 @@
 
 <!-- Sticky Mobile CTA -->
 <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 md:hidden z-40 safe-area-pb">
-    <a href="https://groups.google.com/g/luma-luma-testers/c/l-zBj-RgEGw" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full rounded-lg bg-accent px-4 py-3 text-sm font-bold text-white shadow-lg active:scale-95 transition">
+    <a href="https://groups.google.com/g/luma-luma-testers/c/OPY-JQWAm_o" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full rounded-lg bg-accent px-4 py-3 text-sm font-bold text-white shadow-lg active:scale-95 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         Join Closed Testing
     </a>
