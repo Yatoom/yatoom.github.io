@@ -1,361 +1,495 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, minimal-ui, initial-scale=1, maximum-scale=1, user-scalable=no'/>
-  <title>Jeroen van Hoof</title>
-  <meta name='description' content='Personal site of Jeroen van Hoof.'>
-  <meta name='keywords' content='Jeroen van Hoof'>
-  <link rel="stylesheet" href="build/css/main.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-  <script src="build/js/main.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeroen van Hoof — MLOps Platform Architect</title>
+  <meta name="description" content="Jeroen van Hoof - MLOps Platform Architect at Rabobank. Designing and building production ML platforms, orchestrating data pipelines, and directing platform strategy with focus on scalability and governance.">
+  <meta name="keywords" content="Jeroen van Hoof, MLOps, Platform Architecture, Machine Learning, Cloud Infrastructure, Solution Architecture">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Jeroen van Hoof — MLOps Platform Architect">
+  <meta property="og:description" content="MLOps Platform Architect at Rabobank. Designing production ML platforms, orchestrating data pipelines, and driving platform strategy with GitOps, IaC, and solution architecture.">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Jeroen van Hoof — MLOps Platform Architect">
+  <meta property="twitter:description" content="MLOps Platform Architect at Rabobank. Designing production ML platforms, implementing GitOps, and guiding platform evolution through architectural decisions.">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .gradient-bg {
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    .dark .gradient-bg {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .project-card {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+    
+    *:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  </style>
+  
+  <script>
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
-<body>
-<!--<img class='logo reveal' src='build/img/logo.svg'>-->
-<div class='hero'>
-  <div class="hero__background">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="#" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+        JvH
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="#projects" class="text-sm font-semibold leading-6 hover:text-accent transition">Projects</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
   </div>
-  <div class="content">
-    <img src="build/img/me.jpg" class="reveal me"/>
-    <h1 class='title'>Jeroen van Hoof</h1>
-    Hi there, I am Jeroen! I studied Computer Science at the TU/e and I work as a data engineer  at <a
-          class='link' href='//abnamro.nl'>ABN Amro</a>. Below you will find some of my old projects that I need to update sometime :)
-          You can also find my resume <a class="link" href="//jeroenvanhoof.nl/resume">here</a>.
-    <div class='icons'>
+</nav>
 
-      <!-- Linkedin -->
-      <a href='//nl.linkedin.com/in/jmapvhoof'>
-        <svg class='icon' viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
-             clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-          <path fill='white'
-                d="M13.632 13.635h-2.37V9.922c0-.886-.018-2.025-1.234-2.025-1.235 0-1.424.964-1.424 1.96v3.778h-2.37V6H8.51V7.04h.03c.318-.6 1.092-1.233 2.247-1.233 2.4 0 2.845 1.58 2.845 3.637v4.188zM3.558 4.955c-.762 0-1.376-.617-1.376-1.377 0-.758.614-1.375 1.376-1.375.76 0 1.376.617 1.376 1.375 0 .76-.617 1.377-1.376 1.377zm1.188 8.68H2.37V6h2.376v7.635zM14.816 0H1.18C.528 0 0 .516 0 1.153v13.694C0 15.484.528 16 1.18 16h13.635c.652 0 1.185-.516 1.185-1.153V1.153C16 .516 15.467 0 14.815 0z"
-                fill-rule="nonzero"/>
-        </svg>
-      </a>
+<!-- Hero Section -->
+<div class="relative isolate overflow-hidden gradient-bg pt-16">
+  <!-- Decorative blobs -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <!-- Github -->
-      <a href='//github.com/Yatoom'>
-        <svg class='icon' viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
-             clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-          <path fill='white'
-                d="M8 0C3.58 0 0 3.582 0 8c0 3.535 2.292 6.533 5.47 7.59.4.075.547-.172.547-.385 0-.19-.007-.693-.01-1.36-2.226.483-2.695-1.073-2.695-1.073-.364-.924-.89-1.17-.89-1.17-.725-.496.056-.486.056-.486.803.056 1.225.824 1.225.824.714 1.223 1.873.87 2.33.665.072-.517.278-.87.507-1.07-1.777-.2-3.644-.888-3.644-3.953 0-.873.31-1.587.823-2.147-.083-.202-.358-1.015.077-2.117 0 0 .672-.215 2.2.82.638-.178 1.323-.266 2.003-.27.68.004 1.364.092 2.003.27 1.527-1.035 2.198-.82 2.198-.82.437 1.102.163 1.915.08 2.117.513.56.823 1.274.823 2.147 0 3.073-1.87 3.75-3.653 3.947.287.246.543.735.543 1.48 0 1.07-.01 1.933-.01 2.195 0 .215.144.463.55.385C13.71 14.53 16 11.534 16 8c0-4.418-3.582-8-8-8"/>
-        </svg>
-      </a>
+  <div class="mx-auto max-w-4xl px-6 py-24 sm:py-32 lg:px-8 text-center">
+    <div class="reveal">
+      <img src="build/img/me.jpeg" alt="Jeroen van Hoof" class="mx-auto h-24 w-24 rounded-full shadow-lg mb-8 border-4 border-white dark:border-slate-800"/>
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">
+        Jeroen van Hoof
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
+        I architect scalable MLOps platforms at <a href="https://www.rabobank.com" class="text-accent hover:underline font-semibold">Rabobank</a>. Passionate about cloud infrastructure, Kubernetes, and building systems that scale. You'll find my projects, experiments, and random explorations here.
+      </p>
 
-      <!-- Mail -->
-      <a href='mailto:jvhnl@jeroenvanhoof.nl'>
-        <svg class='icon' viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
-             clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
-          <path fill='white'
-                d="M15.244 7.386c-.023.607-.112 1.204-.266 1.79-.155.587-.387 1.11-.696 1.572-.31.46-.703.833-1.18 1.117-.48.283-1.053.425-1.723.425-.47 0-.885-.102-1.246-.305-.36-.203-.64-.49-.842-.863-.56.756-1.314 1.134-2.258 1.134-.413 0-.788-.092-1.126-.275-.337-.183-.62-.444-.845-.785-.227-.34-.39-.75-.49-1.228-.1-.478-.122-1.012-.064-1.602.084-.72.248-1.376.488-1.962.24-.587.54-1.088.902-1.503.36-.415.774-.735 1.24-.958.468-.223.97-.335 1.508-.335.344 0 .644.026.902.077.258.052.49.122.7.21.21.09.402.19.58.306.177.114.355.232.532.352l-.438 5.04c-.03.242-.024.438.013.59.037.15.097.273.18.364.083.092.18.155.292.19.11.034.224.05.34.05.245 0 .474-.084.686-.252.21-.17.395-.403.55-.7.154-.298.277-.65.37-1.052.09-.404.145-.84.162-1.31.046-.893-.023-1.71-.206-2.448-.184-.738-.486-1.37-.906-1.894-.42-.523-.962-.93-1.624-1.22-.66-.288-1.45-.433-2.366-.433-.87 0-1.65.17-2.34.51-.69.342-1.283.813-1.778 1.414-.495.602-.883 1.31-1.164 2.127-.28.815-.443 1.7-.49 2.65-.045 1.03.038 1.93.25 2.704.212.774.54 1.42.988 1.938.446.518 1.004.906 1.674 1.164.67.257 1.44.386 2.31.386.247 0 .5-.014.756-.043.258-.028.51-.068.76-.12.25-.05.487-.11.713-.176.226-.067.43-.14.614-.22l.317 1.426c-.2.13-.43.244-.687.34-.258.093-.528.172-.812.235-.283.064-.57.11-.863.143-.292.03-.57.047-.833.047-1.162 0-2.193-.166-3.092-.498-.898-.332-1.65-.826-2.254-1.482-.604-.655-1.055-1.47-1.353-2.447-.297-.976-.423-2.11-.378-3.397.052-1.174.268-2.26.65-3.26.38-.998.902-1.86 1.566-2.59C3.636 1.6 4.43 1.032 5.356.62 6.28.206 7.31 0 8.45 0c1.134 0 2.133.18 2.998.537.864.358 1.586.86 2.164 1.51.578.65 1.006 1.428 1.284 2.333.278.905.394 1.907.348 3.006zm-8.588.98c-.063.743-.005 1.306.176 1.687.18.38.47.57.87.57.087 0 .186-.018.298-.055.11-.037.226-.106.343-.206.118-.1.234-.24.348-.42.116-.18.222-.418.32-.71l.342-3.916c-.17-.046-.35-.07-.532-.07-.344 0-.638.07-.885.203-.246.134-.455.333-.627.596-.17.264-.31.59-.416.98-.106.39-.185.835-.236 1.34z"
-                fill-rule="nonzero"/>
-        </svg>
-      </a>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-white font-semibold hover:bg-blue-600 transition shadow-lg shadow-accent/30">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 0H4C1.791 0 0 1.791 0 4v16c0 2.209 1.791 4 4 4h16c2.209 0 4-1.791 4-4V4c0-2.209-1.791-4-4-4zM8 19H5v-9h3v9zM6.5 8.25C5.118 8.25 4 7.132 4 5.75c0-1.382 1.118-2.5 2.5-2.5s2.5 1.118 2.5 2.5c0 1.382-1.118 2.5-2.5 2.5zm13 10.75h-3v-4.5c0-1.383-.5-2.326-1.672-2.326-1.085 0-1.672.844-1.672 2.326V19h-3v-9h2.882v1.178h.041c.416-.708 1.458-1.753 3.085-1.753 3.205 0 5.336 1.989 5.336 6.267V19z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/Yatoom" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-lg bg-slate-700 dark:bg-slate-600 px-6 py-3 text-white font-semibold hover:bg-slate-800 dark:hover:bg-slate-700 transition">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="mailto:jvhnl@jeroenvanhoof.nl" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-6 py-3 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Email
+        </a>
+      </div>
     </div>
   </div>
 </div>
 
 
 <div class='content'>
-  <!-- <h1 class='title'>Timeline</h1> -->
 
-  <!-- <div class='timeline'>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class="figure-container">
-          <figure class="filter">
-            <img src='build/img/wolfpack.png'>
-          </figure>
-        </div>
-        <div class='timeline__description'>
-          <strong>August 2017</strong> <br>
-          <i>Joined the Wolfpack</i><br>
-          Started working as a software developer at Wolfpack.
-        </div>
-      </div>
+<!-- Projects Section -->
+<div id="projects" class="py-24 sm:py-32 border-t border-slate-200 dark:border-slate-800">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="lg:text-center mb-16 reveal">
+      <h2 class="text-base font-semibold leading-7 text-accent uppercase tracking-wide">Portfolio</h2>
+      <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Featured Projects</p>
+      <p class="mt-4 text-lg text-slate-600 dark:text-slate-400">Featuring machine learning projects, algorithms, web design, app development and DevOps.</p>
     </div>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class='timeline__description'>
-          <strong>March 2016</strong> <br>
-          <i>Started master</i><br>
-          Started a master's study of Computer Science &amp; Engineering at the Eindhoven University of
-          Technology .
+
+    <!-- Luma Luma Featured Project -->
+    <div class="mx-auto max-w-4xl mb-12 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 overflow-hidden shadow-sm hover:shadow-lg transition project-card reveal">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div class="p-8 md:p-12 flex flex-col justify-center">
+          <div class="inline-flex items-center gap-2 rounded-full bg-accent/10 w-fit px-3 py-1 text-sm font-medium text-accent ring-1 ring-inset ring-accent/20 mb-4">
+            <span class="w-2 h-2 rounded-full bg-accent"></span>
+            Latest Project
+          </div>
+          <h3 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">Luma Luma</h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-6">A fast-paced digital roll-and-write strategy game with solo and online multiplayer. Uniquely generated grids for infinite replayability. Built with modern Android Kotlin and Compose architecture.</p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 rounded text-sm font-semibold bg-accent/10 text-accent">Kotlin</span>
+            <span class="px-3 py-1 rounded text-sm font-semibold bg-accent/10 text-accent">Compose</span>
+            <span class="px-3 py-1 rounded text-sm font-semibold bg-accent/10 text-accent">Game Dev</span>
+          </div>
+          <a href="luma-luma/index.html" class="inline-flex items-center gap-2 text-accent hover:text-blue-600 font-semibold transition">
+            View Project →
+          </a>
         </div>
-      </div>
-    </div>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class="figure-container">
-          <figure class="filter">
-            <img src='build/img/graduation-340.jpg'>
-          </figure>
-        </div>
-        <div class='timeline__description'>
-          <strong>March 2016</strong><br>
-          <i>Bachelor's degree</i><br>
-          Received Bachelor's degree in Computer Science (Web Science) at the Eindhoven University of
-          Technology.
+        <div class="bg-gradient-to-br from-accent/10 to-purple-500/10 flex items-center justify-center p-8 md:p-12 min-h-64">
+          <div class="text-center">
+            <img src="build/img/main-menu-small.png" alt="Skin Perfection beauty site" class="w-full h-full object-cover" loading="lazy">
+
+            <!-- <div class="text-6xl font-bold text-accent/50">🎲</div> -->
+            <!-- <p class="text-slate-600 dark:text-slate-400 mt-4">Master the Grid</p> -->
+          </div>
         </div>
       </div>
     </div>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class="figure-container">
-          <figure class="filter">
-            <img src='build/img/ilysian-340.jpg'>
-          </figure>
+
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Homelab -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/homelab.png" alt="Skin Perfection beauty site" class="w-full h-full object-cover" loading="lazy">
         </div>
-        <div class='timeline__description'>
-          <strong>July 2015</strong> <br>
-          <i>Started work at Ilysian</i><br>
-          Started working as software developer at Ilysian.
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Homelab</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2025</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Personal home lab for testing and development purposes.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">ArgoCD</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Kubernetes</span>
+          </div>
+          <a href="https://github.com/Yatoom/my-homelab" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+
+
+      <!-- Skin Perfection -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/skin-perfection.png" alt="Skin Perfection beauty site" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Skin Perfection</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2024</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Webshop built on Wordpress. Automated with Ansible for minimal resource usage.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Wordpress</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Ansible</span>
+          </div>
+          <a href="http://www.skinperfection.nl/" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            Visit Site →
+          </a>
+        </div>
+      </div>
+
+      <!-- Hyperbench -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/hyperbench.png" alt="Hyperbench performance testing tool" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Hyperbench</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2023</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">A benchmarking framework for hyperparameter optimization (HPO) algorithms that includes Hyperboost, a custom HPO library.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Python</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">AutoML</span>
+          </div>
+          <a href="https://github.com/Yatoom/hyperbench" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+
+      <!-- Voronoi -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 50ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/triangle.gif" alt="Voronoi diagram visualization" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Voronoi Algorithm</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2021</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Efficient sweep line algorithm for calculating Voronoi diagrams within user-defined bounding polygons.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Algorithms</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Geometry</span>
+          </div>
+          <a href="https://github.com/Yatoom/voronoi" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+
+      <!-- Jumper -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 100ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/jumper.png" alt="Jumper platformer game" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Jumper</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2020</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Platform game built with Phaser that teaches programming concepts through interactive gameplay.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Game Dev</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Education</span>
+          </div>
+          <a href="http://team-beta.github.io/furry-sansa/" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            Play Game →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- Optimus -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 150ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/optimus-graph.png" alt="Optimus AutoML optimization graphs" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Optimus — AutoML Framework</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2018</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Automated machine learning framework with OpenML integration. Leverages Bayesian optimization to find optimal algorithm parameters. Master's thesis project on automating iterative ML workflows—foundational work influencing later platform architecture decisions.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Python</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">AutoML</span>
+          </div>
+          <a href="https://github.com/Yatoom/Optimus/tree/develop" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- City Generator -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 200ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/generation.png" alt="Procedurally generated city" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">City Generator</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2018</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Procedural generation of road plans and unique buildings using L-systems, based on Parish and Müller's research.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Procedural Gen</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">React</span>
+          </div>
+          <a href="https://github.com/nenanen/2IMV10-project6" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+
+      <!-- Calllock -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 250ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/calllock-system.png" alt="Calllock vehicle sharing system" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Calllock</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2016</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Control panel for vehicle share service resellers, built with Laravel, AngularJS and Sass.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Laravel</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">AngularJS</span>
+          </div>
+          <a href="http://2cp.calllock.com/login" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View Project →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- Balmoral -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 300ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/balmoral.png" alt="Balmoral Cigars e-commerce site" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Balmoral Cigars</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2015</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">E-commerce website built with PHP, HTML5 and Sass.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">PHP</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">CSS</span>
+          </div>
+          <a href="http://www.balmoralcigars.com/" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            Visit Site →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- CS KochSysteme -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 350ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/cs-kochsysteme.png" alt="CS KochSysteme landing page" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">CS KochSysteme</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2015</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Complete frontend rewrite with maintainable architecture, responsive design, and performance improvements.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Frontend</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Responsive</span>
+          </div>
+          <a href="https://www.cs-kochsysteme.nl" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            Visit Site →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- Travelmatch -->
+      <!-- <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 400ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/travelmatch-login.png" alt="Travelmatch travel planning app" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Travelmatch</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2015</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Mobile app generating TravelDNA from image preferences. Built with Cordova, AngularJS and Django backend.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Cordova</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Django</span>
+          </div>
+          <a href="http://wwwis.win.tue.nl/2R690/projects/travelmatch/sum.pdf" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View Project →
+          </a>
+        </div>
+      </div> -->
+
+      <!-- The Cycle -->
+      <div class="group relative bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition hover:shadow-lg hover:-translate-y-1 project-card reveal overflow-hidden" style="transition-delay: 450ms">
+        <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+          <img src="build/img/cycle.png" alt="The Cycle point-and-click game" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">The Cycle</h3>
+          <p class="text-sm font-medium text-accent mb-4">Year: <span class="font-semibold text-lg">2014</span></p>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Point and click game built in HTML5 with Inkscape illustrations and custom frontend architecture.</p>
+          <div class="flex gap-2 mb-4">
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">HTML5</span>
+            <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Game Dev</span>
+          </div>
+          <a href="https://github.com/Yatoom/TheCycle" target="_blank" class="text-accent hover:text-blue-600 font-semibold text-sm transition">
+            View on GitHub →
+          </a>
         </div>
       </div>
     </div>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class='timeline__description'>
-          <strong>Nov 2014 – Jan 2015</strong> <br>
-          <i>Student assistent Web Technology</i><br>
-          Worked a student assistant for the course Web Technology, where students were taught technologies,
-          languages and frameworks, such as SOAP, REST, HTML5, Javascript, CSS, Bootstrap, AJAX, PHP, NodeJS,
-          Python and Django.
-        </div>
+  </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
       </div>
     </div>
-    <div class='timeline__container'>
-      <div class='timeline__box reveal'>
-        <div class='timeline__description'>
-          <strong>June 2011</strong> <br>
-          <i>Graduated highschool</i><br>
-          Finished high school at Willibrord Gymnasium Deurne, in Science &amp; Technology and Health &amp;
-          Nature.
-        </div>
-      </div>
-    </div>
-  </div> -->
-</div>
-
-<div class='content'>
-  <h1 class='title'>Projects</h1>
-</div>
-
-<!-- Voronoi -->
-<div class='project project--elysiumcss flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/triangle.gif"/>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
     </div>
   </div>
+</footer>
 
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Voronoi algorithm</h2>
-    <a class='link' href='https://github.com/Yatoom/voronoi'>Voronoi</a>, an efficient sweep line algorithm for the
-    calculation of Voronoi diagrams within a user defined bounding polygon.</li>
-  </div>
-</div>
+<script>
+  // Theme Toggle
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
 
-<div class='project project--elysiumcss flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/ai-medapp.png"/>
-    </div>
-  </div>
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    themeToggleLightIcon.classList.remove('hidden');
+  } else {
+    themeToggleDarkIcon.classList.remove('hidden');
+  }
 
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>AI for medicine boxes</h2>
-    An <a class='link' href='https://medapp.nu/medapp-ontwikkeling-kunstmatige-intelligentie/'>article about my work at
-    Wolfpack</a>, where I created a a tool for scanning medicine boxes and extracting the ingredients using natural
-    language processing.
-    </li>
-  </div>
-</div>
+  themeToggleBtn.addEventListener('click', function() {
+    themeToggleDarkIcon.classList.toggle('hidden');
+    themeToggleLightIcon.classList.toggle('hidden');
 
-<!-- Optimus -->
-<div class='project project--elysiumcss flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/optimus-graph.png"/>
-    </div>
-  </div>
+    if (localStorage.getItem('color-theme')) {
+      if (localStorage.getItem('color-theme') === 'light') {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      }
+    } else {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+    }
+  });
 
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Optimus</h2>
-    <a class='link' href='https://github.com/Yatoom/Optimus/tree/develop'>Optimus</a>, an automated machine learning
-    tool with
-    <a class='link' href="https://www.openml.org/">OpenML</a> integration for reproducible results. With the help of
-    Bayesian optimization it finds the best parameters for an algorithm on a given task.</li>
-  </div>
-</div>
+  // Current Year
+  document.getElementById('current-year').textContent = new Date().getFullYear();
 
-<!-- City generator -->
-<div class='project project--jumper flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/generation.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>City generator</h2>
-    Fully automatic generation of road plans and unique buildings in a highly parameterizable way.
-    The algorithms behind this procedural generation mostly follow the paper of Procedural Modeling of Cities by Parish
-    and Müller, which uses L-systems for road and building generation.<br/>
-    <a class="link" href="https://github.com/nenanen/2IMV10-project6">Project source.</a>
-  </div>
-</div>
-
-
-<!-- ElysiumCSS -->
-<div class='project project--elysiumcss flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/elysiumcss.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Elysium CSS</h2>
-    <a class='link' href='https://github.com/Yatoom/ElysiumCSS'>ElysiumCSS</a>, a SASS/CSS style guide.</li>
-  </div>
-</div>
-
-<!-- Calllock -->
-<div class='project project--calllock flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/calllock-system.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Calllock</h2>
-    <a class='link' href='http://2cp.calllock.com/login'>Calllock Customer control panel</a>, a control panel for
-    resellers of Calllock's vehicle share service, built with Laravel, AngularJS and Sass.
-  </div>
-</div>
-
-<!-- Balmoral -->
-<div class='project project--balmoral flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/balmoral.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Balmoral</h2>
-    <a class='link' href='http://www.balmoralcigars.com/'>Balmoral cigars</a>, a website built with PHP, HTML5 and
-    Sass.
-  </div>
-</div>
-
-<!-- Skin Perfection -->
-<div class='project project--skin-perfection flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/skinperfection.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Skin Perfection</h2>
-    <a class='link' href='http://www.skinperfection.nl/'>Skin Perfection</a>, a website built on Wordpress.
-  </div>
-</div>
-
-<!-- CS KochSysteme -->
-<div class='project project--cs-kochsysteme flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/cs-kochsysteme.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>CS Kochysteme</h2>
-    <a class='link' href='https://www.cs-kochsysteme.nl'>CS Kochsysteme</a> used to be a website which front-end had
-    a lot of problems and had become very hard to maintain.
-    I have rewritten the front-end from scratch in a maintainable, logical and consistent architecture, fixing the
-    problems and making it responsive along the way.
-  </div>
-</div>
-
-<!-- Travelmatch -->
-<div class='project project--travelmatch flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--mobile">
-      <img class='css-device__image' src="build/img/travelmatch-login.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Travelmatch</h2>
-    <a class='link' href='http://wwwis.win.tue.nl/2R690/projects/travelmatch/sum.pdf'>Travelmatch</a>, a
-    smartphone/tablet app that creates a TravelDNA based on the liking and disliking of travel images.
-    The mobile app was built with Cordova, AngularJS and Less and communicated via REST with a Django server.
-  </div>
-</div>
-
-<!-- Jumper -->
-<div class='project project--jumper flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/jumper.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>Jumper</h2>
-    <a class='link' href='http://team-beta.github.io/furry-sansa/'>Jumper</a>, a platform game built with <a
-          class='link' href='http://phaser.io/'>Phaser</a> that teaches you how to program.
-  </div>
-</div>
-
-
-<!-- The Cycle -->
-<div class='project project--cycle flex'>
-  <!-- Screenshot -->
-  <div class='project__screenshot reveal'>
-    <div class="css-device css-device--browser">
-      <img class='css-device__image' src="build/img/cycle.png"/>
-    </div>
-  </div>
-
-  <!-- Description -->
-  <div class='project__description'>
-    <h2><span class="arrow"></span>The Cycle</h2>
-    <a class='link' href='http://cycle.atscripts.com/index.php'>The Cycle</a>, a point and click game built in
-    HTML5, illustrations are made by me using Inkscape, and I developed a large part of the front-end of the game.
-  </div>
-</div>
+  // Scroll Reveal Observer
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
