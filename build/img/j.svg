@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256mm"
+   height="256mm"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   sodipodi:docname="j.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.63942443"
+     inkscape:cx="398.79615"
+     inkscape:cy="480.11928"
+     inkscape:window-width="1712"
+     inkscape:window-height="971"
+     inkscape:window-x="0"
+     inkscape:window-y="39"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <style>
+      @media (prefers-color-scheme: dark) {
+        path { fill: white !important; }
+        text { fill: white !important; }
+        rect { stroke: white !important; }
+      }
+      @media (prefers-color-scheme: light) {
+        path { fill: black !important; }
+        text { fill: black !important; }
+        rect { stroke: black !important; }
+      }
+    </style>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+       d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+       id="text1"
+       aria-label="J_" />
+    <text
+       xml:space="preserve"
+       style="font-size:21.1667px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;stroke-width:0.264583"
+       x="87.056923"
+       y="118.46281"
+       id="text1-2"><tspan
+         sodipodi:role="line"
+         id="tspan1-4"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:0.264583"
+         x="87.056923"
+         y="118.46281" /></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:17.8144;stroke-dasharray:none"
+       id="rect1"
+       width="224.11226"
+       height="219.19101"
+       x="15.943868"
+       y="18.404495" />
+  </g>
+</svg>
