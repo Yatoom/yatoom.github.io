@@ -24,6 +24,9 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="build/img/favicon.png">
   
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -131,6 +134,13 @@
     }
     .floating-element:nth-child(8) {
       animation: grid-path-4 6.3s ease-in-out infinite 2.2s, fade-in-out 4.1s ease-in-out infinite 1.1s;
+    }
+    
+    .floating-element {
+      background-color: #000000 !important;
+    }
+    .dark .floating-element {
+      background-color: #ffffff !important;
     }
     
     .grid-bg {
@@ -292,7 +302,7 @@
             View Project →
           </a>
         </div>
-        <div class="bg-gradient-to-br from-accent/10 to-purple-500/10 flex items-center justify-center p-8 md:p-12 min-h-64">
+        <div class="bg-gradient-to-br from-accent/10 to-purple-500/10 flex items-center justify-center min-h-64">
           <div class="text-center">
             <img src="build/img/main-menu-small.png" alt="Skin Perfection beauty site" class="w-full h-full object-cover" loading="lazy">
 
@@ -313,7 +323,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Vastorum</h3>
-          <p class="text-sm font-medium text-accent mb-4">Coming soon</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 text-xs font-semibold text-amber-600 dark:text-amber-400 ring-1 ring-inset ring-amber-400/20">
+              <i class="material-icons" style="font-size: 16px;">schedule</i>
+              Coming Soon
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">A multiplayer real-time strategy browser game built around an on-demand, tick-less lazy event simulation engine.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Go</span>
@@ -332,7 +347,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Homelab</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2025</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2025
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">Personal home lab for testing and development purposes.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">ArgoCD</span>
@@ -352,8 +372,13 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Skin Perfection</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2024</p>
-          <p class="text-slate-600 dark:text-slate-400 mb-4">Webshop built on Wordpress. Fully custom UI design. Automated with Ansible for minimal resource usage.</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2024
+            </span>
+          </div>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">Webshop built on Wordpress. Fully custom UI design. Deployed with Ansible for minimal resource usage.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Wordpress</span>
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Ansible</span>
@@ -371,7 +396,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Hyperbench</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2023</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2023
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">A benchmarking framework for hyperparameter optimization (HPO) algorithms that includes Hyperboost, a custom HPO library.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Python</span>
@@ -390,7 +420,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Voronoi Algorithm</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2021</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2021
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">Efficient sweep line algorithm for calculating Voronoi diagrams within user-defined bounding polygons.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Algorithms</span>
@@ -447,7 +482,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">City Generator</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2018</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2018
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">Procedural generation of road plans and unique buildings using L-systems, based on Parish and Müller's research.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">Procedural Gen</span>
@@ -542,7 +582,12 @@
         </div>
         <div class="p-8">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">The Cycle</h3>
-          <p class="text-sm font-medium text-accent mb-4">Year: 2014</p>
+          <div class="inline-flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-xs font-semibold text-accent ring-1 ring-inset ring-accent/20">
+              <i class="material-icons" style="font-size: 16px;">calendar_today</i>
+              2014
+            </span>
+          </div>
           <p class="text-slate-600 dark:text-slate-400 mb-4">Point and click game built in HTML5 with Inkscape illustrations and custom frontend architecture.</p>
           <div class="flex gap-2 mb-4">
             <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">HTML5</span>
