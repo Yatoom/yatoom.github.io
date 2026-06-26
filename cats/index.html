@@ -5,481 +5,390 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Katten Stamboom — Jeroen van Hoof</title>
   <meta name="description" content="Katten Stamboom - Een visuele stamboom van onze geliefde familiekatten door de generaties heen.">
-  <meta name="keywords" content="Katten, Stamboom, Jeroen van Hoof, Poezen, Huisdieren">
-  
-  <!-- Theme Color -->
+
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
-  
-  <!-- Favicon -->
+
   <link rel="icon" type="image/png" href="../build/img/j.svg">
-  
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            accent: '#3B82F6',
-          }
-        }
-      }
+      theme: { extend: { colors: { accent: '#3B82F6' } } }
     }
   </script>
-  
+
   <style>
-    .gradient-bg {
-      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    }
-    .dark .gradient-bg {
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-    }
-    
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.8; }
-    }
-    @keyframes grid-flow {
-      0% { background-position: 0 0; }
-      100% { background-position: 50px 50px; }
-    }
-    
+    .gradient-bg { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
+    .dark .gradient-bg { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
+
+    @keyframes pulse-glow { 0%,100%{opacity:.3} 50%{opacity:.8} }
+    @keyframes grid-flow { 0%{background-position:0 0} 100%{background-position:50px 50px} }
+    @keyframes fadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+
     .grid-bg {
-      background-image: 
-        linear-gradient(0deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
+      background-image:
+        linear-gradient(0deg,rgba(59,130,246,.08) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(59,130,246,.08) 1px,transparent 1px);
       background-size: 50px 50px;
       animation: grid-flow 20s linear infinite;
-      transition: animation 0.3s ease;
     }
     .dark .grid-bg {
-      background-image: 
-        linear-gradient(0deg, rgba(93, 147, 255, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(93, 147, 255, 0.06) 1px, transparent 1px);
+      background-image:
+        linear-gradient(0deg,rgba(93,147,255,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(93,147,255,.06) 1px,transparent 1px);
     }
-    
-    .glow-blob {
-      animation: pulse-glow 4s ease-in-out infinite;
-    }
-    
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
-    }
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    .dark ::-webkit-scrollbar-thumb {
-      background: #475569;
-    }
-    
-    *:focus-visible {
-      outline: 2px solid #3b82f6;
-      outline-offset: 2px;
-    }
+    .glow-blob { animation: pulse-glow 4s ease-in-out infinite; }
 
-    /* Modernized Tree Custom Lines */
-    .clt, .clt ul, .clt li {
-      position: relative;
-    }
-    .clt ul {
-       list-style: none;
-       padding-left: 28px;
-       margin-top: 0;
-    }
-    .clt li {
-        margin: 0;
-        padding: 8px 0;
-    }
-    .clt li::before, .clt li::after {
-       content: "";
-       position: absolute;
-       left: -14px;
-    }
-    
-    /* DEFAULT tree connectors (for text-only leaf nodes, e.g. Soesje) */
-    .clt li::before {
-       border-top: 1px solid rgb(203 213 225); /* slate-300 */
-       top: 20px;
-       width: 10px;
-       height: 0;
-    }
-    .dark .clt li::before {
-       border-top-color: rgb(51 65 85); /* slate-700 */
-    }
-    .clt li::after {
-       border-left: 1px solid rgb(203 213 225); /* slate-300 */
-       height: 100%;
-       width: 0px;
-       top: 0;
-    }
-    .dark .clt li::after {
-       border-left-color: rgb(51 65 85); /* slate-700 */
-    }
-    .clt ul > li:last-child::after {
-       height: 20px;
-    }
+    /* ── Tree connectors ── */
+    .clt, .clt ul, .clt li { position: relative; }
+    .clt ul { list-style: none; padding-left: 28px; margin-top: 0; }
+    .clt li { margin: 0; padding: 8px 0; }
+    .clt li::before, .clt li::after { content:""; position:absolute; left:-14px; }
 
-    /* SPECIFIC connectors for parent collapsible nodes (Ginny, Safira, etc.) */
-    .clt li.parent-node::before {
-       top: 48px; /* aligns with center of the 88px parent card */
-    }
-    .clt ul > li.parent-node:last-child::after {
-       height: 48px;
-    }
+    .clt li::before { border-top:1px solid rgb(203 213 225); top:20px; width:10px; height:0; }
+    .dark .clt li::before { border-top-color:rgb(51 65 85); }
+    .clt li::after { border-left:1px solid rgb(203 213 225); height:100%; width:0; top:0; }
+    .dark .clt li::after { border-left-color:rgb(51 65 85); }
+    .clt ul > li:last-child::after { height:20px; }
 
-    /* SPECIFIC connectors for leaf card nodes */
-    .clt li.card-node::before {
-       top: 40px; /* points to upper portion of profile cards */
-    }
-    .clt ul > li.card-node:last-child::after {
-       height: 40px;
-    }
+    .clt li.parent-node::before { top:48px; }
+    .clt ul > li.parent-node:last-child::after { height:48px; }
+    .clt li.card-node::before { top:40px; }
+    .clt ul > li.card-node:last-child::after { height:40px; }
 
-    /* Hide standard details arrow */
-    summary::-webkit-details-marker {
+    summary::-webkit-details-marker { display:none; }
+    summary { list-style:none; }
+
+    /* ── Lightbox ── */
+    #lightbox {
       display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,.88);
+      backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
     }
-    summary {
-      list-style: none;
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: min(90vw, 800px);
+      max-height: 85vh;
+      border-radius: 16px;
+      object-fit: contain;
+      animation: fadeIn .2s ease;
+      box-shadow: 0 32px 80px rgba(0,0,0,.6);
     }
+    #lightbox-name {
+      position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
+      background:rgba(0,0,0,.6);
+      color:#fff; font-weight:700; font-size:15px;
+      padding:8px 20px; border-radius:999px;
+      backdrop-filter: blur(4px);
+    }
+    #lightbox-close {
+      position:absolute; top:20px; right:20px;
+      background:rgba(255,255,255,.1); border:none; color:#fff;
+      width:44px; height:44px; border-radius:50%; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; transition:.2s;
+    }
+    #lightbox-close:hover { background:rgba(255,255,255,.2); }
+    #lightbox-prev, #lightbox-next {
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(255,255,255,.1); border:none; color:#fff;
+      width:50px; height:50px; border-radius:50%; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px; transition:.2s;
+    }
+    #lightbox-prev:hover, #lightbox-next:hover { background:rgba(255,255,255,.25); }
+    #lightbox-prev { left:24px; }
+    #lightbox-next { right:24px; }
+
+    /* ── Generation badge colours ── */
+    .gen-1 { --gb:rgba(245,158,11,.1); --gc:rgb(180,115,0); --gr:rgba(245,158,11,.2); }
+    .dark .gen-1 { --gc:rgb(251,191,36); }
+    .gen-2 { --gb:rgba(16,185,129,.1); --gc:rgb(4,120,87); --gr:rgba(16,185,129,.2); }
+    .dark .gen-2 { --gc:rgb(52,211,153); }
+    .gen-3 { --gb:rgba(59,130,246,.1); --gc:rgb(29,78,216); --gr:rgba(59,130,246,.2); }
+    .dark .gen-3 { --gc:rgb(96,165,250); }
+    .gen-4 { --gb:rgba(168,85,247,.1); --gc:rgb(109,40,217); --gr:rgba(168,85,247,.2); }
+    .dark .gen-4 { --gc:rgb(196,132,251); }
+    .gen-5 { --gb:rgba(236,72,153,.1); --gc:rgb(157,23,77); --gr:rgba(236,72,153,.2); }
+    .dark .gen-5 { --gc:rgb(244,114,182); }
+    .gen-6 { --gb:rgba(234,179,8,.1); --gc:rgb(133,77,14); --gr:rgba(234,179,8,.2); }
+    .dark .gen-6 { --gc:rgb(250,204,21); }
+
+    .gen-badge {
+      display:inline-flex; align-items:center; gap:3px;
+      padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700;
+      background:var(--gb); color:var(--gc);
+      ring: 1px solid var(--gr);
+      box-shadow: 0 0 0 1px var(--gr);
+      margin-top:2px; align-self:flex-start;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width:8px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+    .dark ::-webkit-scrollbar-thumb { background:#475569; }
+    *:focus-visible { outline:2px solid #3b82f6; outline-offset:2px; }
   </style>
-  
+
   <script>
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
     }
   </script>
 </head>
 <body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
 
-<!-- Navbar -->
+<!-- ══════════════════════════════════════════════════════════ LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Katfoto vergroten">
+  <button id="lightbox-close" aria-label="Sluiten"><i class="material-icons">close</i></button>
+  <button id="lightbox-prev" aria-label="Vorige"><i class="material-icons">chevron_left</i></button>
+  <img id="lightbox-img" src="" alt="">
+  <button id="lightbox-next" aria-label="Volgende"><i class="material-icons">chevron_right</i></button>
+  <div id="lightbox-name"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ NAVBAR -->
 <nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
   <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
-    <div class="flex items-center gap-3">
-      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
-        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <style>
-              html.dark svg path { fill: white !important; }
-              html.dark svg text { fill: white !important; }
-              html.dark svg rect { stroke: white !important; }
-              html:not(.dark) svg path { fill: black !important; }
-              html:not(.dark) svg text { fill: black !important; }
-              html:not(.dark) svg rect { stroke: black !important; }
-            </style>
-          </defs>
-          <g>
-            <path
-               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
-               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
-               aria-label="J_" />
-            <rect
-               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
-               width="224.11226"
-               height="219.19101"
-               x="15.943868"
-               y="18.404495" />
-          </g>
-        </svg>
-      </a>
-    </div>
+    <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+      <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>html.dark svg path{fill:white!important}html.dark svg rect{stroke:white!important}html:not(.dark) svg path{fill:black!important}html:not(.dark) svg rect{stroke:black!important}</style></defs>
+        <g>
+          <path style="font-weight:bold;font-size:170.497px;font-family:Roboto;stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/>
+          <rect style="fill:none;stroke-width:17.8144" width="224.11226" height="219.19101" x="15.943868" y="18.404495"/>
+        </g>
+      </svg>
+    </a>
 
-    <!-- Desktop Nav -->
     <div class="hidden md:flex items-center gap-x-8">
       <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
-      <!-- <a href="../blog.html" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Blog</a> -->
-      <a href="index.html" class="text-sm font-bold leading-6 text-accent dark:text-accent transition">Cats</a>
+      <a href="index.html" class="text-sm font-bold leading-6 text-accent transition">Cats</a>
     </div>
 
-    <div class="flex items-center gap-3">
-      <!-- Dark Mode Toggle -->
-      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
-        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-      </button>
-    </div>
+    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+      <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+      <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
+    </button>
   </div>
 </nav>
 
-<!-- Hero Section -->
+<!-- ══════════════════════════════════════════════════════════ HERO -->
 <div class="relative isolate overflow-hidden gradient-bg pt-16">
-  <!-- Animated Grid Background -->
   <div class="absolute inset-0 grid-bg opacity-40 dark:opacity-30"></div>
-  
-  <!-- Decorative blobs with animation -->
   <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl pointer-events-none glow-blob"></div>
-  <div class="absolute -bottom-32 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl pointer-events-none glow-blob"></div>
 
-  <div class="mx-auto max-w-4xl px-6 py-20 sm:py-28 lg:px-8 text-center relative z-10">
-    <div class="reveal active">
-      <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-blue-500/10 text-accent mb-8 border border-blue-500/20 shadow-sm">
-        <i class="material-icons" style="font-size: 40px;">pets</i>
-      </div>
-      <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">
-        Katten Stamboom
-      </h1>
-      <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-        Een visuele stamboom van onze geliefde familiekatten door de generaties heen. Klik op categorieën om ze uit te klappen en bekijk hun foto's.
-      </p>
+  <div class="mx-auto max-w-4xl px-6 py-16 sm:py-24 lg:px-8 text-center relative z-10">
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-blue-500/10 text-accent mb-6 border border-blue-500/20 shadow-sm">
+      <i class="material-icons" style="font-size:40px">pets</i>
     </div>
+    <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">Katten Stamboom</h1>
+    <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+      Een visuele stamboom van onze geliefde familiekatten door de generaties heen. Klik op foto's om ze te vergroten.
+    </p>
   </div>
 </div>
 
-<!-- Main Content Area -->
-<div class="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-  <div class="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-12 shadow-sm reveal active">
-    
-    <!-- Visual Tree Root Node -->
+<!-- ══════════════════════════════════════════════════════════ CONTROLS -->
+<div class="sticky top-[65px] z-40 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm">
+  <div class="mx-auto max-w-7xl px-6 py-3 lg:px-8 flex gap-2 justify-end">
+    <button id="expand-all" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+      <i class="material-icons" style="font-size:14px">unfold_more</i> Alles open
+    </button>
+    <button id="collapse-all" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+      <i class="material-icons" style="font-size:14px">unfold_less</i> Alles dicht
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ TREE -->
+<div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+
+  <div class="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-12 shadow-sm overflow-x-auto">
+
+    <!-- Root badge -->
     <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-white font-bold rounded-2xl shadow-lg shadow-accent/20 mb-6 select-none">
       <i class="material-icons text-lg">alt_route</i>
       <span>Kattenfamilie</span>
     </div>
 
-    <!-- Tree Layout Container -->
-    <div class="clt mt-2 pl-2">
+    <!-- Tree -->
+    <div class="clt mt-2 pl-2" id="tree-root">
       <ul>
-        <!-- Level 1: Soesje -->
-        <li class="parent-node">
-          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md transition-all duration-300 min-w-[200px] w-fit">
-            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-950 flex items-center justify-center text-slate-400 dark:text-slate-600 shadow-inner">
-              <i class="material-icons" style="font-size: 28px;">pets</i>
+
+        <!-- ── Gen 1: Soesje (no photo) ── -->
+        <li class="parent-node cat-entry" data-gen="1" data-name="soesje">
+          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm min-w-[200px] w-fit">
+            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
+              <i class="material-icons" style="font-size:28px">pets</i>
             </div>
             <div class="pr-2">
-              <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Soesje</h3>
-              <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-amber-500/10 text-[10px] font-bold text-amber-600 dark:text-amber-400 ring-1 ring-inset ring-amber-500/20">
-                Gen 1
-              </span>
+              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Soesje</h3>
+              <span class="gen-badge gen-1">Gen 1</span>
             </div>
           </div>
         </li>
 
-        <!-- Level 1: Ginny -->
-        <li class="parent-node">
-          <details class="group">
-            <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-850 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+        <!-- ── Gen 1: Ginny ── -->
+        <li class="parent-node cat-entry" data-gen="1" data-name="ginny">
+          <details class="group" id="details-ginny">
+            <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+              <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                <i class="material-icons" style="font-size:14px">chevron_right</i>
               </span>
               <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                <img src="katten/ginny.jpg" alt="Ginny" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+                <img src="katten/ginny.jpg" alt="Ginny" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Ginny">
                 <div class="pr-2">
-                  <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Ginny</h3>
-                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-amber-500/10 text-[10px] font-bold text-amber-600 dark:text-amber-400 ring-1 ring-inset ring-amber-500/20">
-                    Gen 1
-                  </span>
+                  <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Ginny</h3>
+                  <span class="gen-badge gen-1">Gen 1</span>
                 </div>
               </div>
             </summary>
             <ul>
-              <!-- Level 2: Ruby -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="katten/ruby.jpg" alt="Ruby" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+              <!-- Ruby -->
+              <li class="card-node cat-entry" data-gen="2" data-name="ruby">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img src="katten/ruby.jpg" alt="Ruby" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Ruby">
                   </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Ruby</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Ruby</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
             </ul>
           </details>
         </li>
 
-        <!-- Level 1: Safira -->
-        <li class="parent-node">
-          <details class="group">
-            <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-850 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+        <!-- ── Gen 1: Safira ── -->
+        <li class="parent-node cat-entry" data-gen="1" data-name="safira">
+          <details class="group" id="details-safira">
+            <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+              <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                <i class="material-icons" style="font-size:14px">chevron_right</i>
               </span>
-              <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                <img src="katten/safira.jpg" alt="Safira" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+              <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                <img src="katten/safira.jpg" alt="Safira" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Safira">
                 <div class="pr-2">
-                  <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Safira</h3>
-                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-amber-500/10 text-[10px] font-bold text-amber-600 dark:text-amber-400 ring-1 ring-inset ring-amber-500/20">
-                    Gen 1
-                  </span>
+                  <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Safira</h3>
+                  <span class="gen-badge gen-1">Gen 1</span>
                 </div>
               </div>
             </summary>
             <ul>
-              <!-- Level 2: Roosje -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="katten/roosje.jpg" alt="Roosje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+              <!-- Roosje -->
+              <li class="card-node cat-entry" data-gen="2" data-name="roosje">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img src="katten/roosje.jpg" alt="Roosje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Roosje">
                   </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Roosje</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Roosje</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
-              
-              <!-- Level 2: Midnight -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="katten/midnight.jpg" alt="Midnight" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+              <!-- Midnight -->
+              <li class="card-node cat-entry" data-gen="2" data-name="midnight">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img src="katten/midnight.jpg" alt="Midnight" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Midnight">
                   </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Midnight</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Midnight</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
-              
-              <!-- Level 2: Sparkle -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="katten/sparkle.jpg" alt="Sparkle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+              <!-- Sparkle -->
+              <li class="card-node cat-entry" data-gen="2" data-name="sparkle">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img src="katten/sparkle.jpg" alt="Sparkle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sparkle">
                   </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Sparkle</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sparkle</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
-              
-              <!-- Level 2: Lieffie -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                    <img src="katten/lieffie.jpg" alt="Lieffie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+              <!-- Lieffie -->
+              <li class="card-node cat-entry" data-gen="2" data-name="lieffie">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img src="katten/lieffie.jpg" alt="Lieffie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Lieffie">
                   </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Lieffie</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Lieffie</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
-              
-              <!-- Level 2: Lily -->
-              <li class="parent-node">
-                <details class="group">
-                  <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-850 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                      <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+
+              <!-- ── Gen 2: Lily (collapsible) ── -->
+              <li class="parent-node cat-entry" data-gen="2" data-name="lily">
+                <details class="group" id="details-lily">
+                  <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                    <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                      <i class="material-icons" style="font-size:14px">chevron_right</i>
                     </span>
-                    <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                      <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-950 flex items-center justify-center text-slate-400 dark:text-slate-600 shadow-inner">
-                        <img src="katten/lily.jpg" alt="Lily" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
-                      </div>
+                    <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                      <img src="katten/lily.jpg" alt="Lily" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Lily">
                       <div class="pr-2">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Lily</h3>
-                        <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-450 ring-1 ring-inset ring-emerald-500/20">
-                          Gen 2
-                        </span>
+                        <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Lily</h3>
+                        <span class="gen-badge gen-2">Gen 2</span>
                       </div>
                     </div>
                   </summary>
                   <ul>
-                    <!-- Level 3: Speedy -->
-                    <li class="parent-node">
-                      <details class="group">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-850 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                            <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+
+                    <!-- ── Gen 3: Speedy ── -->
+                    <li class="parent-node cat-entry" data-gen="3" data-name="speedy">
+                      <details class="group" id="details-speedy">
+                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                            <i class="material-icons" style="font-size:14px">chevron_right</i>
                           </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                            <img src="katten/speedy.jpg" alt="Speedy" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                            <img src="katten/speedy.jpg" alt="Speedy" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Speedy">
                             <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Speedy</h3>
-                              <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-blue-500/10 text-[10px] font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20">
-                                Gen 3
-                              </span>
+                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Speedy</h3>
+                              <span class="gen-badge gen-3">Gen 3</span>
                             </div>
                           </div>
                         </summary>
                         <ul>
                           <!-- Flip -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                <img src="katten/flip.jpeg" alt="Flip" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                          <li class="card-node cat-entry" data-gen="4" data-name="flip">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="katten/flip.jpeg" alt="Flip" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Flip">
                               </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Flip</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 16 sep 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="p-3">
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Flip</span><br>
+                                <span class="gen-badge gen-4">Gen 4</span>
+                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
                               </div>
                             </div>
                           </li>
 
-                          <!-- Fjoepie (Collapsible Parent Node with kids) -->
-                          <li class="parent-node">
-                            <details class="group">
-                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-855 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                                  <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+                          <!-- ── Gen 4: Fjoepie (collapsible) ── -->
+                          <li class="parent-node cat-entry" data-gen="4" data-name="fjoepie">
+                            <details class="group" id="details-fjoepie">
+                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                                <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                                  <i class="material-icons" style="font-size:14px">chevron_right</i>
                                 </span>
-                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                                  <img src="katten/fjoepie.jpeg" alt="Fjoepie" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                                  <img src="katten/fjoepie.jpeg" alt="Fjoepie" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Fjoepie">
                                   <div class="pr-2">
-                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Fjoepie</h3>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">
-                                      Gen 4
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 16 sep 2015</span>
+                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Fjoepie</h3>
+                                    <span class="gen-badge gen-4">Gen 4</span>
+                                    <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
                                   </div>
                                 </div>
                               </summary>
                               <ul>
-                                <!-- Fjoepie's kids: Kittens -->
-                                <li class="card-node">
-                                  <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                    <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                      <img src="katten/kitties.jpg" alt="Kittens" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                                <!-- Flynn & Flo -->
+                                <li class="card-node cat-entry" data-gen="5" data-name="flynn flo">
+                                  <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                    <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                      <img src="katten/kitties.jpg" alt="Flynn & Flo" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Flynn & Flo">
                                     </div>
-                                    <div class="p-3 flex items-center justify-between">
-                                      <div class="flex flex-col">
-                                        <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Flynn & Flo</span>
-                                        <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                        <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 3 feb 2022</span>
-                                      </div>
-                                      <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="p-3">
+                                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Flynn &amp; Flo</span><br>
+                                      <span class="gen-badge gen-5">Gen 5</span>
+                                      <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 feb 2022</div>
                                     </div>
                                   </div>
                                 </li>
@@ -488,52 +397,41 @@
                           </li>
 
                           <!-- Spilly -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                <img src="katten/spilly.jpeg" alt="Spilly" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                          <li class="card-node cat-entry" data-gen="4" data-name="spilly">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="katten/spilly.jpeg" alt="Spilly" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Spilly">
                               </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Spilly</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 16 sep 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="p-3">
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Spilly</span><br>
+                                <span class="gen-badge gen-4">Gen 4</span>
+                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
                               </div>
                             </div>
                           </li>
-
                           <!-- Noodle -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                <img src="katten/noodle.jpg" alt="Noodle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                          <li class="card-node cat-entry" data-gen="4" data-name="noodle">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="katten/noodle.jpg" alt="Noodle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Noodle">
                               </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Noodle</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 16 sep 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="p-3">
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Noodle</span><br>
+                                <span class="gen-badge gen-4">Gen 4</span>
+                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
                               </div>
                             </div>
                           </li>
-
                           <!-- Nibbit -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                <img src="katten/nibbit.jpeg" alt="Nibbit" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                          <li class="card-node cat-entry" data-gen="4" data-name="nibbit">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="katten/nibbit.jpeg" alt="Nibbit" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Nibbit">
                               </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Nibbit</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 16 sep 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="p-3">
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Nibbit</span><br>
+                                <span class="gen-badge gen-4">Gen 4</span>
+                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
                               </div>
                             </div>
                           </li>
@@ -541,139 +439,90 @@
                       </details>
                     </li>
 
-                    <!-- Level 3: Piraatje -->
-                    <li class="parent-node">
-                      <details class="group">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-855 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                            <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+                    <!-- ── Gen 3: Piraatje ── -->
+                    <li class="parent-node cat-entry" data-gen="3" data-name="piraatje">
+                      <details class="group" id="details-piraatje">
+                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                            <i class="material-icons" style="font-size:14px">chevron_right</i>
                           </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                            <img src="katten/piraatje.jpg" alt="Piraatje" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                            <img src="katten/piraatje.jpg" alt="Piraatje" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Piraatje">
                             <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Piraatje</h3>
-                              <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-blue-500/10 text-[10px] font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20">
-                                Gen 3
-                              </span>
+                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Piraatje</h3>
+                              <span class="gen-badge gen-3">Gen 3</span>
                             </div>
                           </div>
                         </summary>
                         <ul>
                           <!-- Streepje -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                <img src="katten/streepje.jpeg" alt="Streepje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
+                          <li class="card-node cat-entry" data-gen="4" data-name="streepje">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="katten/streepje.jpeg" alt="Streepje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Streepje">
                               </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Streepje</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 3 okt 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="p-3">
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Streepje</span><br>
+                                <span class="gen-badge gen-4">Gen 4</span>
+                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div>
                               </div>
                             </div>
                           </li>
 
-                          <!-- Ziva (Collapsible Parent Node with kids) -->
-                          <li class="parent-node">
-                            <details class="group">
-                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-855 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                                  <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+                          <!-- ── Gen 4: Ziva (collapsible) ── -->
+                          <li class="parent-node cat-entry" data-gen="4" data-name="ziva">
+                            <details class="group" id="details-ziva">
+                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                                <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                                  <i class="material-icons" style="font-size:14px">chevron_right</i>
                                 </span>
-                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                                  <img src="katten/ziva.jpeg" alt="Ziva" class="cat-image w-16 h-16 rounded-xl object-cover cursor-zoom-in shadow-inner">
+                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                                  <img src="katten/ziva.jpeg" alt="Ziva" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Ziva">
                                   <div class="pr-2">
-                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Ziva</h3>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">
-                                      Gen 4
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 03 okt 2015</span>
+                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Ziva</h3>
+                                    <span class="gen-badge gen-4">Gen 4</span>
+                                    <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div>
                                   </div>
                                 </div>
                               </summary>
                               <ul>
                                 <li>
-                                  <!-- Card Grid for Ziva's Kittens -->
-                                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-2 mb-4">
-                                    
+                                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-2 mb-4">
                                     <!-- Kleintje -->
-                                    <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                      <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                        <img src="katten/kleintje.jpg" alt="Kleintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                      </div>
-                                      <div class="p-3 flex items-center justify-between">
-                                        <div class="flex flex-col">
-                                          <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Kleintje</span>
-                                          <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                          <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 21 aug 2018</span>
-                                        </div>
-                                        <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="cat-entry" data-gen="5" data-name="kleintje">
+                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/kleintje.jpg" alt="Kleintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Kleintje"></div>
+                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Kleintje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
                                       </div>
                                     </div>
-
                                     <!-- Charcoal -->
-                                    <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                      <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                        <img src="katten/charcoal.jpg" alt="Charcoal" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                      </div>
-                                      <div class="p-3 flex items-center justify-between">
-                                        <div class="flex flex-col">
-                                          <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Charcoal</span>
-                                          <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                          <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 21 aug 2018</span>
-                                        </div>
-                                        <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="cat-entry" data-gen="5" data-name="charcoal">
+                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/charcoal.jpg" alt="Charcoal" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Charcoal"></div>
+                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Charcoal</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
                                       </div>
                                     </div>
-
                                     <!-- Copper -->
-                                    <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-855 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                      <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                        <img src="katten/copper.jpg" alt="Copper" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                      </div>
-                                      <div class="p-3 flex items-center justify-between">
-                                        <div class="flex flex-col">
-                                          <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Copper</span>
-                                          <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                          <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 21 aug 2018</span>
-                                        </div>
-                                        <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="cat-entry" data-gen="5" data-name="copper">
+                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/copper.jpg" alt="Copper" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Copper"></div>
+                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Copper</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
                                       </div>
                                     </div>
-
                                     <!-- Grijsje -->
-                                    <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-855 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                      <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                        <img src="katten/grijsje.jpg" alt="Grijsje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                      </div>
-                                      <div class="p-3 flex items-center justify-between">
-                                        <div class="flex flex-col">
-                                          <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Grijsje</span>
-                                          <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                          <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 21 aug 2018</span>
-                                        </div>
-                                        <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="cat-entry" data-gen="5" data-name="grijsje">
+                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/grijsje.jpg" alt="Grijsje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Grijsje"></div>
+                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Grijsje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
                                       </div>
                                     </div>
-
                                     <!-- Bruintje -->
-                                    <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-855 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                      <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                        <img src="katten/bruintje.jpg" alt="Bruintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                      </div>
-                                      <div class="p-3 flex items-center justify-between">
-                                        <div class="flex flex-col">
-                                          <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Bruintje</span>
-                                          <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-pink-500/10 text-[10px] font-bold text-pink-600 dark:text-pink-400 ring-1 ring-inset ring-pink-500/20">Gen 5</span>
-                                          <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 21 aug 2018</span>
-                                        </div>
-                                        <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                                    <div class="cat-entry" data-gen="5" data-name="bruintje">
+                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/bruintje.jpg" alt="Bruintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Bruintje"></div>
+                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Bruintje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
                                       </div>
                                     </div>
-
                                   </div>
                                 </li>
                               </ul>
@@ -681,211 +530,110 @@
                           </li>
 
                           <!-- Zara -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                <img src="katten/zara.jpeg" alt="Zara" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                              </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Zara</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 03 okt 2015</span>  
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                              </div>
+                          <li class="card-node cat-entry" data-gen="4" data-name="zara">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/zara.jpeg" alt="Zara" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Zara"></div>
+                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Zara</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
                             </div>
                           </li>
-
                           <!-- Sunny -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                <img src="katten/sunny.jpeg" alt="Sunny" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                              </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Sunny</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 03 okt 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                              </div>
+                          <li class="card-node cat-entry" data-gen="4" data-name="sunny">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/sunny.jpeg" alt="Sunny" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sunny"></div>
+                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sunny</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
                             </div>
                           </li>
-
                           <!-- Sneeuwvlokje -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                <img src="katten/sneeuwvlokje.jpeg" alt="Sneeuwvlokje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                              </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Sneeuwvlokje</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 03 okt 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                              </div>
+                          <li class="card-node cat-entry" data-gen="4" data-name="sneeuwvlokje">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/sneeuwvlokje.jpeg" alt="Sneeuwvlokje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sneeuwvlokje"></div>
+                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sneeuwvlokje</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
                             </div>
                           </li>
-
                           <!-- Oreo -->
-                          <li class="card-node">
-                            <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                <img src="katten/oreo.jpeg" alt="Oreo" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                              </div>
-                              <div class="p-3 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                  <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Oreo</span>
-                                  <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                  <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 03 okt 2015</span>
-                                </div>
-                                <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                              </div>
+                          <li class="card-node cat-entry" data-gen="4" data-name="oreo">
+                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/oreo.jpeg" alt="Oreo" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Oreo"></div>
+                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Oreo</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
                             </div>
                           </li>
-
                         </ul>
                       </details>
                     </li>
 
-                    <!-- Level 3: Bloesempje -->
-                    <li class="parent-node">
-                      <details class="group">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none font-semibold text-slate-800 dark:text-slate-200 hover:text-accent dark:hover:text-accent transition-colors py-1">
-                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-850 text-slate-400 group-open:rotate-90 transition-transform duration-200 shadow-sm">
-                            <i class="material-icons text-sm" style="font-size: 14px;">chevron_right</i>
+                    <!-- ── Gen 3: Bloesempje ── -->
+                    <li class="parent-node cat-entry" data-gen="3" data-name="bloesempje">
+                      <details class="group" id="details-bloesempje">
+                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
+                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
+                            <i class="material-icons" style="font-size:14px">chevron_right</i>
                           </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-950 flex items-center justify-center text-slate-400 dark:text-slate-600 shadow-inner">
-                              <i class="material-icons" style="font-size: 28px;">pets</i>
+                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
+                            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
+                              <i class="material-icons" style="font-size:28px">pets</i>
                             </div>
                             <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">Bloesempje</h3>
-                              <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-blue-500/10 text-[10px] font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20">
-                                Gen 3
-                              </span>
+                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Bloesempje</h3>
+                              <span class="gen-badge gen-3">Gen 3</span>
                             </div>
                           </div>
                         </summary>
                         <ul>
                           <li>
-                            <!-- Card Grid for Bloesempje's Kittens -->
-                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-2 mb-4">
-                              
+                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-2 mb-4">
                               <!-- Bambi -->
-                              <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-950 relative">
-                                  <img src="katten/bambi.jpeg" alt="Bambi" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                </div>
-                                <div class="p-3 flex items-center justify-between">
-                                  <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Bambi</span>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 28 sep 2015</span>
-                                  </div>
-                                  <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="cat-entry" data-gen="4" data-name="bambi">
+                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/bambi.jpeg" alt="Bambi" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Bambi"></div>
+                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Bambi</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
                                 </div>
                               </div>
-
                               <!-- Shadow -->
-                              <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                  <img src="katten/shadow.jpeg" alt="Shadow" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                </div>
-                                <div class="p-3 flex items-center justify-between">
-                                  <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Shadow</span>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 28 sep 2015</span>
-                                  </div>
-                                  <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="cat-entry" data-gen="4" data-name="shadow">
+                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/shadow.jpeg" alt="Shadow" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Shadow"></div>
+                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Shadow</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
                                 </div>
                               </div>
-
                               <!-- Charlie -->
-                              <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                  <img src="katten/charlie.jpeg" alt="Charlie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                </div>
-                                <div class="p-3 flex items-center justify-between">
-                                  <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Charlie</span>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 28 sep 2015</span>
-                                  </div>
-                                  <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="cat-entry" data-gen="4" data-name="charlie">
+                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/charlie.jpeg" alt="Charlie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Charlie"></div>
+                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Charlie</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
                                 </div>
                               </div>
-
                               <!-- Noortje -->
-                              <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                  <img src="katten/noortje.jpeg" alt="Noortje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                </div>
-                                <div class="p-3 flex items-center justify-between">
-                                  <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Noortje</span>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 28 sep 2015</span>
-                                  </div>
-                                  <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="cat-entry" data-gen="4" data-name="noortje">
+                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/noortje.jpeg" alt="Noortje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Noortje"></div>
+                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Noortje</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
                                 </div>
                               </div>
-
                               <!-- Snowy -->
-                              <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-855 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                                  <img src="katten/snowy.jpeg" alt="Snowy" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                                </div>
-                                <div class="p-3 flex items-center justify-between">
-                                  <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Snowy</span>
-                                    <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-purple-500/10 text-[10px] font-bold text-purple-600 dark:text-purple-400 ring-1 ring-inset ring-purple-500/20">Gen 4</span>
-                                    <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full self-start bg-slate-500/10 text-[10px] font-medium text-slate-500 dark:text-slate-400 ring-1 ring-inset ring-slate-400/20"><i class="material-icons" style="font-size:10px;">calendar_today</i> 28 sep 2015</span>
-                                  </div>
-                                  <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
+                              <div class="cat-entry" data-gen="4" data-name="snowy">
+                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/snowy.jpeg" alt="Snowy" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Snowy"></div>
+                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Snowy</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
                                 </div>
                               </div>
-
                             </div>
                           </li>
                         </ul>
                       </details>
                     </li>
 
-                    <!-- Level 3: Schatje (Single Card) -->
-                    <li class="card-node">
-                      <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                        <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                          <img src="katten/schatje.jpeg" alt="Schatje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                        </div>
-                        <div class="p-3 flex items-center justify-between">
-                          <div class="flex flex-col">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Schatje</span>
-                            <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-blue-500/10 text-[10px] font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20">Gen 3</span>
-                          </div>
-                          <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                        </div>
+                    <!-- Schatje -->
+                    <li class="card-node cat-entry" data-gen="3" data-name="schatje">
+                      <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/schatje.jpeg" alt="Schatje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Schatje"></div>
+                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Schatje</span><br><span class="gen-badge gen-3">Gen 3</span></div>
                       </div>
                     </li>
-
-                    <!-- Level 3: Lillifee (Single Card) -->
-                    <li class="card-node">
-                      <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                        <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                          <img src="katten/lillifee.jpeg" alt="Lillifee" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                        </div>
-                        <div class="p-3 flex items-center justify-between">
-                          <div class="flex flex-col">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Lillifee</span>
-                            <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-blue-500/10 text-[10px] font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20">Gen 3</span>
-                          </div>
-                          <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                        </div>
+                    <!-- Lillifee -->
+                    <li class="card-node cat-entry" data-gen="3" data-name="lillifee">
+                      <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/lillifee.jpeg" alt="Lillifee" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Lillifee"></div>
+                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Lillifee</span><br><span class="gen-badge gen-3">Gen 3</span></div>
                       </div>
                     </li>
 
@@ -893,43 +641,32 @@
                 </details>
               </li>
 
-              <!-- Level 2: Royke (Single Card) -->
-              <li class="card-node">
-                <div class="group/card max-w-[200px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-955 relative">
-                    <img src="katten/royke.jpeg" alt="Royke" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy">
-                  </div>
-                  <div class="p-3 flex items-center justify-between">
-                    <div class="flex flex-col">
-                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 tracking-tight">Royke</span>
-                      <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full self-start bg-emerald-500/10 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Gen 2</span>
-                    </div>
-                    <i class="material-icons text-xs text-slate-400 dark:text-slate-500">zoom_in</i>
-                  </div>
+              <!-- Royke -->
+              <li class="card-node cat-entry" data-gen="2" data-name="royke">
+                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
+                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/royke.jpeg" alt="Royke" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Royke"></div>
+                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Royke</span><br><span class="gen-badge gen-2">Gen 2</span></div>
                 </div>
               </li>
 
             </ul>
           </details>
         </li>
+
       </ul>
-    </div>
+    </div><!-- /clt -->
 
   </div>
 </div>
 
-<!-- Footer -->
+<!-- ══════════════════════════════════════════════════════════ FOOTER -->
 <footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
   <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-    <div class="flex flex-col sm:flex-row items-center gap-4">
-      <div>
-        <p class="text-sm font-bold text-slate-900 dark:text-white">
-          Jeroen van Hoof
-        </p>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
-      </div>
+    <div>
+      <p class="text-sm font-bold text-slate-900 dark:text-white">Jeroen van Hoof</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
     </div>
-    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+    <div class="flex gap-x-8 text-sm">
       <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
       <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
       <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
@@ -938,50 +675,92 @@
 </footer>
 
 <script>
-  // Add zoom-in/out image functionality in clean event listener
-  document.querySelectorAll(".cat-image").forEach(function(elem) {
-    elem.addEventListener('click', function(e) {
-      e.stopPropagation(); // Prevents details open/close toggle on photo click
-      window.open(elem.src);
-    });
-  });
+// ── Theme ──────────────────────────────────────────────────────────────────
+const themeToggleDarkIcon  = document.getElementById('theme-toggle-dark-icon');
+const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+const themeToggleBtn       = document.getElementById('theme-toggle');
+document.getElementById('current-year').textContent = new Date().getFullYear();
 
-  // Current Year in Footer
-  document.getElementById('current-year').textContent = new Date().getFullYear();
+if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  themeToggleLightIcon.classList.remove('hidden');
+} else {
+  themeToggleDarkIcon.classList.remove('hidden');
+}
+themeToggleBtn.addEventListener('click', () => {
+  themeToggleDarkIcon.classList.toggle('hidden');
+  themeToggleLightIcon.classList.toggle('hidden');
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+});
 
-  // Dark Mode Theme Toggle Setup
-  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-  const themeToggleBtn = document.getElementById('theme-toggle');
+// ── Lightbox ───────────────────────────────────────────────────────────────
+const lightbox     = document.getElementById('lightbox');
+const lbImg        = document.getElementById('lightbox-img');
+const lbName       = document.getElementById('lightbox-name');
+const lbClose      = document.getElementById('lightbox-close');
+const lbPrev       = document.getElementById('lightbox-prev');
+const lbNext       = document.getElementById('lightbox-next');
 
-  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-  } else {
-    themeToggleDarkIcon.classList.remove('hidden');
+let allImages = [];
+let lbIndex   = 0;
+
+function gatherImages() {
+  allImages = Array.from(document.querySelectorAll('.cat-image'));
+}
+
+function openLightbox(idx) {
+  gatherImages();
+  lbIndex = idx;
+  const img = allImages[lbIndex];
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+  lbName.textContent = img.dataset.name || img.alt;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lbPrev.style.display = allImages.length > 1 ? 'flex' : 'none';
+  lbNext.style.display = allImages.length > 1 ? 'flex' : 'none';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function moveLightbox(dir) {
+  lbIndex = (lbIndex + dir + allImages.length) % allImages.length;
+  const img = allImages[lbIndex];
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+  lbName.textContent = img.dataset.name || img.alt;
+}
+
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('cat-image')) {
+    e.stopPropagation();
+    gatherImages();
+    openLightbox(allImages.indexOf(e.target));
   }
+});
+lbClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+lbPrev.addEventListener('click', e => { e.stopPropagation(); moveLightbox(-1); });
+lbNext.addEventListener('click', e => { e.stopPropagation(); moveLightbox(1); });
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape')      closeLightbox();
+  if (e.key === 'ArrowLeft')   moveLightbox(-1);
+  if (e.key === 'ArrowRight')  moveLightbox(1);
+});
 
-  themeToggleBtn.addEventListener('click', function() {
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
+// ── Expand / Collapse All ──────────────────────────────────────────────────
+document.getElementById('expand-all').addEventListener('click', () => {
+  document.querySelectorAll('#tree-root details').forEach(d => d.open = true);
+});
+document.getElementById('collapse-all').addEventListener('click', () => {
+  document.querySelectorAll('#tree-root details').forEach(d => d.open = false);
+});
 
-    if (localStorage.getItem('color-theme')) {
-      if (localStorage.getItem('color-theme') === 'light') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-      }
-    } else {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-      }
-    }
-  });
+
 </script>
 </body>
 </html>
