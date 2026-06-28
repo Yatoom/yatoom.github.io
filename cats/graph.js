@@ -22,29 +22,40 @@ export function initGraph(uiHandlers) {
   g = svg.append('g').attr('class', 'zoom-layer');
   gNode = g.node();
 
-  let zoomPending = false;
-  let zoomTransform = { x: 0, y: 0, k: 1 };
-
   zoom = d3.zoom()
     .scaleExtent([0.08, 6])
+    .on('start', () => {
+      svg.classed('zooming', true);
+      if (simulation) simulation.stop();
+    })
     .on('zoom', e => {
-      zoomTransform = e.transform;
-      if (!zoomPending) {
-        zoomPending = true;
-        requestAnimationFrame(() => {
-          const { x, y, k } = zoomTransform;
-          gNode.style.transform = `translate3d(${x}px,${y}px,0) scale(${k})`;
-          zoomPending = false;
-        });
-      }
+      g.attr('transform', e.transform);
+    })
+    .on('end', () => {
+      svg.classed('zooming', false);
     });
   svg.call(zoom);
 
-  // Attach UI handlers if needed, or export functions for UI to call
+  // Attach legend filters once
+  document.querySelectorAll('.legend-item').forEach(li => {
+    li.onclick = () => {
+      li.classList.toggle('dimmed');
+      if (uiHandlers.clearHighlight) uiHandlers.clearHighlight();
+    };
+  });
+
   buildLayeredLayout(uiHandlers);
 
+  let lastWidth = window.innerWidth;
+  let resizeTimer;
   window.addEventListener('resize', () => {
-    if (currentNodesData.length) fitGraph(currentNodesData);
+    if (window.innerWidth !== lastWidth) {
+      lastWidth = window.innerWidth;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (currentNodesData.length) fitGraph(currentNodesData);
+      }, 250);
+    }
   });
 }
 
@@ -282,12 +293,4 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
   }
   draw();
   sim.on('tick', draw);
-
-  // Legend filter attachment
-  document.querySelectorAll('.legend-item').forEach(li => {
-    li.onclick = () => {
-      li.classList.toggle('dimmed');
-      clearHighlight();
-    };
-  });
 }

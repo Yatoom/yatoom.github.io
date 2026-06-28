@@ -362,6 +362,19 @@ nav a:hover, nav a.active { color: var(--accent); }
 .node.dimmed { opacity: .15; }
 .link.dimmed  { opacity: .05; }
 
+/* ── PERFORMANCE OPTIMIZATIONS ── */
+#graph-svg.zooming .node {
+  pointer-events: none;
+}
+
+#graph-svg.zooming text {
+  display: none;
+}
+
+#graph-svg.zooming .link {
+  stroke-opacity: 0.05;
+}
+
 *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ── MOBILE OVERRIDES ── */
