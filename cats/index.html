@@ -483,8 +483,6 @@
 </div>
 
 <script>
-// ── HELPERS ──────────────────────────────────────────────────────────────────
-const isMobile = () => window.innerWidth <= 600;
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 const nodes = [
@@ -519,6 +517,7 @@ const nodes = [
   { id: 'charlie',     name: 'Charlie',        gen: 4, photo: 'katten/charlie.jpeg',       birth: '28 sep 2015' },
   { id: 'noortje',     name: 'Noortje',        gen: 4, photo: 'katten/noortje.jpeg',       birth: '28 sep 2015' },
   { id: 'snowy',       name: 'Snowy',          gen: 4, photo: 'katten/snowy.jpeg',         birth: '28 sep 2015' },
+  { id: 'flynnflo',    name: 'Flynn & Flo',    gen: 5, photo: 'katten/kitties.jpg',        birth: '03 feb 2022' },
   { id: 'kleintje',    name: 'Kleintje',       gen: 5, photo: 'katten/kleintje.jpg',       birth: '21 aug 2018' },
   { id: 'charcoal',    name: 'Charcoal',       gen: 5, photo: 'katten/charcoal.jpg',       birth: '21 aug 2018' },
   { id: 'copper',      name: 'Copper',         gen: 5, photo: 'katten/copper.jpg',         birth: '21 aug 2018' },
@@ -526,7 +525,6 @@ const nodes = [
   { id: 'roodje',      name: 'Roodje',         gen: 5, photo: 'katten/roodje.jpg',         birth: '21 aug 2018' },
   { id: 'grijsje',     name: 'Grijsje',        gen: 5, photo: 'katten/grijsje.jpg',        birth: '21 aug 2018' },
   { id: 'bruintje',    name: 'Bruintje',       gen: 5, photo: 'katten/bruintje.jpg',       birth: '21 aug 2018' },
-  { id: 'flynnflo',    name: 'Flynn & Flo',    gen: 5, photo: 'katten/kitties.jpg',        birth: '03 feb 2022' },
   { id: '1',    name: '1',    gen: 5, photo: null, birth: null },
   { id: '2',    name: '2',    gen: 5, photo: null, birth: null },
   { id: '3',    name: '3',    gen: 5, photo: null, birth: null },
@@ -600,21 +598,11 @@ nodes.forEach(n => {
     .append('circle').attr('r', nodeR(n));
 });
 
-function nodeR(n) {
-  if (isMobile()) {
-    // Slightly larger on mobile for easier tapping
-    if (n.gen === 1) return 36;
-    if (n.gen === 2) return 29;
-    if (n.gen === 3) return 24;
-    if (n.gen === 4) return 20;
-    return 17;
-  }
-  if (n.gen === 1) return 32;
-  if (n.gen === 2) return 26;
-  if (n.gen === 3) return 22;
-  if (n.gen === 4) return 18;
-  return 15;
+function nodeR() {
+  return 22;
 }
+
+const isMobile = () => window.innerWidth <= 600;
 
 const g = svg.append('g').attr('class', 'zoom-layer');
 const gNode = g.node();
@@ -635,94 +623,125 @@ let currentNodesData = [];
 function buildLayeredLayout() {
   if (simulation) simulation.stop();
 
+
   const nodesCopy = nodes.map(d => ({ ...d }));
   const linksCopy = links.map(d => ({ ...d }));
 
-  const mobile = isMobile();
-  const ROW_H       = mobile ? 130 : 148;
-  const TOP         = mobile ? 60  : 75;
-  const NODE_W      = mobile ? 68  : 76;
-  const SIBLING_GAP = mobile ? 6   : 8;
-  const FAMILY_GAP  = mobile ? 28  : 38;
 
-  // Build children map
-  const childrenOf = {};
-  links.forEach(l => {
-    if (!childrenOf[l.source]) childrenOf[l.source] = [];
-    childrenOf[l.source].push(l.target);
+  const GEN_H = 140;
+  const TOP = 70;
+
+  const NODE_GAP = 80;
+  const FAMILY_GAP = 60;
+
+
+  const parentOfLocal = {};
+
+  linksCopy.forEach(l => {
+    parentOfLocal[l.target] = l.source;
   });
 
-  const childIds = new Set(links.map(l => l.target));
-  const roots    = nodesCopy.filter(n => !childIds.has(n.id));
 
-  // ── Sibling compaction ──────────────────────────────────────────────────
-  // Within each family (children of same parent), re-order so that leaf
-  // siblings cluster next to the sibling(s) that have children, rather than
-  // spreading across the full width as if they owned equal subtrees.
-  //
-  // Strategy: among the children of a parent, find which ones are "branching"
-  // (have children of their own) vs "leaf" (no children). Place branching
-  // children first (or last), and pack leaves tightly beside them.
-  // Children of the same parent always stay contiguous.
-  function reorderFamily(parentId) {
-    const kids = childrenOf[parentId];
-    if (!kids || kids.length <= 1) return;
-    // Recurse first so children are already reordered
-    kids.forEach(reorderFamily);
-    // Partition into branching vs leaf
-    const branching = kids.filter(k => (childrenOf[k] || []).length > 0);
-    const leaves    = kids.filter(k => (childrenOf[k] || []).length === 0);
-    if (branching.length === 0 || leaves.length === 0) return; // nothing to compact
-    // Put leaves after branching children — keep original relative order within each group
-    childrenOf[parentId] = [...branching, ...leaves];
-  }
-  roots.forEach(r => reorderFamily(r.id));
 
-  // ── Subtree width ────────────────────────────────────────────────────────
-  // Leaf nodes cost NODE_W. Branching nodes cost the sum of their children.
-  // Leaves inside a branching family are packed tightly (SIBLING_GAP only).
-  const subtreeW = {};
-  function calcWidth(id) {
-    const kids = childrenOf[id] || [];
-    if (!kids.length) { subtreeW[id] = NODE_W; return NODE_W; }
-    let w = 0;
-    kids.forEach((kid, i) => {
-      w += calcWidth(kid);
-      if (i < kids.length - 1) w += SIBLING_GAP;
-    });
-    subtreeW[id] = w;
-    return w;
-  }
-  roots.forEach(r => calcWidth(r.id));
+  // Group nodes per generation and parent
+  const generationGroups = {};
 
-  // ── X assignment ─────────────────────────────────────────────────────────
-  const xPos = {};
-  function assignX(id, left) {
-    const kids = childrenOf[id] || [];
-    if (!kids.length) { xPos[id] = left + NODE_W / 2; return; }
-    let cursor = left;
-    kids.forEach(kid => { assignX(kid, cursor); cursor += subtreeW[kid] + SIBLING_GAP; });
-    // Parent centres over its children span
-    xPos[id] = (xPos[kids[0]] + xPos[kids[kids.length - 1]]) / 2;
-  }
-
-  let cursor = 0;
-  roots.forEach(root => { assignX(root.id, cursor); cursor += subtreeW[root.id] + FAMILY_GAP; });
 
   nodesCopy.forEach(n => {
-    n.x  = xPos[n.id] || 0;
-    n.y  = TOP + (n.gen - 1) * ROW_H;
-    n.fx = n.x;
-    n.fy = n.y;
+
+    const gen = n.gen;
+
+    if (!generationGroups[gen]) {
+      generationGroups[gen] = {};
+    }
+
+
+    const parent = parentOfLocal[n.id] || "root";
+
+
+    if (!generationGroups[gen][parent]) {
+      generationGroups[gen][parent] = [];
+    }
+
+
+    generationGroups[gen][parent].push(n);
+
   });
 
+
+
+  const positions = {};
+
+
+
+  Object.keys(generationGroups)
+    .forEach(gen => {
+
+
+      let x = 0;
+
+
+      Object.values(generationGroups[gen])
+        .forEach(group => {
+
+
+          group.forEach(n => {
+
+            positions[n.id] = x;
+
+            x += NODE_GAP;
+
+          });
+
+
+          x += FAMILY_GAP;
+
+        });
+
+    });
+
+
+
+  nodesCopy.forEach(n => {
+
+    n.x = positions[n.id];
+
+    n.y = TOP + (n.gen - 1) * GEN_H;
+
+
+    n.fx = n.x;
+    n.fy = n.y;
+
+  });
+
+
+
   simulation = d3.forceSimulation(nodesCopy)
-    .force('link', d3.forceLink(linksCopy).id(d => d.id).strength(0))
+
+    .force(
+      "link",
+      d3.forceLink(linksCopy)
+        .id(d => d.id)
+        .strength(0)
+    )
+
     .alphaDecay(1);
 
+
+
   currentNodesData = nodesCopy;
-  render(nodesCopy, linksCopy, simulation, true, ROW_H, TOP);
+
+
+  render(
+    nodesCopy,
+    linksCopy,
+    simulation
+  );
+
+
   simulation.tick();
+
+
   setTimeout(() => fitGraph(nodesCopy), 50);
 }
 
@@ -740,7 +759,7 @@ function buildForceLayout() {
     .force('collide', d3.forceCollide().radius(d => nodeR(d) + 18).strength(0.9));
 
   currentNodesData = nodesCopy;
-  render(nodesCopy, linksCopy, simulation, false, 0, 0);
+  render(nodesCopy, linksCopy, simulation, false, 0, 0, false);
   setTimeout(() => fitGraph(nodesCopy), 2000);
 }
 
@@ -761,52 +780,69 @@ function fitGraph(nodesData) {
 }
 
 // ── RENDER ───────────────────────────────────────────────────────────────────
-function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
+function render(
+  nodesData,
+  linksData,
+  sim,
+  layered
+){
   g.selectAll('*').remove();
 
   if (layered) {
     const labelG = g.append('g').attr('class', 'row-labels');
     [1,2,3,4,5].forEach(gen => {
-      const y = TOP + (gen - 1) * ROW_H;
-      labelG.append('line')
-        .attr('x1', -2000).attr('x2', 2000).attr('y1', y).attr('y2', y)
-        .attr('stroke', genColors[gen]).attr('stroke-opacity', 0.07)
-        .attr('stroke-width', 1).attr('stroke-dasharray', '4 8');
-      labelG.append('text')
-        .attr('x', -60).attr('y', y).attr('dy', '0.35em')
-        .attr('text-anchor', 'end').attr('font-size', 11).attr('font-weight', 700)
-        .attr('fill', genColors[gen]).attr('opacity', 0.55)
-        .text(`Gen ${gen}`);
+      const pos = GEN_OFFSET + (gen - 1) * GEN_SPACING;
+      if (vertical) {
+        // Vertical layout: gen lines are vertical, labels above
+        labelG.append('line')
+          .attr('x1', pos).attr('x2', pos).attr('y1', -2000).attr('y2', 2000)
+          .attr('stroke', genColors[gen]).attr('stroke-opacity', 0.07)
+          .attr('stroke-width', 1).attr('stroke-dasharray', '4 8');
+        labelG.append('text')
+          .attr('x', pos).attr('y', -18)
+          .attr('text-anchor', 'middle').attr('font-size', 10).attr('font-weight', 700)
+          .attr('fill', genColors[gen]).attr('opacity', 0.6)
+          .text(`Gen ${gen}`);
+      } else {
+        // Horizontal layout: gen lines are horizontal, labels to the left
+        labelG.append('line')
+          .attr('x1', -2000).attr('x2', 2000).attr('y1', pos).attr('y2', pos)
+          .attr('stroke', genColors[gen]).attr('stroke-opacity', 0.07)
+          .attr('stroke-width', 1).attr('stroke-dasharray', '4 8');
+        labelG.append('text')
+          .attr('x', -60).attr('y', pos).attr('dy', '0.35em')
+          .attr('text-anchor', 'end').attr('font-size', 11).attr('font-weight', 700)
+          .attr('fill', genColors[gen]).attr('opacity', 0.55)
+          .text(`Gen ${gen}`);
+      }
     });
   }
 
-  const linkGroup = g.append('g').attr('class', 'links');
-  const linkSegs  = [];
-  linksData.forEach(d => {
-    const a = linkGroup.append('line').attr('class', 'link');
-    const b = linkGroup.append('line').attr('class', 'link');
-    const c = linkGroup.append('line').attr('class', 'link');
-    // Store raw DOM nodes for fast direct property writes in drawLinks
-    linkSegs.push({ a, b, c, an: a.node(), bn: b.node(), cn: c.node(), d });
+const linkGroup = g.append('g')
+  .attr('class','links');
+
+
+const linkSegs = linksData.map(d => {
+  const sel = linkGroup.append('line').attr('class', 'link');
+  const s = nodesData.find(n => n.id === (d.source.id || d.source));
+  const t = nodesData.find(n => n.id === (d.target.id || d.target));
+  return { sel, line: sel.node(), d, s, t };
+});
+
+
+function drawLinks() {
+
+  linkSegs.forEach(({ line, d }) => {
+
+    line.x1.baseVal.value = d.source.x;
+    line.y1.baseVal.value = d.source.y + nodeR();
+
+    line.x2.baseVal.value = d.target.x;
+    line.y2.baseVal.value = d.target.y - nodeR();
+
   });
+}
 
-  // Fast DOM-direct link drawing — avoids D3 selection overhead per attribute per frame
-  function drawLinks() {
-    for (let i = 0; i < linkSegs.length; i++) {
-      const { an, bn, cn, d } = linkSegs[i];
-      const sx   = d.source.x,  sy = d.source.y + nodeR(d.source);
-      const tx   = d.target.x,  ty = d.target.y - nodeR(d.target);
-      const midY = (sy + ty) * 0.5;
-      an.x1.baseVal.value = sx;  an.y1.baseVal.value = sy;
-      an.x2.baseVal.value = sx;  an.y2.baseVal.value = midY;
-      bn.x1.baseVal.value = sx;  bn.y1.baseVal.value = midY;
-      bn.x2.baseVal.value = tx;  bn.y2.baseVal.value = midY;
-      cn.x1.baseVal.value = tx;  cn.y1.baseVal.value = midY;
-      cn.x2.baseVal.value = tx;  cn.y2.baseVal.value = ty;
-    }
-  }
-
-  // Touch target enlarger (invisible bigger circle on mobile)
   const node = g.append('g').attr('class', 'nodes')
     .selectAll('.node')
     .data(nodesData)
@@ -815,13 +851,19 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
     .call(d3.drag()
       .on('start', (e, d) => {
         if (!e.active && sim.alpha) sim.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        if (!layered) d.fy = d.y;
+        if (vertical) { d.fy = d.y; }
+        else          { d.fx = d.x; }
+        if (!layered) { d.fx = d.x; d.fy = d.y; }
       })
       .on('drag', (e, d) => {
-        d.fx = e.x;
-        if (!layered) d.fy = e.y; else d.fy = d.y;
-        if (layered) { d.x = e.x; draw(); }
+        if (!layered) { d.fx = e.x; d.fy = e.y; }
+        else if (vertical) {
+          // Lock X (generation column), allow Y drag
+          d.fx = d.x; d.fy = e.y; d.y = e.y; draw();
+        } else {
+          // Lock Y (generation row), allow X drag
+          d.fx = e.x; d.fy = d.y; d.x = e.x; draw();
+        }
       })
       .on('end', (e, d) => {
         if (!e.active && sim.alphaTarget) sim.alphaTarget(0);
@@ -831,7 +873,7 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
 
   // Invisible hit target on mobile
   node.append('circle')
-    .attr('r', d => Math.max(nodeR(d), isMobile() ? 28 : 0))
+    .attr('r', nodeR())
     .attr('fill', 'transparent')
     .attr('stroke', 'none');
 
@@ -865,9 +907,12 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
   });
 
   node.append('text')
-    .attr('y', d => nodeR(d) + 14)
+    .attr('y', d => nodeR(d) + 13)
+    .attr('text-anchor', 'middle')
     .text(d => d.name)
-    .attr('font-size', d => d.gen <= 2 ? 12 : d.gen === 3 ? 11 : 10)
+    .attr('font-size', d => {
+      12
+    })
     .attr('fill', 'var(--text)')
     .attr('font-weight', d => d.gen <= 2 ? 700 : 600);
 
@@ -900,18 +945,17 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
       if (tgt === d.id) connectedIds.add(src);
     });
     _n.classed('dimmed', n => !connectedIds.has(n.id));
-    _ls.forEach(({ a, b, c, d: l }) => {
-      const src = l.source.id || l.source;
-      const tgt = l.target.id || l.target;
-      const dim = !(connectedIds.has(src) && connectedIds.has(tgt));
-      a.classed('dimmed', dim); b.classed('dimmed', dim); c.classed('dimmed', dim);
+    _ls.forEach(({ sel, s, t }) => {
+      const dim = !(connectedIds.has(s?.id) && connectedIds.has(t?.id));
+      sel.classed('dimmed', dim);
     });
   }
 
   function clearHighlight() {
-    node.classed('dimmed', false);
-    linkSegs.forEach(({ a, b, c }) => {
-      a.classed('dimmed', false); b.classed('dimmed', false); c.classed('dimmed', false);
+    const hg = new Set(Array.from(document.querySelectorAll('.legend-item.dimmed')).map(x => +x.dataset.gen));
+    node.classed('dimmed', d => hg.has(d.gen));
+    linkSegs.forEach(({ sel, s, t }) => {
+      sel.classed('dimmed', hg.has(s?.gen) || hg.has(t?.gen));
     });
   }
 
@@ -935,16 +979,7 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
   document.querySelectorAll('.legend-item').forEach(li => {
     li.onclick = () => {
       li.classList.toggle('dimmed');
-      const hiddenGens = new Set(
-        Array.from(document.querySelectorAll('.legend-item.dimmed')).map(x => +x.dataset.gen)
-      );
-      node.classed('dimmed', d => hiddenGens.has(d.gen));
-      linkSegs.forEach(({ a, b, c, d: l }) => {
-        const src = nodesData.find(n => n.id === (l.source.id || l.source));
-        const tgt = nodesData.find(n => n.id === (l.target.id || l.target));
-        const dim = hiddenGens.has(src?.gen) || hiddenGens.has(tgt?.gen);
-        a.classed('dimmed', dim); b.classed('dimmed', dim); c.classed('dimmed', dim);
-      });
+      clearHighlight();
     };
   });
 }
