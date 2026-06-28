@@ -327,6 +327,12 @@
       fill: none;
     }
 
+    /* Performance: promote zoom layer to its own compositor layer */
+    .zoom-layer { will-change: transform; }
+
+    /* No CSS transitions on individual SVG elements — kills perf on mobile */
+    .node, .node *, .link { transition: none !important; }
+
     .node.dimmed { opacity: .15; }
     .link.dimmed  { opacity: .05; }
 
@@ -630,32 +636,64 @@ function buildLayeredLayout() {
   const SIBLING_GAP = mobile ? 6   : 8;
   const FAMILY_GAP  = mobile ? 28  : 38;
 
+  // Build children map
   const childrenOf = {};
   links.forEach(l => {
     if (!childrenOf[l.source]) childrenOf[l.source] = [];
     childrenOf[l.source].push(l.target);
   });
 
-  const childIds  = new Set(links.map(l => l.target));
-  const roots     = nodesCopy.filter(n => !childIds.has(n.id));
-  const subtreeW  = {};
+  const childIds = new Set(links.map(l => l.target));
+  const roots    = nodesCopy.filter(n => !childIds.has(n.id));
 
+  // ── Sibling compaction ──────────────────────────────────────────────────
+  // Within each family (children of same parent), re-order so that leaf
+  // siblings cluster next to the sibling(s) that have children, rather than
+  // spreading across the full width as if they owned equal subtrees.
+  //
+  // Strategy: among the children of a parent, find which ones are "branching"
+  // (have children of their own) vs "leaf" (no children). Place branching
+  // children first (or last), and pack leaves tightly beside them.
+  // Children of the same parent always stay contiguous.
+  function reorderFamily(parentId) {
+    const kids = childrenOf[parentId];
+    if (!kids || kids.length <= 1) return;
+    // Recurse first so children are already reordered
+    kids.forEach(reorderFamily);
+    // Partition into branching vs leaf
+    const branching = kids.filter(k => (childrenOf[k] || []).length > 0);
+    const leaves    = kids.filter(k => (childrenOf[k] || []).length === 0);
+    if (branching.length === 0 || leaves.length === 0) return; // nothing to compact
+    // Put leaves after branching children — keep original relative order within each group
+    childrenOf[parentId] = [...branching, ...leaves];
+  }
+  roots.forEach(r => reorderFamily(r.id));
+
+  // ── Subtree width ────────────────────────────────────────────────────────
+  // Leaf nodes cost NODE_W. Branching nodes cost the sum of their children.
+  // Leaves inside a branching family are packed tightly (SIBLING_GAP only).
+  const subtreeW = {};
   function calcWidth(id) {
     const kids = childrenOf[id] || [];
     if (!kids.length) { subtreeW[id] = NODE_W; return NODE_W; }
-    let w = kids.reduce((sum, kid, i) =>
-      sum + calcWidth(kid) + (i < kids.length - 1 ? SIBLING_GAP : 0), 0);
+    let w = 0;
+    kids.forEach((kid, i) => {
+      w += calcWidth(kid);
+      if (i < kids.length - 1) w += SIBLING_GAP;
+    });
     subtreeW[id] = w;
     return w;
   }
   roots.forEach(r => calcWidth(r.id));
 
+  // ── X assignment ─────────────────────────────────────────────────────────
   const xPos = {};
   function assignX(id, left) {
     const kids = childrenOf[id] || [];
     if (!kids.length) { xPos[id] = left + NODE_W / 2; return; }
     let cursor = left;
     kids.forEach(kid => { assignX(kid, cursor); cursor += subtreeW[kid] + SIBLING_GAP; });
+    // Parent centres over its children span
     xPos[id] = (xPos[kids[0]] + xPos[kids[kids.length - 1]]) / 2;
   }
 
@@ -739,18 +777,24 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
     const a = linkGroup.append('line').attr('class', 'link');
     const b = linkGroup.append('line').attr('class', 'link');
     const c = linkGroup.append('line').attr('class', 'link');
-    linkSegs.push({ a, b, c, d });
+    // Store raw DOM nodes for fast direct property writes in drawLinks
+    linkSegs.push({ a, b, c, an: a.node(), bn: b.node(), cn: c.node(), d });
   });
 
+  // Fast DOM-direct link drawing — avoids D3 selection overhead per attribute per frame
   function drawLinks() {
-    linkSegs.forEach(({ a, b, c, d }) => {
+    for (let i = 0; i < linkSegs.length; i++) {
+      const { an, bn, cn, d } = linkSegs[i];
       const sx   = d.source.x,  sy = d.source.y + nodeR(d.source);
       const tx   = d.target.x,  ty = d.target.y - nodeR(d.target);
-      const midY = (sy + ty) / 2;
-      a.attr('x1', sx).attr('y1', sy).attr('x2', sx).attr('y2', midY);
-      b.attr('x1', sx).attr('y1', midY).attr('x2', tx).attr('y2', midY);
-      c.attr('x1', tx).attr('y1', midY).attr('x2', tx).attr('y2', ty);
-    });
+      const midY = (sy + ty) * 0.5;
+      an.x1.baseVal.value = sx;  an.y1.baseVal.value = sy;
+      an.x2.baseVal.value = sx;  an.y2.baseVal.value = midY;
+      bn.x1.baseVal.value = sx;  bn.y1.baseVal.value = midY;
+      bn.x2.baseVal.value = tx;  bn.y2.baseVal.value = midY;
+      cn.x1.baseVal.value = tx;  cn.y1.baseVal.value = midY;
+      cn.x2.baseVal.value = tx;  cn.y2.baseVal.value = ty;
+    }
   }
 
   // Touch target enlarger (invisible bigger circle on mobile)
@@ -768,7 +812,7 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
       .on('drag', (e, d) => {
         d.fx = e.x;
         if (!layered) d.fy = e.y; else d.fy = d.y;
-        if (layered) { d.x = e.x; drawLinks(); node.attr('transform', nd => `translate(${nd.x},${nd.y})`); }
+        if (layered) { d.x = e.x; draw(); }
       })
       .on('end', (e, d) => {
         if (!e.active && sim.alphaTarget) sim.alphaTarget(0);
@@ -865,9 +909,15 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
   // Expose for bottom sheet close
   window._clearHighlight = clearHighlight;
 
+  // Cache raw DOM nodes for fast transform writes on tick
+  const nodeEls = [];
+  node.each(function(d) { nodeEls.push({ el: this, d }); });
+
   function draw() {
     drawLinks();
-    node.attr('transform', d => `translate(${d.x},${d.y})`);
+    for (let i = 0; i < nodeEls.length; i++) {
+      nodeEls[i].el.setAttribute('transform', `translate(${nodeEls[i].d.x},${nodeEls[i].d.y})`);
+    }
   }
   draw();
   sim.on('tick', draw);
