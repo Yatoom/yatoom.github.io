@@ -28,7 +28,6 @@
       --gen3: #3b82f6;
       --gen4: #a855f7;
       --gen5: #ec4899;
-      --gen6: #eab308;
     }
 
     html.dark {
@@ -48,6 +47,8 @@
       height: 100dvh;
       display: flex;
       flex-direction: column;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     /* ── NAVBAR ── */
@@ -56,8 +57,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
-      height: 60px;
+      padding: 0 16px;
+      height: 56px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
@@ -67,11 +68,13 @@
     nav a:hover, nav a.active { color: var(--accent); }
     .nav-logo { display: flex; align-items: center; gap: 10px; }
     .nav-links { display: flex; gap: 24px; }
+    .nav-right { display: flex; align-items: center; gap: 4px; }
     #theme-toggle {
       background: none; border: none; cursor: pointer;
-      color: var(--muted); width: 36px; height: 36px;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); width: 40px; height: 40px;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
       transition: background .2s;
+      -webkit-tap-highlight-color: transparent;
     }
     #theme-toggle:hover { background: var(--border); }
 
@@ -92,33 +95,54 @@
     /* ── CONTROLS ── */
     .controls {
       position: absolute;
-      bottom: 24px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 6px 10px;
-      box-shadow: 0 8px 32px rgba(0,0,0,.12);
+      padding: 5px 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.15);
       z-index: 10;
+      white-space: nowrap;
     }
     .ctrl-btn {
       background: none; border: none; cursor: pointer;
-      color: var(--muted); width: 32px; height: 32px;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 18px; transition: background .15s, color .15s;
+      color: var(--muted); width: 40px; height: 40px;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; transition: background .15s, color .15s;
+      -webkit-tap-highlight-color: transparent;
+      min-width: 40px;
     }
-    .ctrl-btn:hover { background: var(--border); color: var(--text); }
-    .ctrl-divider { width: 1px; height: 20px; background: var(--border); }
+    .ctrl-btn:hover, .ctrl-btn:active { background: var(--border); color: var(--text); }
+    .ctrl-divider { width: 1px; height: 20px; background: var(--border); flex: none; }
 
-    /* ── LEGEND ── */
+    /* ── LEGEND (slide-up panel on mobile) ── */
+    .legend-toggle {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,.1);
+      cursor: pointer;
+      color: var(--muted);
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .legend {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 12px;
+      right: 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -126,6 +150,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,.1);
       z-index: 10;
       min-width: 130px;
+      transition: opacity .2s, transform .2s;
     }
     .legend h4 {
       font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -135,13 +160,14 @@
       display: flex; align-items: center; gap: 8px;
       font-size: 12px; color: var(--text); margin-bottom: 6px; cursor: pointer;
       opacity: 1; transition: opacity .2s;
+      padding: 3px 0;
+      min-height: 28px;
     }
+    .legend-item:last-child { margin-bottom: 0; }
     .legend-item.dimmed { opacity: .3; }
-    .legend-dot {
-      width: 10px; height: 10px; border-radius: 50%; flex: none;
-    }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 
-    /* ── NODE TOOLTIP / CARD ── */
+    /* ── NODE CARD (bottom sheet on mobile, tooltip on desktop) ── */
     #tooltip {
       position: absolute;
       pointer-events: none;
@@ -183,6 +209,74 @@
       display: flex; align-items: center; gap: 4px;
     }
 
+    /* ── BOTTOM SHEET (mobile cat card) ── */
+    #bottom-sheet {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      padding: 16px 20px 32px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,.18);
+      z-index: 300;
+      transform: translateY(100%);
+      transition: transform .28s cubic-bezier(.32,0,.15,1);
+    }
+    #bottom-sheet.open { transform: translateY(0); }
+    #bottom-sheet .sheet-handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: var(--border);
+      margin: 0 auto 14px;
+    }
+    #bottom-sheet .sheet-inner {
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    #bottom-sheet img {
+      width: 72px; height: 72px; border-radius: 12px;
+      object-fit: cover; flex: none;
+    }
+    #bottom-sheet .no-photo-sm {
+      width: 72px; height: 72px; border-radius: 12px;
+      background: var(--bg); display: flex; align-items: center;
+      justify-content: center; color: var(--muted); flex: none;
+      font-size: 32px;
+    }
+    #bottom-sheet .sheet-info { flex: 1; min-width: 0; }
+    #bottom-sheet h3 { font-size: 17px; font-weight: 700; color: var(--text); }
+    #bottom-sheet .gen-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; margin-top: 6px;
+    }
+    #bottom-sheet .birth {
+      font-size: 12px; color: var(--muted); margin-top: 8px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    #bottom-sheet .sheet-actions {
+      display: flex; gap: 8px; margin-top: 14px;
+    }
+    #bottom-sheet .sheet-btn {
+      flex: 1; padding: 10px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 13px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #bottom-sheet .sheet-btn.primary {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+    #bottom-sheet .sheet-btn:active { opacity: .8; }
+    #sheet-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     /* ── LIGHTBOX ── */
     #lightbox {
       display: none; position: fixed; inset: 0; z-index: 9999;
@@ -201,12 +295,14 @@
       position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,.6); color: #fff; font-weight: 700; font-size: 15px;
       padding: 8px 20px; border-radius: 999px; backdrop-filter: blur(4px);
+      white-space: nowrap;
     }
     #lb-close {
       position: absolute; top: 20px; right: 20px;
       background: rgba(255,255,255,.1); border: none; color: #fff;
-      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      -webkit-tap-highlight-color: transparent;
     }
     #lb-close:hover { background: rgba(255,255,255,.2); }
 
@@ -214,7 +310,6 @@
     .node circle.bg {
       stroke-width: 3;
       cursor: pointer;
-      transition: r .2s;
     }
     .node image { cursor: pointer; }
     .node text {
@@ -232,15 +327,49 @@
       fill: none;
     }
 
-    /* dim non-highlighted */
     .node.dimmed { opacity: .15; }
     .link.dimmed  { opacity: .05; }
 
     *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+    /* ── MOBILE OVERRIDES ── */
     @media (max-width: 600px) {
-      .legend { display: none; }
+      nav { padding: 0 12px; height: 52px; }
       .nav-links { display: none; }
+
+      /* Show legend toggle button, hide always-on legend */
+      .legend-toggle { display: flex; }
+      .legend {
+        top: 60px; /* below toggle, slide down */
+        right: 12px;
+        transform-origin: top right;
+        transform: scale(.92) translateY(-8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .18s, transform .18s;
+      }
+      .legend.visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+      }
+
+      /* Hide desktop tooltip on mobile */
+      #tooltip { display: none !important; }
+
+      /* Show bottom sheet on mobile */
+      #bottom-sheet { display: block; }
+
+      .controls {
+        bottom: 16px;
+        padding: 4px 6px;
+        gap: 2px;
+      }
+      .ctrl-btn { width: 44px; height: 44px; font-size: 22px; }
+    }
+
+    @media (min-width: 601px) {
+      #bottom-sheet { display: none !important; }
     }
   </style>
 
@@ -260,11 +389,36 @@
   <div id="lb-name"></div>
 </div>
 
+<!-- BOTTOM SHEET (mobile cat card) -->
+<div id="bottom-sheet" aria-modal="true">
+  <div class="sheet-handle"></div>
+  <button id="sheet-close" aria-label="Sluiten"><i class="material-icons">close</i></button>
+  <div class="sheet-inner">
+    <div id="sheet-photo"></div>
+    <div class="sheet-info">
+      <h3 id="sheet-name"></h3>
+      <span class="gen-badge" id="sheet-gen"></span>
+      <div class="birth" id="sheet-birth" style="display:none">
+        <i class="material-icons" style="font-size:12px">calendar_today</i>
+        <span id="sheet-birth-text"></span>
+      </div>
+    </div>
+  </div>
+  <div class="sheet-actions">
+    <button class="sheet-btn" id="sheet-parents-btn" style="display:none">
+      <i class="material-icons" style="font-size:16px">arrow_upward</i> Ouders
+    </button>
+    <button class="sheet-btn primary" id="sheet-photo-btn" style="display:none">
+      <i class="material-icons" style="font-size:16px">photo_size_select_actual</i> Foto
+    </button>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <nav>
   <div class="nav-logo">
     <a href="../index.html">
-      <svg width="30" height="30" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+      <svg width="28" height="28" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
         <defs><style>html.dark svg path{fill:white!important}html.dark svg rect{stroke:white!important}html:not(.dark) svg path{fill:black!important}html:not(.dark) svg rect{stroke:black!important}</style></defs>
         <g>
           <path d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/>
@@ -277,17 +431,24 @@
     <a href="../index.html#projects">Projects</a>
     <a href="index.html" class="active">Cats</a>
   </div>
-  <button id="theme-toggle" aria-label="Toggle dark mode">
-    <i class="material-icons" id="theme-icon">dark_mode</i>
-  </button>
+  <div class="nav-right">
+    <button id="theme-toggle" aria-label="Toggle dark mode">
+      <i class="material-icons" id="theme-icon">dark_mode</i>
+    </button>
+  </div>
 </nav>
 
 <!-- CANVAS -->
 <div class="canvas-wrap">
   <svg id="graph-svg"></svg>
 
+  <!-- LEGEND TOGGLE (mobile only) -->
+  <button class="legend-toggle" id="legend-toggle-btn" aria-label="Generaties">
+    <i class="material-icons" style="font-size:20px">layers</i>
+  </button>
+
   <!-- LEGEND -->
-  <div class="legend">
+  <div class="legend" id="legend-panel">
     <h4>Generatie</h4>
     <div class="legend-item" data-gen="1"><div class="legend-dot" style="background:var(--gen1)"></div> Gen 1</div>
     <div class="legend-item" data-gen="2"><div class="legend-dot" style="background:var(--gen2)"></div> Gen 2</div>
@@ -298,21 +459,24 @@
 
   <!-- CONTROLS -->
   <div class="controls">
-    <button class="ctrl-btn" id="zoom-in"  title="Zoom in"><i class="material-icons">add</i></button>
-    <button class="ctrl-btn" id="zoom-out" title="Zoom uit"><i class="material-icons">remove</i></button>
+    <button class="ctrl-btn" id="zoom-in"  title="Zoom in" aria-label="Zoom in"><i class="material-icons">add</i></button>
+    <button class="ctrl-btn" id="zoom-out" title="Zoom uit" aria-label="Zoom uit"><i class="material-icons">remove</i></button>
     <div class="ctrl-divider"></div>
-    <button class="ctrl-btn" id="fit-view" title="Alles zichtbaar"><i class="material-icons">fit_screen</i></button>
+    <button class="ctrl-btn" id="fit-view" title="Alles zichtbaar" aria-label="Alles zichtbaar"><i class="material-icons">fit_screen</i></button>
     <div class="ctrl-divider"></div>
-    <button class="ctrl-btn" id="layout-force"  title="Force layout"><i class="material-icons">hub</i></button>
-    <button class="ctrl-btn" id="layout-tree" title="Boom layout"><i class="material-icons">account_tree</i></button>
+    <button class="ctrl-btn" id="layout-force"  title="Force layout" aria-label="Force layout"><i class="material-icons">hub</i></button>
+    <button class="ctrl-btn" id="layout-tree" title="Boom layout" aria-label="Boom layout"><i class="material-icons">account_tree</i></button>
   </div>
 
-  <!-- TOOLTIP -->
+  <!-- TOOLTIP (desktop) -->
   <div id="tooltip"></div>
 </div>
 
 <script>
-// ── DATA ────────────────────────────────────────────────────────────────────
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const isMobile = () => window.innerWidth <= 600;
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
 const nodes = [
   { id: 'soesje',      name: 'Soesje',        gen: 1, photo: null },
   { id: 'ginny',       name: 'Ginny',          gen: 1, photo: 'katten/ginny.jpg' },
@@ -352,16 +516,15 @@ const nodes = [
   { id: 'roodje',      name: 'Roodje',         gen: 5, photo: 'katten/roodje.jpg',         birth: '21 aug 2018' },
   { id: 'grijsje',     name: 'Grijsje',        gen: 5, photo: 'katten/grijsje.jpg',        birth: '21 aug 2018' },
   { id: 'bruintje',    name: 'Bruintje',       gen: 5, photo: 'katten/bruintje.jpg',       birth: '21 aug 2018' },
-  { id: 'flynnflo',    name: 'Flynn & flo',       gen: 5, photo: 'katten/kitties.jpg',       birth: '03 feb 2022' },
-  { id: '1',    name: '1',    gen: 5, photo: null,        birth: null },
-  { id: '2',    name: '2',    gen: 5, photo: null,        birth: null },
-  { id: '3',    name: '3',    gen: 5, photo: null,        birth: null },
-  { id: '4',    name: '4',    gen: 5, photo: null,        birth: null },
-  { id: '5',    name: '5',    gen: 5, photo: null,        birth: null },
+  { id: 'flynnflo',    name: 'Flynn & Flo',    gen: 5, photo: 'katten/kitties.jpg',        birth: '03 feb 2022' },
+  { id: '1',    name: '1',    gen: 5, photo: null, birth: null },
+  { id: '2',    name: '2',    gen: 5, photo: null, birth: null },
+  { id: '3',    name: '3',    gen: 5, photo: null, birth: null },
+  { id: '4',    name: '4',    gen: 5, photo: null, birth: null },
+  { id: '5',    name: '5',    gen: 5, photo: null, birth: null },
 ];
 
 const links = [
-  // Gen 1 → 2
   { source: 'ginny',      target: 'ruby' },
   { source: 'safira',     target: 'roosje' },
   { source: 'safira',     target: 'midnight' },
@@ -369,13 +532,11 @@ const links = [
   { source: 'safira',     target: 'lieffie' },
   { source: 'safira',     target: 'lily' },
   { source: 'safira',     target: 'royke' },
-  // Gen 2 → 3
   { source: 'lily',       target: 'speedy' },
   { source: 'lily',       target: 'piraatje' },
   { source: 'lily',       target: 'bloesempje' },
   { source: 'lily',       target: 'schatje' },
   { source: 'lily',       target: 'lillifee' },
-  // Gen 3 → 4
   { source: 'speedy',     target: 'flip' },
   { source: 'speedy',     target: 'fjoepie' },
   { source: 'speedy',     target: 'spilly' },
@@ -392,7 +553,6 @@ const links = [
   { source: 'bloesempje', target: 'charlie' },
   { source: 'bloesempje', target: 'noortje' },
   { source: 'bloesempje', target: 'snowy' },
-  // Gen 4 → 5
   { source: 'ziva',       target: 'kleintje' },
   { source: 'ziva',       target: 'charcoal' },
   { source: 'ziva',       target: 'copper' },
@@ -408,30 +568,37 @@ const links = [
   { source: 'zara',       target: '5' },
 ];
 
-// ── COLOURS ─────────────────────────────────────────────────────────────────
-const genColors = {
-  1: '#f59e0b',
-  2: '#10b981',
-  3: '#3b82f6',
-  4: '#a855f7',
-  5: '#ec4899',
-};
+// Build parent lookup for the bottom sheet
+const parentOf = {};
+links.forEach(l => {
+  if (!parentOf[l.target]) parentOf[l.target] = [];
+  parentOf[l.target].push(l.source);
+});
+
+// ── COLOURS ──────────────────────────────────────────────────────────────────
+const genColors = { 1:'#f59e0b', 2:'#10b981', 3:'#3b82f6', 4:'#a855f7', 5:'#ec4899' };
 
 // ── SETUP ────────────────────────────────────────────────────────────────────
-const svg    = d3.select('#graph-svg');
-const wrap   = document.querySelector('.canvas-wrap');
-const W      = () => wrap.clientWidth;
-const H      = () => wrap.clientHeight;
+const svg  = d3.select('#graph-svg');
+const wrap = document.querySelector('.canvas-wrap');
+const W    = () => wrap.clientWidth;
+const H    = () => wrap.clientHeight;
 
 const defs = svg.append('defs');
-
-// clipPath for circular images
 nodes.forEach(n => {
   defs.append('clipPath').attr('id', `clip-${n.id}`)
     .append('circle').attr('r', nodeR(n));
 });
 
 function nodeR(n) {
+  if (isMobile()) {
+    // Slightly larger on mobile for easier tapping
+    if (n.gen === 1) return 36;
+    if (n.gen === 2) return 29;
+    if (n.gen === 3) return 24;
+    if (n.gen === 4) return 20;
+    return 17;
+  }
   if (n.gen === 1) return 32;
   if (n.gen === 2) return 26;
   if (n.gen === 3) return 22;
@@ -439,17 +606,16 @@ function nodeR(n) {
   return 15;
 }
 
-// Container for zoom
 const g = svg.append('g').attr('class', 'zoom-layer');
 
-// Zoom behaviour
 const zoom = d3.zoom()
-  .scaleExtent([0.1, 4])
+  .scaleExtent([0.08, 6])
   .on('zoom', e => g.attr('transform', e.transform));
 svg.call(zoom);
 
 // ── LAYOUT ───────────────────────────────────────────────────────────────────
 let simulation;
+let currentNodesData = [];
 
 function buildLayeredLayout() {
   if (simulation) simulation.stop();
@@ -457,11 +623,12 @@ function buildLayeredLayout() {
   const nodesCopy = nodes.map(d => ({ ...d }));
   const linksCopy = links.map(d => ({ ...d }));
 
-  const ROW_H       = 148;
-  const TOP         = 75;
-  const NODE_W      = 76;
-  const SIBLING_GAP = 8;
-  const FAMILY_GAP  = 38;
+  const mobile = isMobile();
+  const ROW_H       = mobile ? 130 : 148;
+  const TOP         = mobile ? 60  : 75;
+  const NODE_W      = mobile ? 68  : 76;
+  const SIBLING_GAP = mobile ? 6   : 8;
+  const FAMILY_GAP  = mobile ? 28  : 38;
 
   const childrenOf = {};
   links.forEach(l => {
@@ -469,19 +636,15 @@ function buildLayeredLayout() {
     childrenOf[l.source].push(l.target);
   });
 
-  const childIds = new Set(links.map(l => l.target));
-  const roots = nodesCopy.filter(n => !childIds.has(n.id));
+  const childIds  = new Set(links.map(l => l.target));
+  const roots     = nodesCopy.filter(n => !childIds.has(n.id));
+  const subtreeW  = {};
 
-  const subtreeW = {};
   function calcWidth(id) {
     const kids = childrenOf[id] || [];
-    if (kids.length === 0) {
-      subtreeW[id] = NODE_W;
-      return NODE_W;
-    }
-    let w = kids.reduce((sum, kid, i) => {
-      return sum + calcWidth(kid) + (i < kids.length - 1 ? SIBLING_GAP : 0);
-    }, 0);
+    if (!kids.length) { subtreeW[id] = NODE_W; return NODE_W; }
+    let w = kids.reduce((sum, kid, i) =>
+      sum + calcWidth(kid) + (i < kids.length - 1 ? SIBLING_GAP : 0), 0);
     subtreeW[id] = w;
     return w;
   }
@@ -490,27 +653,18 @@ function buildLayeredLayout() {
   const xPos = {};
   function assignX(id, left) {
     const kids = childrenOf[id] || [];
-    if (kids.length === 0) {
-      xPos[id] = left + NODE_W / 2;
-      return;
-    }
+    if (!kids.length) { xPos[id] = left + NODE_W / 2; return; }
     let cursor = left;
-    kids.forEach(kid => {
-      assignX(kid, cursor);
-      cursor += subtreeW[kid] + SIBLING_GAP;
-    });
+    kids.forEach(kid => { assignX(kid, cursor); cursor += subtreeW[kid] + SIBLING_GAP; });
     xPos[id] = (xPos[kids[0]] + xPos[kids[kids.length - 1]]) / 2;
   }
 
   let cursor = 0;
-  roots.forEach(root => {
-    assignX(root.id, cursor);
-    cursor += subtreeW[root.id] + FAMILY_GAP;
-  });
+  roots.forEach(root => { assignX(root.id, cursor); cursor += subtreeW[root.id] + FAMILY_GAP; });
 
   nodesCopy.forEach(n => {
-    n.x = xPos[n.id] || 0;
-    n.y = TOP + (n.gen - 1) * ROW_H;
+    n.x  = xPos[n.id] || 0;
+    n.y  = TOP + (n.gen - 1) * ROW_H;
     n.fx = n.x;
     n.fy = n.y;
   });
@@ -519,6 +673,7 @@ function buildLayeredLayout() {
     .force('link', d3.forceLink(linksCopy).id(d => d.id).strength(0))
     .alphaDecay(1);
 
+  currentNodesData = nodesCopy;
   render(nodesCopy, linksCopy, simulation, true, ROW_H, TOP);
   simulation.tick();
   setTimeout(() => fitGraph(nodesCopy), 50);
@@ -529,15 +684,15 @@ function buildForceLayout() {
 
   const nodesCopy = nodes.map(d => ({ ...d }));
   const linksCopy = links.map(d => ({ ...d }));
-
   nodesCopy.forEach(n => { delete n.fx; delete n.fy; });
 
   simulation = d3.forceSimulation(nodesCopy)
-    .force('link', d3.forceLink(linksCopy).id(d => d.id).distance(100).strength(0.5))
-    .force('charge', d3.forceManyBody().strength(-300))
+    .force('link', d3.forceLink(linksCopy).id(d => d.id).distance(isMobile() ? 80 : 100).strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-280))
     .force('center', d3.forceCenter(W() / 2, H() / 2))
-    .force('collide', d3.forceCollide().radius(d => nodeR(d) + 20).strength(0.9));
+    .force('collide', d3.forceCollide().radius(d => nodeR(d) + 18).strength(0.9));
 
+  currentNodesData = nodesCopy;
   render(nodesCopy, linksCopy, simulation, false, 0, 0);
   setTimeout(() => fitGraph(nodesCopy), 2000);
 }
@@ -546,12 +701,13 @@ function fitGraph(nodesData) {
   const xs = nodesData.map(n => n.x).filter(Boolean);
   const ys = nodesData.map(n => n.y).filter(Boolean);
   if (!xs.length) return;
-  const minX = Math.min(...xs) - 60, maxX = Math.max(...xs) + 60;
-  const minY = Math.min(...ys) - 60, maxY = Math.max(...ys) + 60;
-  const gw = maxX - minX, gh = maxY - minY;
-  const scale = Math.min(0.95, Math.min(W() / gw, H() / gh));
-  const tx = (W() - gw * scale) / 2 - minX * scale;
-  const ty = (H() - gh * scale) / 2 - minY * scale;
+  const pad  = isMobile() ? 40 : 60;
+  const minX = Math.min(...xs) - pad, maxX = Math.max(...xs) + pad;
+  const minY = Math.min(...ys) - pad, maxY = Math.max(...ys) + pad;
+  const gw   = maxX - minX, gh = maxY - minY;
+  const scale = Math.min(isMobile() ? 0.92 : 0.95, Math.min(W() / gw, H() / gh));
+  const tx   = (W() - gw * scale) / 2 - minX * scale;
+  const ty   = (H() - gh * scale) / 2 - minY * scale;
   svg.transition().duration(800).call(
     zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale)
   );
@@ -561,58 +717,24 @@ function fitGraph(nodesData) {
 function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
   g.selectAll('*').remove();
 
-  // Generation row guide lines
   if (layered) {
     const labelG = g.append('g').attr('class', 'row-labels');
     [1,2,3,4,5].forEach(gen => {
       const y = TOP + (gen - 1) * ROW_H;
       labelG.append('line')
-        .attr('x1', -2000).attr('x2', 2000)
-        .attr('y1', y).attr('y2', y)
-        .attr('stroke', genColors[gen])
-        .attr('stroke-opacity', 0.07)
-        .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '4 8');
+        .attr('x1', -2000).attr('x2', 2000).attr('y1', y).attr('y2', y)
+        .attr('stroke', genColors[gen]).attr('stroke-opacity', 0.07)
+        .attr('stroke-width', 1).attr('stroke-dasharray', '4 8');
       labelG.append('text')
-        .attr('x', -60).attr('y', y)
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'end')
-        .attr('font-size', 11)
-        .attr('font-weight', 700)
-        .attr('fill', genColors[gen])
-        .attr('opacity', 0.55)
+        .attr('x', -60).attr('y', y).attr('dy', '0.35em')
+        .attr('text-anchor', 'end').attr('font-size', 11).attr('font-weight', 700)
+        .attr('fill', genColors[gen]).attr('opacity', 0.55)
         .text(`Gen ${gen}`);
     });
   }
 
-  // ── Connectors: two lines per link (vertical + horizontal elbow) ──
-  // Using <line> elements instead of <path> to avoid any fill issues.
   const linkGroup = g.append('g').attr('class', 'links');
-
-  // We'll store refs so we can update on tick/drag
-  const linkLines = []; // each entry: { seg1, seg2, d }
-  linksData.forEach(d => {
-    const seg1 = linkGroup.append('line').attr('class', 'link');
-    const seg2 = linkGroup.append('line').attr('class', 'link');
-    linkLines.push({ seg1, seg2, d });
-  });
-
-  function updateLinks() {
-    linkLines.forEach(({ seg1, seg2, d }) => {
-      const sx = d.source.x, sy = d.source.y + nodeR(d.source);
-      const tx = d.target.x, ty = d.target.y - nodeR(d.target);
-      const my = (sy + ty) / 2;
-      // Vertical from parent down to midpoint
-      seg1.attr('x1', sx).attr('y1', sy).attr('x2', sx).attr('y2', my);
-      // Horizontal across, then vertical to child
-      seg2.attr('x1', sx).attr('y1', my).attr('x2', tx).attr('y2', my);
-      // Third segment: vertical from midpoint to child — reuse seg2 as horizontal, add seg3
-    });
-  }
-
-  // Actually we need 3 segments. Redo with 3 lines per link.
-  linkGroup.selectAll('*').remove();
-  const linkSegs = [];
+  const linkSegs  = [];
   linksData.forEach(d => {
     const a = linkGroup.append('line').attr('class', 'link');
     const b = linkGroup.append('line').attr('class', 'link');
@@ -622,22 +744,16 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
 
   function drawLinks() {
     linkSegs.forEach(({ a, b, c, d }) => {
-      const sx = d.source.x;
-      const sy = d.source.y + nodeR(d.source);
-      const tx = d.target.x;
-      const ty = d.target.y - nodeR(d.target);
+      const sx   = d.source.x,  sy = d.source.y + nodeR(d.source);
+      const tx   = d.target.x,  ty = d.target.y - nodeR(d.target);
       const midY = (sy + ty) / 2;
-
-      a.attr('x1', sx).attr('y1', sy)
-       .attr('x2', sx).attr('y2', midY);
-      b.attr('x1', sx).attr('y1', midY)
-       .attr('x2', tx).attr('y2', midY);
-      c.attr('x1', tx).attr('y1', midY)
-       .attr('x2', tx).attr('y2', ty);
+      a.attr('x1', sx).attr('y1', sy).attr('x2', sx).attr('y2', midY);
+      b.attr('x1', sx).attr('y1', midY).attr('x2', tx).attr('y2', midY);
+      c.attr('x1', tx).attr('y1', midY).attr('x2', tx).attr('y2', ty);
     });
   }
-  // Expose for drag updates
-  function linkPath() { drawLinks(); }
+
+  // Touch target enlarger (invisible bigger circle on mobile)
   const node = g.append('g').attr('class', 'nodes')
     .selectAll('.node')
     .data(nodesData)
@@ -651,23 +767,21 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
       })
       .on('drag', (e, d) => {
         d.fx = e.x;
-        if (!layered) d.fy = e.y;
-        else d.fy = d.y;  // keep Y locked
-        // Manual re-render for static layered layout
-        if (layered) {
-          d.x = e.x;
-          drawLinks();
-          node.attr('transform', nd => `translate(${nd.x},${nd.y})`);
-        }
+        if (!layered) d.fy = e.y; else d.fy = d.y;
+        if (layered) { d.x = e.x; drawLinks(); node.attr('transform', nd => `translate(${nd.x},${nd.y})`); }
       })
       .on('end', (e, d) => {
         if (!e.active && sim.alphaTarget) sim.alphaTarget(0);
         if (!layered) { d.fx = null; d.fy = null; }
-        // In layered mode keep fx so node stays where dropped
       })
     );
 
-  // Background circle
+  // Invisible hit target on mobile
+  node.append('circle')
+    .attr('r', d => Math.max(nodeR(d), isMobile() ? 28 : 0))
+    .attr('fill', 'transparent')
+    .attr('stroke', 'none');
+
   node.append('circle')
     .attr('class', 'bg')
     .attr('r', d => nodeR(d))
@@ -676,10 +790,9 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
     .attr('stroke-opacity', 0.85)
     .attr('stroke-width', 2.5);
 
-  // Photo or emoji placeholder
   node.each(function(d) {
     const el = d3.select(this);
-    const r = nodeR(d);
+    const r  = nodeR(d);
     if (d.photo) {
       el.append('image')
         .attr('href', d.photo)
@@ -687,20 +800,17 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
         .attr('width', r * 2).attr('height', r * 2)
         .attr('clip-path', `url(#clip-${d.id})`)
         .attr('preserveAspectRatio', 'xMidYMid slice')
-        .on('click', (_, d) => openLightbox(d))
-        .on('mouseenter', (e, d) => showTooltip(e, d))
-        .on('mouseleave', hideTooltip);
+        .on('click', (_, d) => { if (!isMobile()) openLightbox(d); })
+        .on('mouseenter', (e, d) => { if (!isMobile()) showTooltip(e, d); })
+        .on('mouseleave', ()      => { if (!isMobile()) hideTooltip(); });
     } else {
       el.append('text')
-        .attr('dy', '0.35em')
-        .attr('font-size', r * 0.65)
-        .style('fill', genColors[d.gen])
-        .attr('text-anchor', 'middle')
+        .attr('dy', '0.35em').attr('font-size', r * 0.65)
+        .style('fill', genColors[d.gen]).attr('text-anchor', 'middle')
         .text('🐱');
     }
   });
 
-  // Name label
   node.append('text')
     .attr('y', d => nodeR(d) + 14)
     .text(d => d.name)
@@ -710,52 +820,51 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
 
   // ── Interactions ──
   node.on('mouseenter', (e, d) => {
-    showTooltip(e, d);
-    highlightConnected(d);
+    if (!isMobile()) { showTooltip(e, d); highlightConnected(d); }
   }).on('mouseleave', () => {
-    hideTooltip();
-    clearHighlight();
+    if (!isMobile()) { hideTooltip(); clearHighlight(); }
   }).on('click', (e, d) => {
-    if (d.photo) openLightbox(d);
+    if (isMobile()) {
+      openBottomSheet(d, nodesData, linksData);
+      highlightConnected(d, nodesData, linksData, node, linkSegs);
+    } else {
+      if (d.photo) openLightbox(d);
+    }
   });
 
-  function highlightConnected(d) {
+  function highlightConnected(d, nd, ld, n, ls) {
+    // Use closured vars if not passed (desktop path)
+    const _nd = nd || nodesData;
+    const _ld = ld || linksData;
+    const _n  = n  || node;
+    const _ls = ls || linkSegs;
+
     const connectedIds = new Set([d.id]);
-    linksData.forEach(l => {
+    _ld.forEach(l => {
       const src = l.source.id || l.source;
       const tgt = l.target.id || l.target;
       if (src === d.id) connectedIds.add(tgt);
       if (tgt === d.id) connectedIds.add(src);
     });
-    node.classed('dimmed', n => !connectedIds.has(n.id));
-    linkSegs.forEach(({ a, b, c, d: l }) => {
+    _n.classed('dimmed', n => !connectedIds.has(n.id));
+    _ls.forEach(({ a, b, c, d: l }) => {
       const src = l.source.id || l.source;
       const tgt = l.target.id || l.target;
       const dim = !(connectedIds.has(src) && connectedIds.has(tgt));
-      a.classed('dimmed', dim);
-      b.classed('dimmed', dim);
-      c.classed('dimmed', dim);
+      a.classed('dimmed', dim); b.classed('dimmed', dim); c.classed('dimmed', dim);
     });
   }
 
   function clearHighlight() {
     node.classed('dimmed', false);
     linkSegs.forEach(({ a, b, c }) => {
-      a.classed('dimmed', false);
-      b.classed('dimmed', false);
-      c.classed('dimmed', false);
+      a.classed('dimmed', false); b.classed('dimmed', false); c.classed('dimmed', false);
     });
   }
 
-  // ── Elbow connectors: down from parent, horizontal, down to child ──
-  function linkPath(d) {
-    const sx = d.source.x, sy = d.source.y + nodeR(d.source);
-    const tx = d.target.x, ty = d.target.y - nodeR(d.target);
-    const my = (sy + ty) / 2;
-    return `M${sx},${sy} L${sx},${my} L${tx},${my} L${tx},${ty}`;
-  }
+  // Expose for bottom sheet close
+  window._clearHighlight = clearHighlight;
 
-  // Draw once immediately (static layered layout), then keep updating for force layout
   function draw() {
     drawLinks();
     node.attr('transform', d => `translate(${d.x},${d.y})`);
@@ -766,9 +875,7 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
   // Legend filter
   document.querySelectorAll('.legend-item').forEach(li => {
     li.onclick = () => {
-      const gen = +li.dataset.gen;
-      const wasActive = !li.classList.contains('dimmed');
-      if (wasActive) li.classList.add('dimmed'); else li.classList.remove('dimmed');
+      li.classList.toggle('dimmed');
       const hiddenGens = new Set(
         Array.from(document.querySelectorAll('.legend-item.dimmed')).map(x => +x.dataset.gen)
       );
@@ -777,40 +884,123 @@ function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
         const src = nodesData.find(n => n.id === (l.source.id || l.source));
         const tgt = nodesData.find(n => n.id === (l.target.id || l.target));
         const dim = hiddenGens.has(src?.gen) || hiddenGens.has(tgt?.gen);
-        a.classed('dimmed', dim);
-        b.classed('dimmed', dim);
-        c.classed('dimmed', dim);
+        a.classed('dimmed', dim); b.classed('dimmed', dim); c.classed('dimmed', dim);
       });
     };
   });
 }
 
-// ── TOOLTIP ──────────────────────────────────────────────────────────────────
+// ── BOTTOM SHEET ─────────────────────────────────────────────────────────────
+const bottomSheet = document.getElementById('bottom-sheet');
+let sheetOpenCat  = null;
+
+function openBottomSheet(d, nodesData, linksData) {
+  sheetOpenCat = d;
+  const genCol = genColors[d.gen];
+
+  // Photo
+  const photoEl = document.getElementById('sheet-photo');
+  photoEl.innerHTML = d.photo
+    ? `<img src="${d.photo}" alt="${d.name}" style="cursor:zoom-in" onclick="openLightboxById('${d.id}')">`
+    : `<div class="no-photo-sm">🐱</div>`;
+
+  document.getElementById('sheet-name').textContent = d.name;
+
+  const genBadge = document.getElementById('sheet-gen');
+  genBadge.textContent  = `Gen ${d.gen}`;
+  genBadge.style.background = genCol + '22';
+  genBadge.style.color      = genCol;
+  genBadge.style.boxShadow  = `0 0 0 1px ${genCol}44`;
+
+  const birthRow  = document.getElementById('sheet-birth');
+  const birthText = document.getElementById('sheet-birth-text');
+  if (d.birth) {
+    birthText.textContent = d.birth;
+    birthRow.style.display = 'flex';
+  } else {
+    birthRow.style.display = 'none';
+  }
+
+  // Photo button
+  const photoBtn = document.getElementById('sheet-photo-btn');
+  if (d.photo) {
+    photoBtn.style.display = 'flex';
+    photoBtn.onclick = () => openLightbox(d);
+  } else {
+    photoBtn.style.display = 'none';
+  }
+
+  // Parents button
+  const parentsBtn = document.getElementById('sheet-parents-btn');
+  const parents    = (parentOf[d.id] || []);
+  if (parents.length) {
+    parentsBtn.style.display = 'flex';
+    const parentNames = parents.map(pid => {
+      const p = nodes.find(n => n.id === pid);
+      return p ? p.name : pid;
+    }).join(', ');
+    parentsBtn.title   = parentNames;
+    parentsBtn.onclick = () => {
+      // Highlight first parent
+      const firstParent = nodesData.find(n => n.id === parents[0]);
+      if (firstParent) {
+        closeBottomSheet();
+        openBottomSheet(firstParent, nodesData, linksData);
+        // Pan to parent
+        const t = d3.zoomTransform(svg.node());
+        svg.transition().duration(500).call(
+          zoom.transform,
+          d3.zoomIdentity
+            .translate(W()/2 - firstParent.x * t.k, H()/2 - firstParent.y * t.k)
+            .scale(t.k)
+        );
+      }
+    };
+  } else {
+    parentsBtn.style.display = 'none';
+  }
+
+  bottomSheet.classList.add('open');
+}
+
+function closeBottomSheet() {
+  bottomSheet.classList.remove('open');
+  if (window._clearHighlight) window._clearHighlight();
+  sheetOpenCat = null;
+}
+
+document.getElementById('sheet-close').onclick = closeBottomSheet;
+
+// Swipe down to dismiss
+let touchStartY = 0;
+bottomSheet.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+bottomSheet.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (dy > 60) closeBottomSheet();
+}, { passive: true });
+
+// ── TOOLTIP (desktop) ─────────────────────────────────────────────────────────
 const tooltip = document.getElementById('tooltip');
 let ttTimer;
 
 function showTooltip(e, d) {
   clearTimeout(ttTimer);
   const genCol = genColors[d.gen];
-
   tooltip.innerHTML = `
     ${d.photo
       ? `<img src="${d.photo}" alt="${d.name}" ondblclick="openLightboxById('${d.id}')" style="cursor:zoom-in">`
-      : `<div class="no-photo"><i class="material-icons" style="font-size:40px">pets</i></div>`
-    }
+      : `<div class="no-photo"><i class="material-icons" style="font-size:40px">pets</i></div>`}
     <h3>${d.name}</h3>
     <span class="gen-badge" style="background:${genCol}22;color:${genCol};box-shadow:0 0 0 1px ${genCol}44">
       Gen ${d.gen}
     </span>
     ${d.birth ? `<div class="birth"><i class="material-icons" style="font-size:11px">calendar_today</i>${d.birth}</div>` : ''}
   `;
-
   const rect = wrap.getBoundingClientRect();
   let x = e.clientX - rect.left + 16;
-  let y = e.clientY - rect.top + 16;
+  let y = e.clientY - rect.top  + 16;
   if (x + 190 > W()) x = e.clientX - rect.left - 196;
-  if (y + 230 > H()) y = e.clientY - rect.top - 240;
-
+  if (y + 230 > H()) y = e.clientY - rect.top  - 240;
   tooltip.style.left = x + 'px';
   tooltip.style.top  = y + 'px';
   tooltip.classList.add('show');
@@ -827,8 +1017,7 @@ const lbName   = document.getElementById('lb-name');
 
 function openLightbox(d) {
   if (!d.photo) return;
-  lbImg.src = d.photo;
-  lbImg.alt = d.name;
+  lbImg.src = d.photo; lbImg.alt = d.name;
   lbName.textContent = d.name;
   lightbox.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -847,27 +1036,38 @@ lightbox.addEventListener('click', e => {
   if (e.target === lightbox) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && lightbox.classList.contains('open')) {
-    lightbox.classList.remove('open'); document.body.style.overflow = '';
+  if (e.key === 'Escape') {
+    if (lightbox.classList.contains('open')) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+    else closeBottomSheet();
   }
 });
 
-// ── ZOOM CONTROLS ────────────────────────────────────────────────────────────
+// ── LEGEND TOGGLE (mobile) ────────────────────────────────────────────────────
+const legendPanel     = document.getElementById('legend-panel');
+const legendToggleBtn = document.getElementById('legend-toggle-btn');
+legendToggleBtn.onclick = () => {
+  legendPanel.classList.toggle('visible');
+};
+// Close legend when tapping outside
+document.addEventListener('click', e => {
+  if (!legendPanel.contains(e.target) && e.target !== legendToggleBtn) {
+    legendPanel.classList.remove('visible');
+  }
+});
+
+// ── ZOOM CONTROLS ─────────────────────────────────────────────────────────────
 document.getElementById('zoom-in').onclick  = () => svg.transition().duration(300).call(zoom.scaleBy, 1.4);
 document.getElementById('zoom-out').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 0.7);
-
 document.getElementById('layout-force').onclick = () => buildForceLayout();
 document.getElementById('layout-tree').onclick  = () => buildLayeredLayout();
 
-// ── THEME ────────────────────────────────────────────────────────────────────
+// ── THEME ─────────────────────────────────────────────────────────────────────
 const themeBtn  = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
-
 function setThemeIcon() {
   themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
 }
 setThemeIcon();
-
 themeBtn.addEventListener('click', () => {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
@@ -878,18 +1078,15 @@ themeBtn.addEventListener('click', () => {
 buildLayeredLayout();
 
 document.getElementById('fit-view').onclick = () => {
-  // Collect current node positions from the zoom layer
-  const pts = [];
-  g.selectAll('.node').each(function(d) { if (d.x && d.y) pts.push(d); });
-  if (pts.length) fitGraph(pts);
+  if (currentNodesData.length) fitGraph(currentNodesData);
 };
 
+let resizeTimer;
 window.addEventListener('resize', () => {
-  if (simulation) {
-    simulation.force('centerX', d3.forceX(W() / 2).strength(0.04));
-    simulation.alphaTarget(0.1).restart();
-    setTimeout(() => simulation.alphaTarget(0), 600);
-  }
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (currentNodesData.length) fitGraph(currentNodesData);
+  }, 200);
 });
 </script>
 </body>
