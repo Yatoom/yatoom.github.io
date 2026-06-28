@@ -4,763 +4,893 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Katten Stamboom — Jeroen van Hoof</title>
-  <meta name="description" content="Katten Stamboom - Een visuele stamboom van onze geliefde familiekatten door de generaties heen.">
-
+  <meta name="description" content="Katten Stamboom - Een interactieve grafiek van onze geliefde familiekatten.">
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
-
   <link rel="icon" type="image/png" href="../build/img/j.svg">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: { extend: { colors: { accent: '#3B82F6' } } }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 
   <style>
-    .gradient-bg { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
-    .dark .gradient-bg { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    @keyframes pulse-glow { 0%,100%{opacity:.3} 50%{opacity:.8} }
-    @keyframes grid-flow { 0%{background-position:0 0} 100%{background-position:50px 50px} }
-    @keyframes fadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+    :root {
+      --bg:       #f1f5f9;
+      --surface:  #ffffff;
+      --border:   rgba(0,0,0,.08);
+      --text:     #0f172a;
+      --muted:    #64748b;
+      --accent:   #3b82f6;
 
-    .grid-bg {
-      background-image:
-        linear-gradient(0deg,rgba(59,130,246,.08) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(59,130,246,.08) 1px,transparent 1px);
-      background-size: 50px 50px;
-      animation: grid-flow 20s linear infinite;
+      --gen1: #f59e0b;
+      --gen2: #10b981;
+      --gen3: #3b82f6;
+      --gen4: #a855f7;
+      --gen5: #ec4899;
+      --gen6: #eab308;
     }
-    .dark .grid-bg {
-      background-image:
-        linear-gradient(0deg,rgba(93,147,255,.06) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(93,147,255,.06) 1px,transparent 1px);
+
+    html.dark {
+      --bg:      #0f172a;
+      --surface: #1e293b;
+      --border:  rgba(255,255,255,.07);
+      --text:    #f1f5f9;
+      --muted:   #94a3b8;
     }
-    .glow-blob { animation: pulse-glow 4s ease-in-out infinite; }
 
-    /* ── Tree connectors ── */
-    .clt, .clt ul, .clt li { position: relative; }
-    .clt ul { list-style: none; padding-left: 28px; margin-top: 0; }
-    .clt li { margin: 0; padding: 8px 0; }
-    .clt li::before, .clt li::after { content:""; position:absolute; left:-14px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background .3s, color .3s;
+      overflow: hidden;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .clt li::before { border-top:1px solid rgb(203 213 225); top:20px; width:10px; height:0; }
-    .dark .clt li::before { border-top-color:rgb(51 65 85); }
-    .clt li::after { border-left:1px solid rgb(203 213 225); height:100%; width:0; top:0; }
-    .dark .clt li::after { border-left-color:rgb(51 65 85); }
-    .clt ul > li:last-child::after { height:20px; }
+    /* ── NAVBAR ── */
+    nav {
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 60px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    nav a { text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 600; transition: color .2s; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-links { display: flex; gap: 24px; }
+    #theme-toggle {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); width: 36px; height: 36px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    #theme-toggle:hover { background: var(--border); }
 
-    .clt li.parent-node::before { top:48px; }
-    .clt ul > li.parent-node:last-child::after { height:48px; }
-    .clt li.card-node::before { top:40px; }
-    .clt ul > li.card-node:last-child::after { height:40px; }
+    /* ── MAIN CANVAS AREA ── */
+    .canvas-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
 
-    summary::-webkit-details-marker { display:none; }
-    summary { list-style:none; }
+    #graph-svg {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    #graph-svg:active { cursor: grabbing; }
 
-    /* ── Lightbox ── */
+    /* ── CONTROLS ── */
+    .controls {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.12);
+      z-index: 10;
+    }
+    .ctrl-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); width: 32px; height: 32px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: background .15s, color .15s;
+    }
+    .ctrl-btn:hover { background: var(--border); color: var(--text); }
+    .ctrl-divider { width: 1px; height: 20px; background: var(--border); }
+
+    /* ── LEGEND ── */
+    .legend {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.1);
+      z-index: 10;
+      min-width: 130px;
+    }
+    .legend h4 {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--muted); margin-bottom: 10px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--text); margin-bottom: 6px; cursor: pointer;
+      opacity: 1; transition: opacity .2s;
+    }
+    .legend-item.dimmed { opacity: .3; }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex: none;
+    }
+
+    /* ── NODE TOOLTIP / CARD ── */
+    #tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.18);
+      width: 180px;
+      z-index: 200;
+      opacity: 0;
+      transform: scale(.95) translateY(4px);
+      transition: opacity .18s, transform .18s;
+    }
+    #tooltip.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    #tooltip img {
+      width: 100%; aspect-ratio: 1; object-fit: cover;
+      border-radius: 10px; margin-bottom: 10px;
+      display: block;
+    }
+    #tooltip .no-photo {
+      width: 100%; aspect-ratio: 1;
+      background: var(--bg);
+      border-radius: 10px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+    }
+    #tooltip h3 { font-size: 14px; font-weight: 700; color: var(--text); }
+    #tooltip .gen-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 10px; font-weight: 700; margin-top: 4px;
+    }
+    #tooltip .birth {
+      font-size: 10px; color: var(--muted); margin-top: 6px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ── LIGHTBOX ── */
     #lightbox {
-      display: none;
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(0,0,0,.88);
-      backdrop-filter: blur(6px);
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,.88); backdrop-filter: blur(6px);
       align-items: center; justify-content: center;
     }
     #lightbox.open { display: flex; }
     #lightbox img {
-      max-width: min(90vw, 800px);
-      max-height: 85vh;
-      border-radius: 16px;
-      object-fit: contain;
-      animation: fadeIn .2s ease;
+      max-width: min(90vw, 800px); max-height: 85vh;
+      border-radius: 16px; object-fit: contain;
       box-shadow: 0 32px 80px rgba(0,0,0,.6);
+      animation: fadeIn .2s ease;
     }
-    #lightbox-name {
-      position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
-      background:rgba(0,0,0,.6);
-      color:#fff; font-weight:700; font-size:15px;
-      padding:8px 20px; border-radius:999px;
-      backdrop-filter: blur(4px);
+    @keyframes fadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+    #lb-name {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.6); color: #fff; font-weight: 700; font-size: 15px;
+      padding: 8px 20px; border-radius: 999px; backdrop-filter: blur(4px);
     }
-    #lightbox-close {
-      position:absolute; top:20px; right:20px;
-      background:rgba(255,255,255,.1); border:none; color:#fff;
-      width:44px; height:44px; border-radius:50%; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      font-size:20px; transition:.2s;
+    #lb-close {
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,.1); border: none; color: #fff;
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
     }
-    #lightbox-close:hover { background:rgba(255,255,255,.2); }
-    #lightbox-prev, #lightbox-next {
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:rgba(255,255,255,.1); border:none; color:#fff;
-      width:50px; height:50px; border-radius:50%; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      font-size:28px; transition:.2s;
-    }
-    #lightbox-prev:hover, #lightbox-next:hover { background:rgba(255,255,255,.25); }
-    #lightbox-prev { left:24px; }
-    #lightbox-next { right:24px; }
+    #lb-close:hover { background: rgba(255,255,255,.2); }
 
-    /* ── Generation badge colours ── */
-    .gen-1 { --gb:rgba(245,158,11,.1); --gc:rgb(180,115,0); --gr:rgba(245,158,11,.2); }
-    .dark .gen-1 { --gc:rgb(251,191,36); }
-    .gen-2 { --gb:rgba(16,185,129,.1); --gc:rgb(4,120,87); --gr:rgba(16,185,129,.2); }
-    .dark .gen-2 { --gc:rgb(52,211,153); }
-    .gen-3 { --gb:rgba(59,130,246,.1); --gc:rgb(29,78,216); --gr:rgba(59,130,246,.2); }
-    .dark .gen-3 { --gc:rgb(96,165,250); }
-    .gen-4 { --gb:rgba(168,85,247,.1); --gc:rgb(109,40,217); --gr:rgba(168,85,247,.2); }
-    .dark .gen-4 { --gc:rgb(196,132,251); }
-    .gen-5 { --gb:rgba(236,72,153,.1); --gc:rgb(157,23,77); --gr:rgba(236,72,153,.2); }
-    .dark .gen-5 { --gc:rgb(244,114,182); }
-    .gen-6 { --gb:rgba(234,179,8,.1); --gc:rgb(133,77,14); --gr:rgba(234,179,8,.2); }
-    .dark .gen-6 { --gc:rgb(250,204,21); }
-
-    .gen-badge {
-      display:inline-flex; align-items:center; gap:3px;
-      padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700;
-      background:var(--gb); color:var(--gc);
-      ring: 1px solid var(--gr);
-      box-shadow: 0 0 0 1px var(--gr);
-      margin-top:2px; align-self:flex-start;
+    /* ── SVG NODES ── */
+    .node circle.bg {
+      stroke-width: 3;
+      cursor: pointer;
+      transition: r .2s;
+    }
+    .node image { cursor: pointer; }
+    .node text {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--text);
+      pointer-events: none;
+      text-anchor: middle;
+    }
+    .link {
+      stroke: var(--muted);
+      stroke-opacity: .18;
+      stroke-width: 1;
+      fill: none;
     }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width:8px; }
-    ::-webkit-scrollbar-track { background:transparent; }
-    ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
-    .dark ::-webkit-scrollbar-thumb { background:#475569; }
-    *:focus-visible { outline:2px solid #3b82f6; outline-offset:2px; }
+    /* dim non-highlighted */
+    .node.dimmed { opacity: .15; }
+    .link.dimmed  { opacity: .05; }
+
+    *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    @media (max-width: 600px) {
+      .legend { display: none; }
+      .nav-links { display: none; }
+    }
   </style>
 
   <script>
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem('color-theme') === 'dark' ||
+        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     }
   </script>
 </head>
-<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+<body>
 
-<!-- ══════════════════════════════════════════════════════════ LIGHTBOX -->
-<div id="lightbox" role="dialog" aria-modal="true" aria-label="Katfoto vergroten">
-  <button id="lightbox-close" aria-label="Sluiten"><i class="material-icons">close</i></button>
-  <button id="lightbox-prev" aria-label="Vorige"><i class="material-icons">chevron_left</i></button>
-  <img id="lightbox-img" src="" alt="">
-  <button id="lightbox-next" aria-label="Volgende"><i class="material-icons">chevron_right</i></button>
-  <div id="lightbox-name"></div>
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lb-close" aria-label="Sluiten"><i class="material-icons">close</i></button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-name"></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════ NAVBAR -->
-<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
-  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
-    <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
-      <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <a href="../index.html">
+      <svg width="30" height="30" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
         <defs><style>html.dark svg path{fill:white!important}html.dark svg rect{stroke:white!important}html:not(.dark) svg path{fill:black!important}html:not(.dark) svg rect{stroke:black!important}</style></defs>
         <g>
-          <path style="font-weight:bold;font-size:170.497px;font-family:Roboto;stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/>
+          <path d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/>
           <rect style="fill:none;stroke-width:17.8144" width="224.11226" height="219.19101" x="15.943868" y="18.404495"/>
         </g>
       </svg>
     </a>
-
-    <div class="hidden md:flex items-center gap-x-8">
-      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
-      <a href="index.html" class="text-sm font-bold leading-6 text-accent transition">Cats</a>
-    </div>
-
-    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
-      <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
-      <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
-    </button>
   </div>
+  <div class="nav-links">
+    <a href="../index.html#projects">Projects</a>
+    <a href="index.html" class="active">Cats</a>
+  </div>
+  <button id="theme-toggle" aria-label="Toggle dark mode">
+    <i class="material-icons" id="theme-icon">dark_mode</i>
+  </button>
 </nav>
 
-<!-- ══════════════════════════════════════════════════════════ HERO -->
-<div class="relative isolate overflow-hidden gradient-bg pt-16">
-  <div class="absolute inset-0 grid-bg opacity-40 dark:opacity-30"></div>
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl pointer-events-none glow-blob"></div>
+<!-- CANVAS -->
+<div class="canvas-wrap">
+  <svg id="graph-svg"></svg>
 
-  <div class="mx-auto max-w-4xl px-6 py-16 sm:py-24 lg:px-8 text-center relative z-10">
-    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-blue-500/10 text-accent mb-6 border border-blue-500/20 shadow-sm">
-      <i class="material-icons" style="font-size:40px">pets</i>
-    </div>
-    <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">Katten Stamboom</h1>
-    <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-      Een visuele stamboom van onze geliefde familiekatten door de generaties heen. Klik op foto's om ze te vergroten.
-    </p>
+  <!-- LEGEND -->
+  <div class="legend">
+    <h4>Generatie</h4>
+    <div class="legend-item" data-gen="1"><div class="legend-dot" style="background:var(--gen1)"></div> Gen 1</div>
+    <div class="legend-item" data-gen="2"><div class="legend-dot" style="background:var(--gen2)"></div> Gen 2</div>
+    <div class="legend-item" data-gen="3"><div class="legend-dot" style="background:var(--gen3)"></div> Gen 3</div>
+    <div class="legend-item" data-gen="4"><div class="legend-dot" style="background:var(--gen4)"></div> Gen 4</div>
+    <div class="legend-item" data-gen="5"><div class="legend-dot" style="background:var(--gen5)"></div> Gen 5</div>
   </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="ctrl-btn" id="zoom-in"  title="Zoom in"><i class="material-icons">add</i></button>
+    <button class="ctrl-btn" id="zoom-out" title="Zoom uit"><i class="material-icons">remove</i></button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="fit-view" title="Alles zichtbaar"><i class="material-icons">fit_screen</i></button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="layout-force"  title="Force layout"><i class="material-icons">hub</i></button>
+    <button class="ctrl-btn" id="layout-tree" title="Boom layout"><i class="material-icons">account_tree</i></button>
+  </div>
+
+  <!-- TOOLTIP -->
+  <div id="tooltip"></div>
 </div>
-
-<!-- ══════════════════════════════════════════════════════════ CONTROLS -->
-<div class="sticky top-[65px] z-40 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm">
-  <div class="mx-auto max-w-7xl px-6 py-3 lg:px-8 flex gap-2 justify-end">
-    <button id="expand-all" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-      <i class="material-icons" style="font-size:14px">unfold_more</i> Alles open
-    </button>
-    <button id="collapse-all" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-      <i class="material-icons" style="font-size:14px">unfold_less</i> Alles dicht
-    </button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════ TREE -->
-<div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-
-  <div class="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-12 shadow-sm overflow-x-auto">
-
-    <!-- Root badge -->
-    <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-white font-bold rounded-2xl shadow-lg shadow-accent/20 mb-6 select-none">
-      <i class="material-icons text-lg">alt_route</i>
-      <span>Kattenfamilie</span>
-    </div>
-
-    <!-- Tree -->
-    <div class="clt mt-2 pl-2" id="tree-root">
-      <ul>
-
-        <!-- ── Gen 1: Soesje (no photo) ── -->
-        <li class="parent-node cat-entry" data-gen="1" data-name="soesje">
-          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm min-w-[200px] w-fit">
-            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
-              <i class="material-icons" style="font-size:28px">pets</i>
-            </div>
-            <div class="pr-2">
-              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Soesje</h3>
-              <span class="gen-badge gen-1">Gen 1</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- ── Gen 1: Ginny ── -->
-        <li class="parent-node cat-entry" data-gen="1" data-name="ginny">
-          <details class="group" id="details-ginny">
-            <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-              <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                <i class="material-icons" style="font-size:14px">chevron_right</i>
-              </span>
-              <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 min-w-[200px]">
-                <img src="katten/ginny.jpg" alt="Ginny" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Ginny">
-                <div class="pr-2">
-                  <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Ginny</h3>
-                  <span class="gen-badge gen-1">Gen 1</span>
-                </div>
-              </div>
-            </summary>
-            <ul>
-              <!-- Ruby -->
-              <li class="card-node cat-entry" data-gen="2" data-name="ruby">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img src="katten/ruby.jpg" alt="Ruby" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Ruby">
-                  </div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Ruby</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-            </ul>
-          </details>
-        </li>
-
-        <!-- ── Gen 1: Safira ── -->
-        <li class="parent-node cat-entry" data-gen="1" data-name="safira">
-          <details class="group" id="details-safira">
-            <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-              <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                <i class="material-icons" style="font-size:14px">chevron_right</i>
-              </span>
-              <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                <img src="katten/safira.jpg" alt="Safira" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Safira">
-                <div class="pr-2">
-                  <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Safira</h3>
-                  <span class="gen-badge gen-1">Gen 1</span>
-                </div>
-              </div>
-            </summary>
-            <ul>
-              <!-- Roosje -->
-              <li class="card-node cat-entry" data-gen="2" data-name="roosje">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img src="katten/roosje.jpg" alt="Roosje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Roosje">
-                  </div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Roosje</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-              <!-- Midnight -->
-              <li class="card-node cat-entry" data-gen="2" data-name="midnight">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img src="katten/midnight.jpg" alt="Midnight" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Midnight">
-                  </div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Midnight</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-              <!-- Sparkle -->
-              <li class="card-node cat-entry" data-gen="2" data-name="sparkle">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img src="katten/sparkle.jpg" alt="Sparkle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sparkle">
-                  </div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sparkle</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-              <!-- Lieffie -->
-              <li class="card-node cat-entry" data-gen="2" data-name="lieffie">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img src="katten/lieffie.jpg" alt="Lieffie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Lieffie">
-                  </div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Lieffie</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-
-              <!-- ── Gen 2: Lily (collapsible) ── -->
-              <li class="parent-node cat-entry" data-gen="2" data-name="lily">
-                <details class="group" id="details-lily">
-                  <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                    <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                      <i class="material-icons" style="font-size:14px">chevron_right</i>
-                    </span>
-                    <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                      <img src="katten/lily.jpg" alt="Lily" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Lily">
-                      <div class="pr-2">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Lily</h3>
-                        <span class="gen-badge gen-2">Gen 2</span>
-                      </div>
-                    </div>
-                  </summary>
-                  <ul>
-
-                    <!-- ── Gen 3: Speedy ── -->
-                    <li class="parent-node cat-entry" data-gen="3" data-name="speedy">
-                      <details class="group" id="details-speedy">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                            <i class="material-icons" style="font-size:14px">chevron_right</i>
-                          </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                            <img src="katten/speedy.jpg" alt="Speedy" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Speedy">
-                            <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Speedy</h3>
-                              <span class="gen-badge gen-3">Gen 3</span>
-                            </div>
-                          </div>
-                        </summary>
-                        <ul>
-                          <!-- Flip -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="flip">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="katten/flip.jpeg" alt="Flip" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Flip">
-                              </div>
-                              <div class="p-3">
-                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Flip</span><br>
-                                <span class="gen-badge gen-4">Gen 4</span>
-                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
-                              </div>
-                            </div>
-                          </li>
-
-                          <!-- ── Gen 4: Fjoepie (collapsible) ── -->
-                          <li class="parent-node cat-entry" data-gen="4" data-name="fjoepie">
-                            <details class="group" id="details-fjoepie">
-                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                                <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                                  <i class="material-icons" style="font-size:14px">chevron_right</i>
-                                </span>
-                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                                  <img src="katten/fjoepie.jpeg" alt="Fjoepie" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Fjoepie">
-                                  <div class="pr-2">
-                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Fjoepie</h3>
-                                    <span class="gen-badge gen-4">Gen 4</span>
-                                    <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
-                                  </div>
-                                </div>
-                              </summary>
-                              <ul>
-                                <!-- Flynn & Flo -->
-                                <li class="card-node cat-entry" data-gen="5" data-name="flynn flo">
-                                  <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                    <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                      <img src="katten/kitties.jpg" alt="Flynn & Flo" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Flynn & Flo">
-                                    </div>
-                                    <div class="p-3">
-                                      <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Flynn &amp; Flo</span><br>
-                                      <span class="gen-badge gen-5">Gen 5</span>
-                                      <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 feb 2022</div>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </details>
-                          </li>
-
-                          <!-- Spilly -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="spilly">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="katten/spilly.jpeg" alt="Spilly" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Spilly">
-                              </div>
-                              <div class="p-3">
-                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Spilly</span><br>
-                                <span class="gen-badge gen-4">Gen 4</span>
-                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
-                              </div>
-                            </div>
-                          </li>
-                          <!-- Noodle -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="noodle">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="katten/noodle.jpg" alt="Noodle" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Noodle">
-                              </div>
-                              <div class="p-3">
-                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Noodle</span><br>
-                                <span class="gen-badge gen-4">Gen 4</span>
-                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
-                              </div>
-                            </div>
-                          </li>
-                          <!-- Nibbit -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="nibbit">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="katten/nibbit.jpeg" alt="Nibbit" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Nibbit">
-                              </div>
-                              <div class="p-3">
-                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Nibbit</span><br>
-                                <span class="gen-badge gen-4">Gen 4</span>
-                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 16 sep 2015</div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </details>
-                    </li>
-
-                    <!-- ── Gen 3: Piraatje ── -->
-                    <li class="parent-node cat-entry" data-gen="3" data-name="piraatje">
-                      <details class="group" id="details-piraatje">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                            <i class="material-icons" style="font-size:14px">chevron_right</i>
-                          </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                            <img src="katten/piraatje.jpg" alt="Piraatje" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Piraatje">
-                            <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Piraatje</h3>
-                              <span class="gen-badge gen-3">Gen 3</span>
-                            </div>
-                          </div>
-                        </summary>
-                        <ul>
-                          <!-- Streepje -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="streepje">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="katten/streepje.jpeg" alt="Streepje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Streepje">
-                              </div>
-                              <div class="p-3">
-                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Streepje</span><br>
-                                <span class="gen-badge gen-4">Gen 4</span>
-                                <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div>
-                              </div>
-                            </div>
-                          </li>
-
-                          <!-- ── Gen 4: Ziva (collapsible) ── -->
-                          <li class="parent-node cat-entry" data-gen="4" data-name="ziva">
-                            <details class="group" id="details-ziva">
-                              <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                                <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                                  <i class="material-icons" style="font-size:14px">chevron_right</i>
-                                </span>
-                                <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                                  <img src="katten/ziva.jpeg" alt="Ziva" class="cat-image w-16 h-16 rounded-xl object-cover shadow-inner" data-name="Ziva">
-                                  <div class="pr-2">
-                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Ziva</h3>
-                                    <span class="gen-badge gen-4">Gen 4</span>
-                                    <div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div>
-                                  </div>
-                                </div>
-                              </summary>
-                              <ul>
-                                <li>
-                                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-2 mb-4">
-                                    <!-- Kleintje -->
-                                    <div class="cat-entry" data-gen="5" data-name="kleintje">
-                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/kleintje.jpg" alt="Kleintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Kleintje"></div>
-                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Kleintje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
-                                      </div>
-                                    </div>
-                                    <!-- Charcoal -->
-                                    <div class="cat-entry" data-gen="5" data-name="charcoal">
-                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/charcoal.jpg" alt="Charcoal" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Charcoal"></div>
-                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Charcoal</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
-                                      </div>
-                                    </div>
-                                    <!-- Copper -->
-                                    <div class="cat-entry" data-gen="5" data-name="copper">
-                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/copper.jpg" alt="Copper" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Copper"></div>
-                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Copper</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
-                                      </div>
-                                    </div>
-                                    <!-- Grijsje -->
-                                    <div class="cat-entry" data-gen="5" data-name="grijsje">
-                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/grijsje.jpg" alt="Grijsje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Grijsje"></div>
-                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Grijsje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
-                                      </div>
-                                    </div>
-                                    <!-- Bruintje -->
-                                    <div class="cat-entry" data-gen="5" data-name="bruintje">
-                                      <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/bruintje.jpg" alt="Bruintje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Bruintje"></div>
-                                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Bruintje</span><br><span class="gen-badge gen-5">Gen 5</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 21 aug 2018</div></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </details>
-                          </li>
-
-                          <!-- Zara -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="zara">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/zara.jpeg" alt="Zara" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Zara"></div>
-                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Zara</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
-                            </div>
-                          </li>
-                          <!-- Sunny -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="sunny">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/sunny.jpeg" alt="Sunny" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sunny"></div>
-                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sunny</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
-                            </div>
-                          </li>
-                          <!-- Sneeuwvlokje -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="sneeuwvlokje">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/sneeuwvlokje.jpeg" alt="Sneeuwvlokje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Sneeuwvlokje"></div>
-                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Sneeuwvlokje</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
-                            </div>
-                          </li>
-                          <!-- Oreo -->
-                          <li class="card-node cat-entry" data-gen="4" data-name="oreo">
-                            <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                              <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/oreo.jpeg" alt="Oreo" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Oreo"></div>
-                              <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Oreo</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 3 okt 2015</div></div>
-                            </div>
-                          </li>
-                        </ul>
-                      </details>
-                    </li>
-
-                    <!-- ── Gen 3: Bloesempje ── -->
-                    <li class="parent-node cat-entry" data-gen="3" data-name="bloesempje">
-                      <details class="group" id="details-bloesempje">
-                        <summary class="flex items-center gap-2 cursor-pointer list-none select-none py-1">
-                          <span class="chevron-icon inline-flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-400 group-open:rotate-90 transition-transform duration-200">
-                            <i class="material-icons" style="font-size:14px">chevron_right</i>
-                          </span>
-                          <div class="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all min-w-[200px]">
-                            <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
-                              <i class="material-icons" style="font-size:28px">pets</i>
-                            </div>
-                            <div class="pr-2">
-                              <h3 class="font-bold text-slate-800 dark:text-slate-200 cat-name">Bloesempje</h3>
-                              <span class="gen-badge gen-3">Gen 3</span>
-                            </div>
-                          </div>
-                        </summary>
-                        <ul>
-                          <li>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-2 mb-4">
-                              <!-- Bambi -->
-                              <div class="cat-entry" data-gen="4" data-name="bambi">
-                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/bambi.jpeg" alt="Bambi" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Bambi"></div>
-                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Bambi</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
-                                </div>
-                              </div>
-                              <!-- Shadow -->
-                              <div class="cat-entry" data-gen="4" data-name="shadow">
-                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/shadow.jpeg" alt="Shadow" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Shadow"></div>
-                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Shadow</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
-                                </div>
-                              </div>
-                              <!-- Charlie -->
-                              <div class="cat-entry" data-gen="4" data-name="charlie">
-                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/charlie.jpeg" alt="Charlie" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Charlie"></div>
-                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Charlie</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
-                                </div>
-                              </div>
-                              <!-- Noortje -->
-                              <div class="cat-entry" data-gen="4" data-name="noortje">
-                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/noortje.jpeg" alt="Noortje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Noortje"></div>
-                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Noortje</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
-                                </div>
-                              </div>
-                              <!-- Snowy -->
-                              <div class="cat-entry" data-gen="4" data-name="snowy">
-                                <div class="group/card bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/snowy.jpeg" alt="Snowy" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Snowy"></div>
-                                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Snowy</span><br><span class="gen-badge gen-4">Gen 4</span><div class="mt-1 flex items-center gap-1 text-[10px] text-slate-400"><i class="material-icons" style="font-size:10px">calendar_today</i> 28 sep 2015</div></div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </details>
-                    </li>
-
-                    <!-- Schatje -->
-                    <li class="card-node cat-entry" data-gen="3" data-name="schatje">
-                      <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/schatje.jpeg" alt="Schatje" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Schatje"></div>
-                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Schatje</span><br><span class="gen-badge gen-3">Gen 3</span></div>
-                      </div>
-                    </li>
-                    <!-- Lillifee -->
-                    <li class="card-node cat-entry" data-gen="3" data-name="lillifee">
-                      <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                        <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/lillifee.jpeg" alt="Lillifee" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Lillifee"></div>
-                        <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Lillifee</span><br><span class="gen-badge gen-3">Gen 3</span></div>
-                      </div>
-                    </li>
-
-                  </ul>
-                </details>
-              </li>
-
-              <!-- Royke -->
-              <li class="card-node cat-entry" data-gen="2" data-name="royke">
-                <div class="group/card max-w-[180px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 hover:scale-[1.02] flex flex-col">
-                  <div class="aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"><img src="katten/royke.jpeg" alt="Royke" class="cat-image w-full h-full object-cover cursor-zoom-in group-hover/card:scale-105 transition-transform duration-500" loading="lazy" data-name="Royke"></div>
-                  <div class="p-3"><span class="font-bold text-sm text-slate-800 dark:text-slate-200 cat-name">Royke</span><br><span class="gen-badge gen-2">Gen 2</span></div>
-                </div>
-              </li>
-
-            </ul>
-          </details>
-        </li>
-
-      </ul>
-    </div><!-- /clt -->
-
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════ FOOTER -->
-<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-    <div>
-      <p class="text-sm font-bold text-slate-900 dark:text-white">Jeroen van Hoof</p>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
-    </div>
-    <div class="flex gap-x-8 text-sm">
-      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
-      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
-      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
-    </div>
-  </div>
-</footer>
 
 <script>
-// ── Theme ──────────────────────────────────────────────────────────────────
-const themeToggleDarkIcon  = document.getElementById('theme-toggle-dark-icon');
-const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-const themeToggleBtn       = document.getElementById('theme-toggle');
-document.getElementById('current-year').textContent = new Date().getFullYear();
+// ── DATA ────────────────────────────────────────────────────────────────────
+const nodes = [
+  { id: 'soesje',      name: 'Soesje',        gen: 1, photo: null },
+  { id: 'ginny',       name: 'Ginny',          gen: 1, photo: 'katten/ginny.jpg' },
+  { id: 'safira',      name: 'Safira',         gen: 1, photo: 'katten/safira.jpg' },
+  { id: 'ruby',        name: 'Ruby',           gen: 2, photo: 'katten/ruby.jpg' },
+  { id: 'roosje',      name: 'Roosje',         gen: 2, photo: 'katten/roosje.jpg' },
+  { id: 'midnight',    name: 'Midnight',       gen: 2, photo: 'katten/midnight.jpg' },
+  { id: 'sparkle',     name: 'Sparkle',        gen: 2, photo: 'katten/sparkle.jpg' },
+  { id: 'lieffie',     name: 'Lieffie',        gen: 2, photo: 'katten/lieffie.jpg' },
+  { id: 'lily',        name: 'Lily',           gen: 2, photo: 'katten/lily.jpg' },
+  { id: 'royke',       name: 'Royke',          gen: 2, photo: 'katten/royke.jpeg' },
+  { id: 'speedy',      name: 'Speedy',         gen: 3, photo: 'katten/speedy.jpg' },
+  { id: 'piraatje',    name: 'Piraatje',       gen: 3, photo: 'katten/piraatje.jpg' },
+  { id: 'bloesempje',  name: 'Bloesempje',     gen: 3, photo: null },
+  { id: 'schatje',     name: 'Schatje',        gen: 3, photo: 'katten/schatje.jpeg' },
+  { id: 'lillifee',    name: 'Lillifee',       gen: 3, photo: 'katten/lillifee.jpeg' },
+  { id: 'flip',        name: 'Flip',           gen: 4, photo: 'katten/flip.jpeg',          birth: '16 sep 2015' },
+  { id: 'fjoepie',     name: 'Fjoepie',        gen: 4, photo: 'katten/fjoepie.jpeg',       birth: '16 sep 2015' },
+  { id: 'spilly',      name: 'Spilly',         gen: 4, photo: 'katten/spilly.jpeg',        birth: '16 sep 2015' },
+  { id: 'noodle',      name: 'Noodle',         gen: 4, photo: 'katten/noodle.jpg',         birth: '16 sep 2015' },
+  { id: 'nibbit',      name: 'Nibbit',         gen: 4, photo: 'katten/nibbit.jpeg',        birth: '16 sep 2015' },
+  { id: 'streepje',    name: 'Streepje',       gen: 4, photo: 'katten/streepje.jpeg',      birth: '3 okt 2015' },
+  { id: 'ziva',        name: 'Ziva',           gen: 4, photo: 'katten/ziva.jpeg',          birth: '3 okt 2015' },
+  { id: 'zara',        name: 'Zara',           gen: 4, photo: 'katten/zara.jpeg',          birth: '3 okt 2015' },
+  { id: 'sunny',       name: 'Sunny',          gen: 4, photo: 'katten/sunny.jpeg',         birth: '3 okt 2015' },
+  { id: 'sneeuwvlokje',name: 'Sneeuwvlokje',  gen: 4, photo: 'katten/sneeuwvlokje.jpeg',  birth: '3 okt 2015' },
+  { id: 'oreo',        name: 'Oreo',           gen: 4, photo: 'katten/oreo.jpeg',          birth: '3 okt 2015' },
+  { id: 'bambi',       name: 'Bambi',          gen: 4, photo: 'katten/bambi.jpeg',         birth: '28 sep 2015' },
+  { id: 'shadow',      name: 'Shadow',         gen: 4, photo: 'katten/shadow.jpeg',        birth: '28 sep 2015' },
+  { id: 'charlie',     name: 'Charlie',        gen: 4, photo: 'katten/charlie.jpeg',       birth: '28 sep 2015' },
+  { id: 'noortje',     name: 'Noortje',        gen: 4, photo: 'katten/noortje.jpeg',       birth: '28 sep 2015' },
+  { id: 'snowy',       name: 'Snowy',          gen: 4, photo: 'katten/snowy.jpeg',         birth: '28 sep 2015' },
+  { id: 'kleintje',    name: 'Kleintje',       gen: 5, photo: 'katten/kleintje.jpg',       birth: '21 aug 2018' },
+  { id: 'charcoal',    name: 'Charcoal',       gen: 5, photo: 'katten/charcoal.jpg',       birth: '21 aug 2018' },
+  { id: 'copper',      name: 'Copper',         gen: 5, photo: 'katten/copper.jpg',         birth: '21 aug 2018' },
+  { id: 'pip',         name: 'Pip',            gen: 5, photo: 'katten/pip.jpg',            birth: '21 aug 2018' },
+  { id: 'roodje',      name: 'Roodje',         gen: 5, photo: 'katten/roodje.jpg',         birth: '21 aug 2018' },
+  { id: 'grijsje',     name: 'Grijsje',        gen: 5, photo: 'katten/grijsje.jpg',        birth: '21 aug 2018' },
+  { id: 'bruintje',    name: 'Bruintje',       gen: 5, photo: 'katten/bruintje.jpg',       birth: '21 aug 2018' },
+  { id: 'flynnflo',    name: 'Flynn & flo',       gen: 5, photo: 'katten/kitties.jpg',       birth: '03 feb 2022' },
+  { id: '1',    name: '1',    gen: 5, photo: null,        birth: null },
+  { id: '2',    name: '2',    gen: 5, photo: null,        birth: null },
+  { id: '3',    name: '3',    gen: 5, photo: null,        birth: null },
+  { id: '4',    name: '4',    gen: 5, photo: null,        birth: null },
+  { id: '5',    name: '5',    gen: 5, photo: null,        birth: null },
+];
 
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  themeToggleLightIcon.classList.remove('hidden');
-} else {
-  themeToggleDarkIcon.classList.remove('hidden');
-}
-themeToggleBtn.addEventListener('click', () => {
-  themeToggleDarkIcon.classList.toggle('hidden');
-  themeToggleLightIcon.classList.toggle('hidden');
-  const isDark = document.documentElement.classList.toggle('dark');
-  localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+const links = [
+  // Gen 1 → 2
+  { source: 'ginny',      target: 'ruby' },
+  { source: 'safira',     target: 'roosje' },
+  { source: 'safira',     target: 'midnight' },
+  { source: 'safira',     target: 'sparkle' },
+  { source: 'safira',     target: 'lieffie' },
+  { source: 'safira',     target: 'lily' },
+  { source: 'safira',     target: 'royke' },
+  // Gen 2 → 3
+  { source: 'lily',       target: 'speedy' },
+  { source: 'lily',       target: 'piraatje' },
+  { source: 'lily',       target: 'bloesempje' },
+  { source: 'lily',       target: 'schatje' },
+  { source: 'lily',       target: 'lillifee' },
+  // Gen 3 → 4
+  { source: 'speedy',     target: 'flip' },
+  { source: 'speedy',     target: 'fjoepie' },
+  { source: 'speedy',     target: 'spilly' },
+  { source: 'speedy',     target: 'noodle' },
+  { source: 'speedy',     target: 'nibbit' },
+  { source: 'piraatje',   target: 'streepje' },
+  { source: 'piraatje',   target: 'ziva' },
+  { source: 'piraatje',   target: 'zara' },
+  { source: 'piraatje',   target: 'sunny' },
+  { source: 'piraatje',   target: 'sneeuwvlokje' },
+  { source: 'piraatje',   target: 'oreo' },
+  { source: 'bloesempje', target: 'bambi' },
+  { source: 'bloesempje', target: 'shadow' },
+  { source: 'bloesempje', target: 'charlie' },
+  { source: 'bloesempje', target: 'noortje' },
+  { source: 'bloesempje', target: 'snowy' },
+  // Gen 4 → 5
+  { source: 'ziva',       target: 'kleintje' },
+  { source: 'ziva',       target: 'charcoal' },
+  { source: 'ziva',       target: 'copper' },
+  { source: 'ziva',       target: 'grijsje' },
+  { source: 'ziva',       target: 'bruintje' },
+  { source: 'ziva',       target: 'pip' },
+  { source: 'ziva',       target: 'roodje' },
+  { source: 'fjoepie',    target: 'flynnflo' },
+  { source: 'zara',       target: '1' },
+  { source: 'zara',       target: '2' },
+  { source: 'zara',       target: '3' },
+  { source: 'zara',       target: '4' },
+  { source: 'zara',       target: '5' },
+];
+
+// ── COLOURS ─────────────────────────────────────────────────────────────────
+const genColors = {
+  1: '#f59e0b',
+  2: '#10b981',
+  3: '#3b82f6',
+  4: '#a855f7',
+  5: '#ec4899',
+};
+
+// ── SETUP ────────────────────────────────────────────────────────────────────
+const svg    = d3.select('#graph-svg');
+const wrap   = document.querySelector('.canvas-wrap');
+const W      = () => wrap.clientWidth;
+const H      = () => wrap.clientHeight;
+
+const defs = svg.append('defs');
+
+// clipPath for circular images
+nodes.forEach(n => {
+  defs.append('clipPath').attr('id', `clip-${n.id}`)
+    .append('circle').attr('r', nodeR(n));
 });
 
-// ── Lightbox ───────────────────────────────────────────────────────────────
-const lightbox     = document.getElementById('lightbox');
-const lbImg        = document.getElementById('lightbox-img');
-const lbName       = document.getElementById('lightbox-name');
-const lbClose      = document.getElementById('lightbox-close');
-const lbPrev       = document.getElementById('lightbox-prev');
-const lbNext       = document.getElementById('lightbox-next');
-
-let allImages = [];
-let lbIndex   = 0;
-
-function gatherImages() {
-  allImages = Array.from(document.querySelectorAll('.cat-image'));
+function nodeR(n) {
+  if (n.gen === 1) return 32;
+  if (n.gen === 2) return 26;
+  if (n.gen === 3) return 22;
+  if (n.gen === 4) return 18;
+  return 15;
 }
 
-function openLightbox(idx) {
-  gatherImages();
-  lbIndex = idx;
-  const img = allImages[lbIndex];
-  lbImg.src = img.src;
-  lbImg.alt = img.alt;
-  lbName.textContent = img.dataset.name || img.alt;
+// Container for zoom
+const g = svg.append('g').attr('class', 'zoom-layer');
+
+// Zoom behaviour
+const zoom = d3.zoom()
+  .scaleExtent([0.1, 4])
+  .on('zoom', e => g.attr('transform', e.transform));
+svg.call(zoom);
+
+// ── LAYOUT ───────────────────────────────────────────────────────────────────
+let simulation;
+
+function buildLayeredLayout() {
+  if (simulation) simulation.stop();
+
+  const nodesCopy = nodes.map(d => ({ ...d }));
+  const linksCopy = links.map(d => ({ ...d }));
+
+  const ROW_H       = 148;
+  const TOP         = 75;
+  const NODE_W      = 76;
+  const SIBLING_GAP = 8;
+  const FAMILY_GAP  = 38;
+
+  const childrenOf = {};
+  links.forEach(l => {
+    if (!childrenOf[l.source]) childrenOf[l.source] = [];
+    childrenOf[l.source].push(l.target);
+  });
+
+  const childIds = new Set(links.map(l => l.target));
+  const roots = nodesCopy.filter(n => !childIds.has(n.id));
+
+  const subtreeW = {};
+  function calcWidth(id) {
+    const kids = childrenOf[id] || [];
+    if (kids.length === 0) {
+      subtreeW[id] = NODE_W;
+      return NODE_W;
+    }
+    let w = kids.reduce((sum, kid, i) => {
+      return sum + calcWidth(kid) + (i < kids.length - 1 ? SIBLING_GAP : 0);
+    }, 0);
+    subtreeW[id] = w;
+    return w;
+  }
+  roots.forEach(r => calcWidth(r.id));
+
+  const xPos = {};
+  function assignX(id, left) {
+    const kids = childrenOf[id] || [];
+    if (kids.length === 0) {
+      xPos[id] = left + NODE_W / 2;
+      return;
+    }
+    let cursor = left;
+    kids.forEach(kid => {
+      assignX(kid, cursor);
+      cursor += subtreeW[kid] + SIBLING_GAP;
+    });
+    xPos[id] = (xPos[kids[0]] + xPos[kids[kids.length - 1]]) / 2;
+  }
+
+  let cursor = 0;
+  roots.forEach(root => {
+    assignX(root.id, cursor);
+    cursor += subtreeW[root.id] + FAMILY_GAP;
+  });
+
+  nodesCopy.forEach(n => {
+    n.x = xPos[n.id] || 0;
+    n.y = TOP + (n.gen - 1) * ROW_H;
+    n.fx = n.x;
+    n.fy = n.y;
+  });
+
+  simulation = d3.forceSimulation(nodesCopy)
+    .force('link', d3.forceLink(linksCopy).id(d => d.id).strength(0))
+    .alphaDecay(1);
+
+  render(nodesCopy, linksCopy, simulation, true, ROW_H, TOP);
+  simulation.tick();
+  setTimeout(() => fitGraph(nodesCopy), 50);
+}
+
+function buildForceLayout() {
+  if (simulation) simulation.stop();
+
+  const nodesCopy = nodes.map(d => ({ ...d }));
+  const linksCopy = links.map(d => ({ ...d }));
+
+  nodesCopy.forEach(n => { delete n.fx; delete n.fy; });
+
+  simulation = d3.forceSimulation(nodesCopy)
+    .force('link', d3.forceLink(linksCopy).id(d => d.id).distance(100).strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(W() / 2, H() / 2))
+    .force('collide', d3.forceCollide().radius(d => nodeR(d) + 20).strength(0.9));
+
+  render(nodesCopy, linksCopy, simulation, false, 0, 0);
+  setTimeout(() => fitGraph(nodesCopy), 2000);
+}
+
+function fitGraph(nodesData) {
+  const xs = nodesData.map(n => n.x).filter(Boolean);
+  const ys = nodesData.map(n => n.y).filter(Boolean);
+  if (!xs.length) return;
+  const minX = Math.min(...xs) - 60, maxX = Math.max(...xs) + 60;
+  const minY = Math.min(...ys) - 60, maxY = Math.max(...ys) + 60;
+  const gw = maxX - minX, gh = maxY - minY;
+  const scale = Math.min(0.95, Math.min(W() / gw, H() / gh));
+  const tx = (W() - gw * scale) / 2 - minX * scale;
+  const ty = (H() - gh * scale) / 2 - minY * scale;
+  svg.transition().duration(800).call(
+    zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale)
+  );
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(nodesData, linksData, sim, layered, ROW_H, TOP) {
+  g.selectAll('*').remove();
+
+  // Generation row guide lines
+  if (layered) {
+    const labelG = g.append('g').attr('class', 'row-labels');
+    [1,2,3,4,5].forEach(gen => {
+      const y = TOP + (gen - 1) * ROW_H;
+      labelG.append('line')
+        .attr('x1', -2000).attr('x2', 2000)
+        .attr('y1', y).attr('y2', y)
+        .attr('stroke', genColors[gen])
+        .attr('stroke-opacity', 0.07)
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', '4 8');
+      labelG.append('text')
+        .attr('x', -60).attr('y', y)
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'end')
+        .attr('font-size', 11)
+        .attr('font-weight', 700)
+        .attr('fill', genColors[gen])
+        .attr('opacity', 0.55)
+        .text(`Gen ${gen}`);
+    });
+  }
+
+  // ── Connectors: two lines per link (vertical + horizontal elbow) ──
+  // Using <line> elements instead of <path> to avoid any fill issues.
+  const linkGroup = g.append('g').attr('class', 'links');
+
+  // We'll store refs so we can update on tick/drag
+  const linkLines = []; // each entry: { seg1, seg2, d }
+  linksData.forEach(d => {
+    const seg1 = linkGroup.append('line').attr('class', 'link');
+    const seg2 = linkGroup.append('line').attr('class', 'link');
+    linkLines.push({ seg1, seg2, d });
+  });
+
+  function updateLinks() {
+    linkLines.forEach(({ seg1, seg2, d }) => {
+      const sx = d.source.x, sy = d.source.y + nodeR(d.source);
+      const tx = d.target.x, ty = d.target.y - nodeR(d.target);
+      const my = (sy + ty) / 2;
+      // Vertical from parent down to midpoint
+      seg1.attr('x1', sx).attr('y1', sy).attr('x2', sx).attr('y2', my);
+      // Horizontal across, then vertical to child
+      seg2.attr('x1', sx).attr('y1', my).attr('x2', tx).attr('y2', my);
+      // Third segment: vertical from midpoint to child — reuse seg2 as horizontal, add seg3
+    });
+  }
+
+  // Actually we need 3 segments. Redo with 3 lines per link.
+  linkGroup.selectAll('*').remove();
+  const linkSegs = [];
+  linksData.forEach(d => {
+    const a = linkGroup.append('line').attr('class', 'link');
+    const b = linkGroup.append('line').attr('class', 'link');
+    const c = linkGroup.append('line').attr('class', 'link');
+    linkSegs.push({ a, b, c, d });
+  });
+
+  function drawLinks() {
+    linkSegs.forEach(({ a, b, c, d }) => {
+      const sx = d.source.x;
+      const sy = d.source.y + nodeR(d.source);
+      const tx = d.target.x;
+      const ty = d.target.y - nodeR(d.target);
+      const midY = (sy + ty) / 2;
+
+      a.attr('x1', sx).attr('y1', sy)
+       .attr('x2', sx).attr('y2', midY);
+      b.attr('x1', sx).attr('y1', midY)
+       .attr('x2', tx).attr('y2', midY);
+      c.attr('x1', tx).attr('y1', midY)
+       .attr('x2', tx).attr('y2', ty);
+    });
+  }
+  // Expose for drag updates
+  function linkPath() { drawLinks(); }
+  const node = g.append('g').attr('class', 'nodes')
+    .selectAll('.node')
+    .data(nodesData)
+    .join('g')
+    .attr('class', 'node')
+    .call(d3.drag()
+      .on('start', (e, d) => {
+        if (!e.active && sim.alpha) sim.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        if (!layered) d.fy = d.y;
+      })
+      .on('drag', (e, d) => {
+        d.fx = e.x;
+        if (!layered) d.fy = e.y;
+        else d.fy = d.y;  // keep Y locked
+        // Manual re-render for static layered layout
+        if (layered) {
+          d.x = e.x;
+          drawLinks();
+          node.attr('transform', nd => `translate(${nd.x},${nd.y})`);
+        }
+      })
+      .on('end', (e, d) => {
+        if (!e.active && sim.alphaTarget) sim.alphaTarget(0);
+        if (!layered) { d.fx = null; d.fy = null; }
+        // In layered mode keep fx so node stays where dropped
+      })
+    );
+
+  // Background circle
+  node.append('circle')
+    .attr('class', 'bg')
+    .attr('r', d => nodeR(d))
+    .attr('fill', d => d.photo ? 'var(--surface)' : genColors[d.gen] + '22')
+    .attr('stroke', d => genColors[d.gen])
+    .attr('stroke-opacity', 0.85)
+    .attr('stroke-width', 2.5);
+
+  // Photo or emoji placeholder
+  node.each(function(d) {
+    const el = d3.select(this);
+    const r = nodeR(d);
+    if (d.photo) {
+      el.append('image')
+        .attr('href', d.photo)
+        .attr('x', -r).attr('y', -r)
+        .attr('width', r * 2).attr('height', r * 2)
+        .attr('clip-path', `url(#clip-${d.id})`)
+        .attr('preserveAspectRatio', 'xMidYMid slice')
+        .on('click', (_, d) => openLightbox(d))
+        .on('mouseenter', (e, d) => showTooltip(e, d))
+        .on('mouseleave', hideTooltip);
+    } else {
+      el.append('text')
+        .attr('dy', '0.35em')
+        .attr('font-size', r * 0.65)
+        .style('fill', genColors[d.gen])
+        .attr('text-anchor', 'middle')
+        .text('🐱');
+    }
+  });
+
+  // Name label
+  node.append('text')
+    .attr('y', d => nodeR(d) + 14)
+    .text(d => d.name)
+    .attr('font-size', d => d.gen <= 2 ? 12 : d.gen === 3 ? 11 : 10)
+    .attr('fill', 'var(--text)')
+    .attr('font-weight', d => d.gen <= 2 ? 700 : 600);
+
+  // ── Interactions ──
+  node.on('mouseenter', (e, d) => {
+    showTooltip(e, d);
+    highlightConnected(d);
+  }).on('mouseleave', () => {
+    hideTooltip();
+    clearHighlight();
+  }).on('click', (e, d) => {
+    if (d.photo) openLightbox(d);
+  });
+
+  function highlightConnected(d) {
+    const connectedIds = new Set([d.id]);
+    linksData.forEach(l => {
+      const src = l.source.id || l.source;
+      const tgt = l.target.id || l.target;
+      if (src === d.id) connectedIds.add(tgt);
+      if (tgt === d.id) connectedIds.add(src);
+    });
+    node.classed('dimmed', n => !connectedIds.has(n.id));
+    linkSegs.forEach(({ a, b, c, d: l }) => {
+      const src = l.source.id || l.source;
+      const tgt = l.target.id || l.target;
+      const dim = !(connectedIds.has(src) && connectedIds.has(tgt));
+      a.classed('dimmed', dim);
+      b.classed('dimmed', dim);
+      c.classed('dimmed', dim);
+    });
+  }
+
+  function clearHighlight() {
+    node.classed('dimmed', false);
+    linkSegs.forEach(({ a, b, c }) => {
+      a.classed('dimmed', false);
+      b.classed('dimmed', false);
+      c.classed('dimmed', false);
+    });
+  }
+
+  // ── Elbow connectors: down from parent, horizontal, down to child ──
+  function linkPath(d) {
+    const sx = d.source.x, sy = d.source.y + nodeR(d.source);
+    const tx = d.target.x, ty = d.target.y - nodeR(d.target);
+    const my = (sy + ty) / 2;
+    return `M${sx},${sy} L${sx},${my} L${tx},${my} L${tx},${ty}`;
+  }
+
+  // Draw once immediately (static layered layout), then keep updating for force layout
+  function draw() {
+    drawLinks();
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  }
+  draw();
+  sim.on('tick', draw);
+
+  // Legend filter
+  document.querySelectorAll('.legend-item').forEach(li => {
+    li.onclick = () => {
+      const gen = +li.dataset.gen;
+      const wasActive = !li.classList.contains('dimmed');
+      if (wasActive) li.classList.add('dimmed'); else li.classList.remove('dimmed');
+      const hiddenGens = new Set(
+        Array.from(document.querySelectorAll('.legend-item.dimmed')).map(x => +x.dataset.gen)
+      );
+      node.classed('dimmed', d => hiddenGens.has(d.gen));
+      linkSegs.forEach(({ a, b, c, d: l }) => {
+        const src = nodesData.find(n => n.id === (l.source.id || l.source));
+        const tgt = nodesData.find(n => n.id === (l.target.id || l.target));
+        const dim = hiddenGens.has(src?.gen) || hiddenGens.has(tgt?.gen);
+        a.classed('dimmed', dim);
+        b.classed('dimmed', dim);
+        c.classed('dimmed', dim);
+      });
+    };
+  });
+}
+
+// ── TOOLTIP ──────────────────────────────────────────────────────────────────
+const tooltip = document.getElementById('tooltip');
+let ttTimer;
+
+function showTooltip(e, d) {
+  clearTimeout(ttTimer);
+  const genCol = genColors[d.gen];
+
+  tooltip.innerHTML = `
+    ${d.photo
+      ? `<img src="${d.photo}" alt="${d.name}" ondblclick="openLightboxById('${d.id}')" style="cursor:zoom-in">`
+      : `<div class="no-photo"><i class="material-icons" style="font-size:40px">pets</i></div>`
+    }
+    <h3>${d.name}</h3>
+    <span class="gen-badge" style="background:${genCol}22;color:${genCol};box-shadow:0 0 0 1px ${genCol}44">
+      Gen ${d.gen}
+    </span>
+    ${d.birth ? `<div class="birth"><i class="material-icons" style="font-size:11px">calendar_today</i>${d.birth}</div>` : ''}
+  `;
+
+  const rect = wrap.getBoundingClientRect();
+  let x = e.clientX - rect.left + 16;
+  let y = e.clientY - rect.top + 16;
+  if (x + 190 > W()) x = e.clientX - rect.left - 196;
+  if (y + 230 > H()) y = e.clientY - rect.top - 240;
+
+  tooltip.style.left = x + 'px';
+  tooltip.style.top  = y + 'px';
+  tooltip.classList.add('show');
+}
+
+function hideTooltip() {
+  ttTimer = setTimeout(() => tooltip.classList.remove('show'), 120);
+}
+
+// ── LIGHTBOX ─────────────────────────────────────────────────────────────────
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lb-img');
+const lbName   = document.getElementById('lb-name');
+
+function openLightbox(d) {
+  if (!d.photo) return;
+  lbImg.src = d.photo;
+  lbImg.alt = d.name;
+  lbName.textContent = d.name;
   lightbox.classList.add('open');
   document.body.style.overflow = 'hidden';
-  lbPrev.style.display = allImages.length > 1 ? 'flex' : 'none';
-  lbNext.style.display = allImages.length > 1 ? 'flex' : 'none';
 }
 
-function closeLightbox() {
+function openLightboxById(id) {
+  const d = nodes.find(n => n.id === id);
+  if (d) openLightbox(d);
+}
+
+document.getElementById('lb-close').onclick = () => {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
-}
-
-function moveLightbox(dir) {
-  lbIndex = (lbIndex + dir + allImages.length) % allImages.length;
-  const img = allImages[lbIndex];
-  lbImg.src = img.src;
-  lbImg.alt = img.alt;
-  lbName.textContent = img.dataset.name || img.alt;
-}
-
-document.addEventListener('click', e => {
-  if (e.target.classList.contains('cat-image')) {
-    e.stopPropagation();
-    gatherImages();
-    openLightbox(allImages.indexOf(e.target));
+};
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+    lightbox.classList.remove('open'); document.body.style.overflow = '';
   }
 });
-lbClose.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-lbPrev.addEventListener('click', e => { e.stopPropagation(); moveLightbox(-1); });
-lbNext.addEventListener('click', e => { e.stopPropagation(); moveLightbox(1); });
-document.addEventListener('keydown', e => {
-  if (!lightbox.classList.contains('open')) return;
-  if (e.key === 'Escape')      closeLightbox();
-  if (e.key === 'ArrowLeft')   moveLightbox(-1);
-  if (e.key === 'ArrowRight')  moveLightbox(1);
+
+// ── ZOOM CONTROLS ────────────────────────────────────────────────────────────
+document.getElementById('zoom-in').onclick  = () => svg.transition().duration(300).call(zoom.scaleBy, 1.4);
+document.getElementById('zoom-out').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+
+document.getElementById('layout-force').onclick = () => buildForceLayout();
+document.getElementById('layout-tree').onclick  = () => buildLayeredLayout();
+
+// ── THEME ────────────────────────────────────────────────────────────────────
+const themeBtn  = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+
+function setThemeIcon() {
+  themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+}
+setThemeIcon();
+
+themeBtn.addEventListener('click', () => {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+  setThemeIcon();
 });
 
-// ── Expand / Collapse All ──────────────────────────────────────────────────
-document.getElementById('expand-all').addEventListener('click', () => {
-  document.querySelectorAll('#tree-root details').forEach(d => d.open = true);
-});
-document.getElementById('collapse-all').addEventListener('click', () => {
-  document.querySelectorAll('#tree-root details').forEach(d => d.open = false);
-});
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildLayeredLayout();
 
+document.getElementById('fit-view').onclick = () => {
+  // Collect current node positions from the zoom layer
+  const pts = [];
+  g.selectAll('.node').each(function(d) { if (d.x && d.y) pts.push(d); });
+  if (pts.length) fitGraph(pts);
+};
 
+window.addEventListener('resize', () => {
+  if (simulation) {
+    simulation.force('centerX', d3.forceX(W() / 2).strength(0.04));
+    simulation.alphaTarget(0.1).restart();
+    setTimeout(() => simulation.alphaTarget(0), 600);
+  }
+});
 </script>
 </body>
 </html>
