@@ -186,6 +186,7 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
       })
     );
 
+
   node.append('circle')
     .attr('class', 'bg')
     .attr('r', d => nodeR(d))
@@ -216,7 +217,7 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
   node.append('text')
     .attr('y', d => nodeR(d) + 13)
     .attr('text-anchor', 'middle')
-    .text(d => d.name)
+    .text(d => d.name.concat(d.gender === 'female' ? ' ♀' : d.gender === 'male' ? ' ♂' : ''))
     .attr('font-size', 12)
     .attr('fill', 'var(--text)')
     .attr('font-weight', d => d.gen <= 2 ? 700 : 600);
