@@ -8,8 +8,6 @@ export const nodes = [
   { id: 'sparkle',     name: 'Sparkle',        gen: 2, photo: 'katten/sparkle.jpg', gender: 'male' },
   { id: 'lieffie',     name: 'Lieffie',        gen: 2, photo: 'katten/lieffie.jpg', gender: 'male' },
   { id: 'lily',        name: 'Lily',           gen: 2, photo: 'katten/lily.jpg', gender: 'female' },
-  { id: 'royke',       name: 'Royke',          gen: 2, photo: 'katten/royke.jpeg', gender: 'male' },
-
   { id: 'speedy',      name: 'Speedy',         gen: 3, photo: 'katten/speedy.jpg', gender: 'female' },
   { id: 'piraatje',    name: 'Piraatje',       gen: 3, photo: 'katten/piraatje.jpg', gender: 'female' },
   { id: 'bloesempje',  name: 'Bloesempje',     gen: 3, photo: null, gender: 'female' },
