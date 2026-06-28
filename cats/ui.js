@@ -10,9 +10,7 @@ links.forEach(l => {
 // ── BOTTOM SHEET ─────────────────────────────────────────────────────────────
 const bottomSheet = document.getElementById('bottom-sheet');
 let sheetOpenCat = null;
-let clearHighlightFn = null;
-
-export function setClearHighlight(fn) { clearHighlightFn = fn; }
+let _uiHandlers = null;
 
 export function openBottomSheet(d, nodesData, linksData, panToNode) {
   sheetOpenCat = d;
@@ -72,7 +70,7 @@ export function openBottomSheet(d, nodesData, linksData, panToNode) {
 
 export function closeBottomSheet() {
   bottomSheet.classList.remove('open');
-  if (clearHighlightFn) clearHighlightFn();
+  if (_uiHandlers && _uiHandlers.clearHighlight) _uiHandlers.clearHighlight();
   sheetOpenCat = null;
 }
 
@@ -125,7 +123,8 @@ export function openLightbox(d) {
   document.body.style.overflow = 'hidden';
 }
 
-export function initUI() {
+export function initUI(uiHandlers) {
+  _uiHandlers = uiHandlers;
   document.getElementById('sheet-close').onclick = closeBottomSheet;
 
   let touchStartY = 0;

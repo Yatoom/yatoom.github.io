@@ -8,7 +8,7 @@ export const nodes = [
   { id: 'sparkle',     name: 'Sparkle',        gen: 2, photo: 'katten/sparkle.jpg', gender: 'male' },
   { id: 'lieffie',     name: 'Lieffie',        gen: 2, photo: 'katten/lieffie.jpg', gender: 'male' },
   { id: 'lily',        name: 'Lily',           gen: 2, photo: 'katten/lily.jpg', gender: 'female' },
-  { id: 'royke',       name: 'Royke',          gen: 2, photo: 'katten/royke.jpeg', gender: 'male' },
+
   { id: 'speedy',      name: 'Speedy',         gen: 3, photo: 'katten/speedy.jpg', gender: 'female' },
   { id: 'piraatje',    name: 'Piraatje',       gen: 3, photo: 'katten/piraatje.jpg', gender: 'female' },
   { id: 'bloesempje',  name: 'Bloesempje',     gen: 3, photo: null, gender: 'female' },
@@ -30,6 +30,7 @@ export const nodes = [
   { id: 'noortje',     name: 'Noortje',        gen: 4, photo: 'katten/noortje.jpeg',       birth: '28 sep 2015', gender: 'female' },
   { id: 'snowy',       name: 'Snowy',          gen: 4, photo: 'katten/snowy.jpeg',         birth: '28 sep 2015', gender: 'female' },
   { id: 'lillifee',    name: 'Lillifee',       gen: 4, photo: 'katten/lillifee.jpeg',      gender: 'female' },
+  { id: 'royke',       name: 'Royke',          gen: 4, photo: 'katten/royke.jpeg', gender: 'male' },
   { id: 'flynnflo',    name: 'Flynn & Flo',    gen: 5, photo: 'katten/kitties.jpg',        birth: '03 feb 2022', gender: 'female' },
   { id: 'kleintje',    name: 'Kleintje',       gen: 5, photo: 'katten/kleintje.jpg',       birth: '21 aug 2018', gender: 'male' },
   { id: 'charcoal',    name: 'Charcoal',       gen: 5, photo: 'katten/charcoal.jpg',       birth: '21 aug 2018', gender: 'female' },

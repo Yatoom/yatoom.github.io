@@ -7,6 +7,7 @@ export const genColors = { 1:'#f59e0b', 2:'#10b981', 3:'#3b82f6', 4:'#a855f7', 5
 let svg, wrap, g, gNode, zoom;
 let simulation;
 let currentNodesData = [];
+let zoomReq;
 
 export const W = () => wrap.clientWidth;
 export const H = () => wrap.clientHeight;
@@ -29,14 +30,19 @@ export function initGraph(uiHandlers) {
       if (simulation) simulation.stop();
     })
     .on('zoom', e => {
-      g.attr('transform', e.transform);
+      if (e.sourceEvent) {
+        cancelAnimationFrame(zoomReq);
+        zoomReq = requestAnimationFrame(() => g.attr('transform', e.transform));
+      } else {
+        g.attr('transform', e.transform);
+      }
     })
     .on('end', () => {
       svg.classed('zooming', false);
     });
   svg.call(zoom);
 
-  // Attach legend filters once
+  // Legend filters - moved to a separate function or handled once
   document.querySelectorAll('.legend-item').forEach(li => {
     li.onclick = () => {
       li.classList.toggle('dimmed');
