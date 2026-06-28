@@ -38,7 +38,10 @@ export function initGraph(uiHandlers) {
       }
     })
     .on('end', () => {
-      svg.classed('zooming', false);
+      // Delay removal slightly to allow the browser to finish the transform
+      setTimeout(() => {
+        svg.classed('zooming', false);
+      }, 50);
     });
   svg.call(zoom);
 
