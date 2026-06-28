@@ -88,9 +88,10 @@
     #graph-svg {
       width: 100%;
       height: 100%;
+      touch-action: none;
       cursor: grab;
+      overflow: visible;
     }
-    #graph-svg:active { cursor: grabbing; }
 
     /* ── CONTROLS ── */
     .controls {
@@ -327,11 +328,14 @@
       fill: none;
     }
 
-    /* Performance: promote zoom layer to its own compositor layer */
-    .zoom-layer { will-change: transform; }
-
     /* No CSS transitions on individual SVG elements — kills perf on mobile */
     .node, .node *, .link { transition: none !important; }
+
+    /* GPU-composite the zoom layer; scale must pivot from top-left to match D3's math */
+    .zoom-layer {
+      will-change: transform;
+      transform-origin: 0 0;
+    }
 
     .node.dimmed { opacity: .15; }
     .link.dimmed  { opacity: .05; }
@@ -613,10 +617,15 @@ function nodeR(n) {
 }
 
 const g = svg.append('g').attr('class', 'zoom-layer');
+const gNode = g.node();
 
+// Write transform as CSS style on the <g> — GPU-composited, no SVG layout cost
 const zoom = d3.zoom()
   .scaleExtent([0.08, 6])
-  .on('zoom', e => g.attr('transform', e.transform));
+  .on('zoom', e => {
+    const { x, y, k } = e.transform;
+    gNode.style.transform = `translate(${x}px,${y}px) scale(${k})`;
+  });
 svg.call(zoom);
 
 // ── LAYOUT ───────────────────────────────────────────────────────────────────
