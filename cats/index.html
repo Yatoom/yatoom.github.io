@@ -61,8 +61,11 @@
       height: 56px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
       z-index: 100;
+    }
+    /* Only apply blur on desktop or capable devices to save mobile perf */
+    @media (min-width: 601px) {
+      nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     }
     nav a { text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 600; transition: color .2s; }
     nav a:hover, nav a.active { color: var(--accent); }
@@ -90,7 +93,9 @@
       height: 100%;
       touch-action: none;
       cursor: grab;
-      overflow: visible;
+      overflow: hidden;
+      shape-rendering: optimizeSpeed;
+      text-rendering: optimizeSpeed;
     }
 
     /* ── CONTROLS ── */
@@ -311,6 +316,7 @@
     .node circle.bg {
       stroke-width: 3;
       cursor: pointer;
+      shape-rendering: optimizeSpeed;
     }
     .node image { cursor: pointer; }
     .node text {
@@ -363,6 +369,7 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity .18s, transform .18s;
+        box-shadow: 0 4px 12px rgba(0,0,0,.1);
       }
       .legend.visible {
         opacity: 1;
@@ -374,14 +381,22 @@
       #tooltip { display: none !important; }
 
       /* Show bottom sheet on mobile */
-      #bottom-sheet { display: block; }
+      #bottom-sheet {
+        display: block;
+        box-shadow: 0 -4px 20px rgba(0,0,0,.12);
+      }
 
       .controls {
         bottom: 16px;
         padding: 4px 6px;
         gap: 2px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.1);
       }
       .ctrl-btn { width: 44px; height: 44px; font-size: 22px; }
+
+      #lightbox { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      #lightbox img { box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+      #lb-name { backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
 
     @media (min-width: 601px) {
@@ -613,12 +628,21 @@ const g = svg.append('g').attr('class', 'zoom-layer');
 const gNode = g.node();
 
 // Write transform as CSS style on the <g> — GPU-composited, no SVG layout cost
+let zoomPending = false;
+let zoomTransform = { x: 0, y: 0, k: 1 };
+
 const zoom = d3.zoom()
   .scaleExtent([0.08, 6])
   .on('zoom', e => {
-    const { x, y, k } = e.transform;
-    // Use translate3d to force hardware acceleration on mobile
-    gNode.style.transform = `translate3d(${x}px,${y}px,0) scale(${k})`;
+    zoomTransform = e.transform;
+    if (!zoomPending) {
+      zoomPending = true;
+      requestAnimationFrame(() => {
+        const { x, y, k } = zoomTransform;
+        gNode.style.transform = `translate3d(${x}px,${y}px,0) scale(${k})`;
+        zoomPending = false;
+      });
+    }
   });
 svg.call(zoom);
 
@@ -741,7 +765,8 @@ function buildLayeredLayout() {
   render(
     nodesCopy,
     linksCopy,
-    simulation
+    simulation,
+    true
   );
 
 
@@ -765,7 +790,7 @@ function buildForceLayout() {
     .force('collide', d3.forceCollide().radius(d => nodeR(d) + 18).strength(0.9));
 
   currentNodesData = nodesCopy;
-  render(nodesCopy, linksCopy, simulation, false, 0, 0, false);
+  render(nodesCopy, linksCopy, simulation, false);
   setTimeout(() => fitGraph(nodesCopy), 2000);
 }
 
@@ -826,19 +851,11 @@ function render(
     .call(d3.drag()
       .on('start', (e, d) => {
         if (!e.active && sim.alpha) sim.alphaTarget(0.3).restart();
-        if (vertical) { d.fy = d.y; }
-        else          { d.fx = d.x; }
-        if (!layered) { d.fx = d.x; d.fy = d.y; }
+        d.fx = d.x; d.fy = d.y;
       })
       .on('drag', (e, d) => {
-        if (!layered) { d.fx = e.x; d.fy = e.y; }
-        else if (vertical) {
-          // Lock X (generation column), allow Y drag
-          d.fx = d.x; d.fy = e.y; d.y = e.y; draw();
-        } else {
-          // Lock Y (generation row), allow X drag
-          d.fx = e.x; d.fy = d.y; d.x = e.x; draw();
-        }
+        d.fx = e.x; d.fy = e.y;
+        if (layered) { d.x = e.x; d.y = e.y; draw(); }
       })
       .on('end', (e, d) => {
         if (!e.active && sim.alphaTarget) sim.alphaTarget(0);
@@ -846,19 +863,14 @@ function render(
       })
     );
 
-  // Invisible hit target on mobile
-  node.append('circle')
-    .attr('r', nodeR())
-    .attr('fill', 'transparent')
-    .attr('stroke', 'none');
-
   node.append('circle')
     .attr('class', 'bg')
     .attr('r', d => nodeR(d))
     .attr('fill', d => d.photo ? 'var(--surface)' : genColors[d.gen] + '22')
     .attr('stroke', d => genColors[d.gen])
     .attr('stroke-opacity', 0.85)
-    .attr('stroke-width', 2.5);
+    .attr('stroke-width', 2.5)
+    .style('cursor', 'pointer');
 
   node.each(function(d) {
     const el = d3.select(this);
@@ -869,7 +881,8 @@ function render(
         .attr('x', -r).attr('y', -r)
         .attr('width', r * 2).attr('height', r * 2)
         .attr('clip-path', 'url(#node-clip)')
-        .attr('preserveAspectRatio', 'xMidYMid slice');
+        .attr('preserveAspectRatio', 'xMidYMid slice')
+        .attr('decoding', 'async');
     } else {
       el.append('text')
         .attr('dy', '0.35em').attr('font-size', r * 0.65)
