@@ -56,7 +56,7 @@ export function openBottomSheet(d, nodesData, linksData, panToNode) {
     parentsBtn.onclick = () => {
       const firstParent = nodesData.find(n => n.id === parents[0]);
       if (firstParent) {
-        closeBottomSheet();
+        // No need to close, just update content for a smooth transition
         openBottomSheet(firstParent, nodesData, linksData, panToNode);
         panToNode(firstParent);
       }

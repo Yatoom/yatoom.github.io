@@ -26,7 +26,9 @@ export function initGraph(uiHandlers) {
   zoom = d3.zoom()
     .scaleExtent([0.08, 6])
     .filter(event => {
+      // Allow wheel zoom always
       if (event.type === 'wheel') return true;
+      // Do not start pan/zoom if we're touching/clicking a node
       return !event.target.closest('.node');
     })
     .on('start', () => {
@@ -49,6 +51,13 @@ export function initGraph(uiHandlers) {
       svg.classed('is-scaling', false);
     });
   svg.call(zoom);
+
+  svg.on('click', (e) => {
+    if (e.target === svg.node()) {
+      if (uiHandlers.closeBottomSheet) uiHandlers.closeBottomSheet();
+      if (uiHandlers.clearHighlight) uiHandlers.clearHighlight();
+    }
+  });
 
   // Legend filters - moved to a separate function or handled once
   document.querySelectorAll('.legend-item').forEach(li => {
@@ -102,14 +111,20 @@ export function buildLayeredLayout(uiHandlers) {
   });
 
   const positions = {};
-  Object.keys(generationGroups).forEach(gen => {
+  Object.keys(generationGroups).sort((a,b)=>a-b).forEach(gen => {
     let x = 0;
-    Object.values(generationGroups[gen]).forEach(group => {
+    const groups = Object.entries(generationGroups[gen]);
+    groups.forEach(([parent, group]) => {
       group.forEach(n => {
         positions[n.id] = x;
         x += NODE_GAP;
       });
       x += FAMILY_GAP;
+    });
+    // Center generation
+    const genW = x - FAMILY_GAP;
+    nodesCopy.filter(n => n.gen == gen).forEach(n => {
+      positions[n.id] -= genW / 2;
     });
   });
 
@@ -211,11 +226,6 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
       })
     );
 
-  // Transparent hit area for easier tapping on mobile
-  node.append('circle')
-    .attr('r', d => nodeR(d) + 12)
-    .attr('fill', 'transparent')
-    .style('cursor', 'pointer');
 
   node.append('circle')
     .attr('class', 'bg')
@@ -252,6 +262,13 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
     .attr('fill', 'var(--text)')
     .attr('font-weight', d => d.gen <= 2 ? 700 : 600);
 
+  // Large hit area to catch taps easily on mobile - appended last to be on top
+  node.append('circle')
+    .attr('r', d => nodeR(d) + 15)
+    .attr('fill', 'transparent')
+    .style('cursor', 'pointer')
+    .style('pointer-events', 'all');
+
   function highlightConnected(d) {
     const connectedIds = new Set([d.id]);
     linksData.forEach(l => {
@@ -286,6 +303,7 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
     if (isMobile()) {
       uiHandlers.openBottomSheet(d, nodesData, linksData, panToNode);
       highlightConnected(d);
+      e.stopPropagation();
     } else {
       if (d.photo) uiHandlers.openLightbox(d);
     }

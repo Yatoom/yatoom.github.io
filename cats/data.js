@@ -37,12 +37,13 @@ export const nodes = [
   { id: 'pip',         name: 'Pip',            gen: 5, photo: 'katten/pip.jpg',            birth: '21 aug 2018', gender: 'female' },
   { id: 'roodje',      name: 'Brick',         gen: 5, photo: 'katten/roodje.jpg',         birth: '21 aug 2018', gender: 'male' },
   { id: 'grijsje',     name: 'Grijsje',        gen: 5, photo: 'katten/grijsje.jpg',        birth: '21 aug 2018', gender: 'male' },
-  { id: 'bruintje',    name: 'Bruintje',       gen: 5, photo: 'katten/bruintje.jpg',       birth: '21 aug 2018', gender: 'female' },
-  { id: '1',    name: 'Maple',    gen: 5, photo: null, birth: null, gender: 'female' },
-  { id: '2',    name: 'Pumkin',    gen: 5, photo: null, birth: null, gender: 'male' },
-  { id: '3',    name: 'Rusty',    gen: 5, photo: null, birth: null, gender: 'male' },
-  { id: '4',    name: 'Patch',    gen: 5, photo: null, birth: null, gender: 'female' },
-  { id: '5',    name: 'Turbo',    gen: 5, photo: null, birth: null, gender: 'female' },
+  { id: 'bruintje',    name: 'Bruintje',       gen: 5, photo: 'katten/bruintje-kitten.jpg',       birth: '21 aug 2018', gender: 'female' },
+   { id: 'streepje-junior',    name: 'Streepje Junior',       gen: 5, photo: 'katten/streepje-junior.jpg',       birth: '21 aug 2018', gender: 'female' },
+
+  { id: 'pumkin',    name: 'Pumkin',    gen: 5, photo: 'katten/pumkin.png', birth: null, gender: 'male' },
+  { id: 'patch',    name: 'Patch',    gen: 5, photo: 'katten/patch.jpg', birth: null, gender: 'female' },
+  { id: 'rusty',    name: 'Rusty',    gen: 5, photo: 'katten/rusty.png', birth: null, gender: 'male' },
+  { id: 'turbo',    name: 'Turbo',    gen: 5, photo: 'katten/turbo.jpg', birth: null, gender: 'female' },
 ];
 
 export const links = [
@@ -81,10 +82,10 @@ export const links = [
   { source: 'ziva',       target: 'bruintje' },
   { source: 'ziva',       target: 'pip' },
   { source: 'ziva',       target: 'roodje' },
+  { source: 'ziva',       target: 'streepje-junior' },
   { source: 'fjoepie',    target: 'flynnflo' },
-  { source: 'lily',       target: '1' },
-  { source: 'lily',       target: '2' },
-  { source: 'lily',       target: '3' },
-  { source: 'lily',       target: '4' },
-  { source: 'lily',       target: '5' },
+  { source: 'lily',       target: 'pumkin' },
+  { source: 'lily',       target: 'patch' },
+  { source: 'lily',       target: 'rusty' },
+  { source: 'lily',       target: 'turbo' },
 ];
