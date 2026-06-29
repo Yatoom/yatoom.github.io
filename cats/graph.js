@@ -17,8 +17,11 @@ export function initGraph(uiHandlers) {
   wrap = document.querySelector('.canvas-wrap');
 
   const defs = svg.append('defs');
-  defs.append('clipPath').attr('id', 'node-clip')
-    .append('circle').attr('r', 22);
+  defs.append('clipPath')
+    .attr('id', 'node-clip')
+    .attr('clipPathUnits', 'objectBoundingBox')
+    .append('circle')
+    .attr('cx', 0.5).attr('cy', 0.5).attr('r', 0.5);
 
   g = svg.append('g').attr('class', 'zoom-layer');
   gNode = g.node();
@@ -83,7 +86,7 @@ export function initGraph(uiHandlers) {
 }
 
 const isMobile = () => window.innerWidth <= 600;
-const nodeR = () => 22;
+const nodeR = () => isMobile() ? 42 : 52;
 
 export function buildLayeredLayout(uiHandlers) {
   if (simulation) simulation.stop();
@@ -91,10 +94,10 @@ export function buildLayeredLayout(uiHandlers) {
   const nodesCopy = nodes.map(d => ({ ...d }));
   const linksCopy = links.map(d => ({ ...d }));
 
-  const GEN_H = 140;
-  const TOP = 70;
-  const NODE_GAP = 80;
-  const FAMILY_GAP = 60;
+  const GEN_H = isMobile() ? 150 : 190;
+  const TOP = isMobile() ? 60 : 100;
+  const NODE_GAP = isMobile() ? 105 : 150;
+  const FAMILY_GAP = isMobile() ? 40 : 80;
 
   const parentOfLocal = {};
   linksCopy.forEach(l => {
@@ -153,10 +156,10 @@ export function buildForceLayout(uiHandlers) {
   nodesCopy.forEach(n => { delete n.fx; delete n.fy; });
 
   simulation = d3.forceSimulation(nodesCopy)
-    .force('link', d3.forceLink(linksCopy).id(d => d.id).distance(isMobile() ? 80 : 100).strength(0.5))
-    .force('charge', d3.forceManyBody().strength(-280))
+    .force('link', d3.forceLink(linksCopy).id(d => d.id).distance(isMobile() ? 130 : 160).strength(0.5))
+    .force('charge', d3.forceManyBody().strength(isMobile() ? -400 : -600))
     .force('center', d3.forceCenter(W() / 2, H() / 2))
-    .force('collide', d3.forceCollide().radius(d => nodeR(d) + 18).strength(0.9));
+    .force('collide', d3.forceCollide().radius(d => nodeR(d) + 25).strength(0.9));
 
   currentNodesData = nodesCopy;
   render(nodesCopy, linksCopy, simulation, false, uiHandlers);
@@ -167,7 +170,7 @@ export function fitGraph(nodesData) {
   const xs = nodesData.map(n => n.x).filter(Boolean);
   const ys = nodesData.map(n => n.y).filter(Boolean);
   if (!xs.length) return;
-  const pad  = isMobile() ? 40 : 60;
+  const pad  = isMobile() ? 90 : 120;
   const minX = Math.min(...xs) - pad, maxX = Math.max(...xs) + pad;
   const minY = Math.min(...ys) - pad, maxY = Math.max(...ys) + pad;
   const gw   = maxX - minX, gh = maxY - minY;
@@ -255,16 +258,16 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
   });
 
   node.append('text')
-    .attr('y', d => nodeR(d) + 13)
+    .attr('y', d => nodeR(d) + (isMobile() ? 20 : 24))
     .attr('text-anchor', 'middle')
     .text(d => d.name.concat(d.gender === 'female' ? ' ♀' : d.gender === 'male' ? ' ♂' : ''))
-    .attr('font-size', 12)
+    .attr('font-size', isMobile() ? 14 : 16)
     .attr('fill', 'var(--text)')
     .attr('font-weight', d => d.gen <= 2 ? 700 : 600);
 
   // Large hit area to catch taps easily on mobile - appended last to be on top
   node.append('circle')
-    .attr('r', d => nodeR(d) + 15)
+    .attr('r', d => nodeR(d) + (isMobile() ? 10 : 20))
     .attr('fill', 'transparent')
     .style('cursor', 'pointer')
     .style('pointer-events', 'all');

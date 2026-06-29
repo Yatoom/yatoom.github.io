@@ -41,7 +41,7 @@ export const nodes = [
    { id: 'streepje-junior',    name: 'Streepje Junior',       gen: 5, photo: 'katten/streepje-junior.jpg',       birth: '21 aug 2018', gender: 'female' },
 
   { id: 'pumkin',    name: 'Pumkin',    gen: 5, photo: 'katten/pumkin.png', birth: null, gender: 'male' },
-  { id: 'patch',    name: 'Patch',    gen: 5, photo: 'katten/patch.jpg', birth: null, gender: 'female' },
+  { id: 'bontje',    name: 'Bontje',    gen: 5, photo: 'katten/bontje.jpg', birth: null, gender: 'female' },
   { id: 'rusty',    name: 'Rusty',    gen: 5, photo: 'katten/rusty.png', birth: null, gender: 'male' },
   { id: 'turbo',    name: 'Turbo',    gen: 5, photo: 'katten/turbo.jpg', birth: null, gender: 'female' },
 ];
@@ -85,7 +85,7 @@ export const links = [
   { source: 'ziva',       target: 'streepje-junior' },
   { source: 'fjoepie',    target: 'flynnflo' },
   { source: 'lily',       target: 'pumkin' },
-  { source: 'lily',       target: 'patch' },
+  { source: 'lily',       target: 'bontje' },
   { source: 'lily',       target: 'rusty' },
   { source: 'lily',       target: 'turbo' },
 ];
