@@ -370,10 +370,6 @@ nav a:hover, nav a.active { color: var(--accent); }
 .link.dimmed  { opacity: .05; }
 
 /* ── PERFORMANCE OPTIMIZATIONS ── */
-#graph-svg.zooming .node {
-  pointer-events: none;
-}
-
 #graph-svg.is-scaling .node image,
 #graph-svg.is-scaling .node text {
   opacity: 0;

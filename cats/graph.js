@@ -25,6 +25,10 @@ export function initGraph(uiHandlers) {
 
   zoom = d3.zoom()
     .scaleExtent([0.08, 6])
+    .filter(event => {
+      if (event.type === 'wheel') return true;
+      return !event.target.closest('.node');
+    })
     .on('start', () => {
       svg.classed('zooming', true);
       if (simulation) simulation.stop();
@@ -207,6 +211,11 @@ function render(nodesData, linksData, sim, layered, uiHandlers) {
       })
     );
 
+  // Transparent hit area for easier tapping on mobile
+  node.append('circle')
+    .attr('r', d => nodeR(d) + 12)
+    .attr('fill', 'transparent')
+    .style('cursor', 'pointer');
 
   node.append('circle')
     .attr('class', 'bg')
