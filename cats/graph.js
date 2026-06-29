@@ -31,6 +31,9 @@ export function initGraph(uiHandlers) {
     })
     .on('zoom', e => {
       if (e.sourceEvent) {
+        const isScaling = e.sourceEvent.type === 'wheel' || (e.sourceEvent.touches && e.sourceEvent.touches.length > 1);
+        svg.classed('is-scaling', isScaling);
+
         cancelAnimationFrame(zoomReq);
         zoomReq = requestAnimationFrame(() => g.attr('transform', e.transform));
       } else {
@@ -39,6 +42,7 @@ export function initGraph(uiHandlers) {
     })
     .on('end', () => {
       svg.classed('zooming', false);
+      svg.classed('is-scaling', false);
     });
   svg.call(zoom);
 
