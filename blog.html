@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Jeroen van Hoof</title>
+  <meta name="description" content="Technical blog by Jeroen van Hoof. Thoughts and experiences in MLOps, DevOps, AI, platform engineering, and game development.">
+  <meta name="keywords" content="Jeroen van Hoof, Blog, MLOps, DevOps, Kubernetes, Platform Engineering, Kotlin, Compose, Game Development">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog — Jeroen van Hoof">
+  <meta property="og:description" content="Technical blog by Jeroen van Hoof. Thoughts and experiences in MLOps, DevOps, AI, platform engineering, and game development.">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="build/img/j.svg">
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .gradient-bg {
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    .dark .gradient-bg {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+    @keyframes grid-flow {
+      0% { background-position: 0 0; }
+      100% { background-position: 50px 50px; }
+    }
+    
+    .grid-bg {
+      background-image: 
+        linear-gradient(0deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: grid-flow 20s linear infinite;
+      transition: animation 0.3s ease;
+    }
+    .dark .grid-bg {
+      background-image: 
+        linear-gradient(0deg, rgba(93, 147, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(93, 147, 255, 0.06) 1px, transparent 1px);
+    }
+    
+    .glow-blob {
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+    
+    .blog-card {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    }
+    .blog-card:hover {
+      transform: translateY(-6px) scale(1.01);
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+    
+    *:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  </style>
+  
+  <script>
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              html.dark svg path { fill: white !important; }
+              html.dark svg text { fill: white !important; }
+              html.dark svg rect { stroke: white !important; }
+              html:not(.dark) svg path { fill: black !important; }
+              html:not(.dark) svg text { fill: black !important; }
+              html:not(.dark) svg rect { stroke: black !important; }
+            </style>
+          </defs>
+          <g>
+            <path
+               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+               aria-label="J_" />
+            <rect
+               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
+               width="224.11226"
+               height="219.19101"
+               x="15.943868"
+               y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<div class="relative isolate overflow-hidden gradient-bg pt-16">
+  <!-- Animated Grid Background -->
+  <div class="absolute inset-0 grid-bg opacity-40 dark:opacity-30"></div>
+  
+  <!-- Decorative blobs with animation -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl pointer-events-none glow-blob"></div>
+  <div class="absolute -bottom-32 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl pointer-events-none glow-blob"></div>
+
+  <div class="mx-auto max-w-4xl px-6 py-20 sm:py-28 lg:px-8 text-center relative z-10">
+    <div class="reveal active">
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">
+        The Logbook
+      </h1>
+      <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        Technical logs, architectural deep-dives, and insights on MLOps, game engineering, and systems development.
+      </p>
+
+      <!-- Search and Filter Container -->
+      <div class="mt-10 max-w-xl mx-auto flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-grow">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 dark:text-slate-500">
+            <i class="material-icons" style="font-size: 20px;">search</i>
+          </span>
+          <input type="text" id="search-input" placeholder="Search articles, tags, or technology..." class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition shadow-sm" aria-label="Search articles">
+        </div>
+      </div>
+
+      <!-- Categories Filter Tabs -->
+      <div class="mt-8 flex flex-wrap justify-center gap-2" id="category-filters">
+        <button data-category="all" class="px-4 py-2 rounded-lg text-sm font-semibold bg-accent text-white shadow-md shadow-accent/20 transition-all filter-btn">
+          All Posts
+        </button>
+        <button data-category="MLOps" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
+          MLOps
+        </button>
+        <button data-category="Game Dev" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
+          Game Dev
+        </button>
+        <button data-category="DevOps" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
+          DevOps
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Grid Section -->
+<div class="py-16 border-t border-slate-200 dark:border-slate-800">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <!-- Grid List -->
+    <div id="blog-posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Dynamically Rendered Blog Post Cards -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <i class="material-icons text-slate-300 dark:text-slate-700" style="font-size: 64px;">search_off</i>
+      <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">No articles found</h3>
+      <p class="mt-2 text-slate-500 dark:text-slate-400">Try adjusting your search query or selecting a different category.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Blog Post Dataset
+  const posts = [
+    {
+      title: "Hyperbench & Hyperboost: Rethinking Hyperparameter Optimization",
+      url: "blog/hyperbench-and-hyperboost.html",
+      date: "October 12, 2024",
+      readTime: "10 min read",
+      category: "MLOps",
+      excerpt: "Exploring Hyperbench, a benchmarking framework for HPO algorithms, and Hyperboost, a CatBoost-powered Empirical Performance Model for SMAC with advanced uncertainty estimation.",
+      tags: ["AutoML", "HPO", "CatBoost", "SMAC", "Optimization"],
+      image: "build/img/hyperbench.png"
+    },
+    {
+      title: "Developing Luma Luma: Building a Strategy Board Game in Kotlin and Compose",
+      url: "blog/luma-luma-kotlin-compose.html",
+      date: "May 15, 2026",
+      readTime: "6 min read",
+      category: "Game Dev",
+      excerpt: "The engineering choices behind Luma Luma: mastering Android state management, optimizing dynamic canvas game renders, and building procedurally-generated gameplay loops.",
+      tags: ["Kotlin", "Compose", "Android", "Game Dev", "Architecture"],
+      image: "build/img/main-menu-small.png"
+    },
+    {
+      title: "Designing and Building My GitOps-Driven Kubernetes Homelab",
+      url: "blog/kubernetes-homelab-gitops.html",
+      date: "April 3, 2026",
+      readTime: "10 min read",
+      category: "DevOps",
+      excerpt: "How I designed a bare-metal Kubernetes homelab cluster managed completely through GitOps, continuous metrics monitoring, and automated high-availability failovers.",
+      tags: ["Kubernetes", "ArgoCD", "Grafana", "DevOps", "Homelab"],
+      image: "build/img/homelab.png"
+    }
+  ];
+
+  let currentCategory = "all";
+  let searchQuery = "";
+
+  const postsGrid = document.getElementById("blog-posts-grid");
+  const emptyState = document.getElementById("empty-state");
+  const searchInput = document.getElementById("search-input");
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  // Render Function
+  function renderPosts() {
+    const filtered = posts.filter(post => {
+      const matchesCategory = currentCategory === "all" || post.category === currentCategory;
+      const matchesSearch = searchQuery === "" || 
+        post.title.toLowerCase().includes(searchQuery) ||
+        post.excerpt.toLowerCase().includes(searchQuery) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchQuery)) ||
+        post.category.toLowerCase().includes(searchQuery);
+      return matchesCategory && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      postsGrid.innerHTML = "";
+      emptyState.classList.remove("hidden");
+    } else {
+      emptyState.classList.add("hidden");
+      
+      postsGrid.innerHTML = filtered.map((post, index) => {
+        const tagsHtml = post.tags.map(tag => 
+          `<span class="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-medium border border-slate-200/50 dark:border-slate-800/50">${tag}</span>`
+        ).join("");
+
+        return `
+          <article class="group relative flex flex-col bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden blog-card reveal active" style="animation-delay: ${index * 50}ms">
+            <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden border-b border-slate-100 dark:border-slate-800">
+              <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            </div>
+            <div class="p-6 flex-grow flex flex-col">
+              <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent">
+                  ${post.category}
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="material-icons" style="font-size: 14px;">schedule</i>
+                  ${post.readTime}
+                </span>
+              </div>
+              
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition duration-200 line-clamp-2">
+                <a href="${post.url}">
+                  ${post.title}
+                </a>
+              </h3>
+              
+              <p class="mt-3 text-sm text-slate-600 dark:text-slate-400 line-clamp-3 mb-6 flex-grow">
+                ${post.excerpt}
+              </p>
+              
+              <div class="flex flex-wrap gap-1.5 mb-6">
+                ${tagsHtml}
+              </div>
+
+              <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                <span class="text-xs text-slate-400 dark:text-slate-500">${post.date}</span>
+                <a href="${post.url}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">
+                  Read Article
+                  <i class="material-icons" style="font-size: 16px;">arrow_forward</i>
+                </a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      // Re-trigger scroll reveal transitions
+      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    }
+  }
+
+  // Setup Search Input Event
+  searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderPosts();
+  });
+
+  // Setup Category Filters
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Update UI selection classes
+      filterButtons.forEach(b => {
+        b.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn";
+      });
+      
+      btn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-accent text-white shadow-md shadow-accent/20 transition-all filter-btn";
+      
+      currentCategory = btn.getAttribute("data-category");
+      renderPosts();
+    });
+  });
+
+  // Theme Toggle
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    themeToggleLightIcon.classList.remove('hidden');
+  } else {
+    themeToggleDarkIcon.classList.remove('hidden');
+  }
+
+  themeToggleBtn.addEventListener('click', function() {
+    themeToggleDarkIcon.classList.toggle('hidden');
+    themeToggleLightIcon.classList.toggle('hidden');
+
+    if (localStorage.getItem('color-theme')) {
+      if (localStorage.getItem('color-theme') === 'light') {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      }
+    } else {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+    }
+  });
+
+  // Current Year
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // Scroll Reveal Observer
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -20px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+
+  // Initial Render
+  renderPosts();
+</script>
+</body>
+</html>
