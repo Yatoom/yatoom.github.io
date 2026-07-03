@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hyperbench & Hyperboost: Rethinking Hyperparameter Optimization — Jeroen van Hoof</title>
+  <meta name="description" content="Exploring Hyperbench, a benchmarking framework for HPO algorithms, and Hyperboost, a CatBoost-powered Empirical Performance Model for SMAC with advanced uncertainty estimation.">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Prism Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Prism Theme Overrides for Dark Mode */
+    .dark .prose pre[class*="language-"] {
+      background: #0f172a !important; /* slate-950 */
+    }
+
+    /* Prism Theme Overrides for Light Mode */
+    .prose pre[class*="language-"] {
+      background: #f8fafc !important; /* slate-50 */
+      border: 1px solid #e2e8f0 !important; /* slate-200 */
+    }
+    .dark .prose pre[class*="language-"] {
+      border: 1px solid #1e293b !important; /* slate-800 */
+    }
+
+    pre[class*="language-"] {
+      margin: 0 !important;
+      border-radius: 0 0 0.75rem 0.75rem !important;
+      font-size: 0.875rem !important;
+      line-height: 1.25rem !important;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    .dark .gradient-bg {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+  </style>
+  
+  <script>
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              html.dark svg path { fill: white !important; }
+              html.dark svg text { fill: white !important; }
+              html.dark svg rect { stroke: white !important; }
+              html:not(.dark) svg path { fill: black !important; }
+              html:not(.dark) svg text { fill: black !important; }
+              html:not(.dark) svg rect { stroke: black !important; }
+            </style>
+          </defs>
+          <g>
+            <path
+               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+               aria-label="J_" />
+            <rect
+               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
+               width="224.11226"
+               height="219.19101"
+               x="15.943868"
+               y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="../blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Article Layout -->
+<main class="pt-24 pb-16 min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 lg:px-8">
+    
+    <!-- Back to blog -->
+    <div class="mb-8 reveal active">
+      <a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">
+        <i class="material-icons" style="font-size: 18px;">arrow_back</i>
+        Back to Blog
+      </a>
+    </div>
+
+    <!-- Header info -->
+    <header class="mb-10 reveal active">
+      <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent text-xs">
+          AutoML
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">calendar_today</i>
+          February 04, 2023
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">schedule</i>
+          10 min read
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+        Hyperbench & Hyperboost: Rethinking Hyperparameter Optimization
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Hyperparameter Optimization (HPO) is often the final bottleneck in the machine learning lifecycle. To address this, I developed <a href="https://github.com/Yatoom/hyperbench" target="_blank" class="text-accent hover:underline"><strong>Hyperbench</strong></a>—a rigorous benchmarking framework—and <strong>Hyperboost</strong>—a CatBoost-powered Empirical Performance Model for SMAC with advanced uncertainty estimation.
+      </p>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active">
+      <img src="../build/img/hyperbench.png" alt="Hyperbench Dashboard and Visualization" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Article Content -->
+    <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+      <p class="leading-relaxed">
+        Finding the optimal configuration for a machine learning model is frequently treated as an afterthought, yet it can be the difference between a mediocre model and a state-of-the-art one. The challenge isn't just finding the best parameters, but doing so in a way that is <strong>reproducible</strong>, <strong>rigorous</strong>, and <strong>efficient</strong>.
+      </p>
+      
+      <p class="leading-relaxed">
+        My recent work focuses on two core components of this ecosystem: <a href="https://github.com/Yatoom/hyperbench" target="_blank" class="text-accent hover:underline"><strong>Hyperbench</strong></a>, a platform for standardized HPO evaluation, and <strong>Hyperboost</strong>, a novel Empirical Performance Model (EPM) designed to enhance <a href="https://github.com/automl/SMAC3" target="_blank" class="text-accent hover:underline"><strong>Sequential Model-based Algorithm Configuration (SMAC)</strong></a>.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Hyperbench Framework
+      </h2>
+      <p class="leading-relaxed">
+        Hyperbench was born out of the need for a reproducible benchmarking environment. While many HPO algorithms exist (Random Search, TPE, BOHB, SMAC), comparing them fairly across different datasets and models is notoriously difficult.
+      </p>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6 space-y-3">
+        <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="material-icons text-accent" style="font-size: 20px;">speed</i>
+          Core Features of Hyperbench
+        </h4>
+        <ul class="list-disc pl-5 space-y-1.5 text-sm">
+          <li><strong>Rigorous Evaluation Logic:</strong> Implements a Search/Evaluation split where parameters found on a search set are re-evaluated on a separate set to eliminate optimization bias.</li>
+          <li><strong>OpenML Integration:</strong> Seamlessly pulls diverse datasets from <a href="https://www.openml.org/" target="_blank" class="text-accent hover:underline">OpenML</a> to test algorithm robustness across different data distributions.</li>
+          <li><strong>Modern Dashboard:</strong> A visual interface built with Streamlit and <code>rich</code> to track optimizer trajectories and compare performance in real-time.</li>
+          <li><strong>Extensible Architecture:</strong> Easily plug in new target algorithms (XGBoost, SVM, RF) or custom optimization strategies.</li>
+        </ul>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Hyperboost: Boosting the EPM with CatBoost
+      </h2>
+      <p class="leading-relaxed">
+        At the heart of Bayesian Optimization (like <strong>SMAC</strong>) lies the <strong>Empirical Performance Model (EPM)</strong>. The EPM predicts how a configuration will perform and, crucially, how <em>uncertain</em> that prediction is. Traditionally, Random Forests or Gaussian Processes are used.
+      </p>
+      
+      <p class="leading-relaxed">
+        <strong>Hyperboost</strong> replaces these traditional models with <a href="https://catboost.ai/" target="_blank" class="text-accent hover:underline"><strong>CatBoost</strong></a>. By utilizing CatBoost's <code>RMSEWithUncertainty</code> loss function, Hyperboost treats regression as a probabilistic task, estimating both the <strong>mean</strong> and the <strong>variance</strong> of a normal distribution.
+      </p>
+
+      <div class="my-6">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border-b border-slate-200 dark:border-slate-800 rounded-t-lg">hyperbench/hyperboost/epm.py</span>
+        <pre class="!bg-slate-950 !p-6 rounded-b-lg text-sm overflow-x-auto font-mono !m-0"><code class="language-python">class HyperboostEPM(AbstractEPM):
+    def _train(self, X: np.ndarray, y: np.ndarray):
+        # Using CatBoost with built-in uncertainty estimation
+        self.model = CatBoostRegressor(
+            iterations=100,
+            learning_rate=1.0,
+            loss_function="RMSEWithUncertainty",
+            posterior_sampling=True
+        )
+        self.model.fit(X, y)
+
+    def _predict(self, X: np.ndarray):
+        # Leverage virtual ensembles for Total Uncertainty
+        mean, total_unc = self.model.virtual_ensembles_predict(
+            X, prediction_type="TotalUncertainty"
+        )
+        # Extract knowledge uncertainty for the predictive variance
+        knowledge_unc = total_unc[:, 1]
+        return mean, knowledge_unc ** 0.3</code></pre>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Quantifying the Unknown: Data vs. Knowledge Uncertainty
+      </h2>
+      <p class="leading-relaxed">
+        One of the key innovations in Hyperboost is how it handles different sources of uncertainty. By leveraging CatBoost's ability to differentiate between these types, we can make more informed decisions during the optimization process.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+        <div class="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
+          <h4 class="font-bold text-slate-900 dark:text-white mb-2">Data Uncertainty (Aleatoric)</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Arises from inherent noise in the data. It is <strong>irreducible</strong>; no matter how much data you collect, this noise persists. Hyperboost captures this via the predicted variance.
+          </p>
+        </div>
+        <div class="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
+          <h4 class="font-bold text-slate-900 dark:text-white mb-2">Knowledge Uncertainty (Epistemic)</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Arises from a lack of data in a specific region of the search space. This <strong>is reducible</strong> by collecting more samples. Hyperboost uses <strong>Virtual Ensembles</strong> to measure this "disagreement."
+          </p>
+        </div>
+      </div>
+
+      <p class="leading-relaxed">
+        By leveraging <code>TotalUncertainty</code>, SMAC can distinguish between a configuration that is likely bad due to noise (Data Uncertainty) and a configuration that we simply haven't explored yet (Knowledge Uncertainty). This allows for much more efficient exploration of high-dimensional hyperparameter spaces.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Why CatBoost for HPO?
+      </h2>
+      <p class="leading-relaxed">
+        While Gaussian Processes are the "gold standard" for Bayesian Optimization, they scale poorly ($O(n^3)$) with the number of observations. CatBoost offers a middle ground:
+      </p>
+      
+      <ol class="list-decimal pl-5 space-y-2 leading-relaxed">
+        <li><strong>Superior Scaling:</strong> Handles thousands of configurations easily, making it suitable for long-running HPO benchmarks.</li>
+        <li><strong>Structured Data Mastery:</strong> HPO logs are tabular data, where gradient boosting typically outperforms other methods.</li>
+        <li><strong>Efficient Uncertainty:</strong> Virtual Ensembles provide ensemble-like benefits without the computational cost of training multiple models.</li>
+      </ol>
+
+      <blockquote class="border-l-4 border-accent pl-4 italic text-slate-600 dark:text-slate-400 my-8">
+        "Uncertainty is not an error; it's a signal. By quantifying what our model doesn't know, we can navigate the high-dimensional search space of hyperparameters with surgical precision."
+      </blockquote>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Summary & Takeaways
+      </h2>
+      <p class="leading-relaxed">
+        The combination of <strong>Hyperbench</strong> and <strong>Hyperboost</strong> provides a powerful toolkit for both researchers and practitioners. Whether you are trying to benchmark a new HPO algorithm or optimize a production model with SMAC, these tools offer the rigor and performance needed for modern ML workflows.
+      </p>
+    </article>
+
+    <!-- Author Profile -->
+    <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active">
+      <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="text-center sm:text-left">
+        <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">Machine Learning Engineer</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Jeroen specializes in Hyperparameter Optimization, AutoML, and robust ML systems. He is the author of Hyperbench and Hyperboost, focusing on bridging the gap between HPO research and production applications.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Current Year
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // Theme Toggle
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    themeToggleLightIcon.classList.remove('hidden');
+  } else {
+    themeToggleDarkIcon.classList.remove('hidden');
+  }
+
+  themeToggleBtn.addEventListener('click', function() {
+    themeToggleDarkIcon.classList.toggle('hidden');
+    themeToggleLightIcon.classList.toggle('hidden');
+
+    if (localStorage.getItem('color-theme')) {
+      if (localStorage.getItem('color-theme') === 'light') {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      }
+    } else {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+    }
+  });
+
+  // Scroll Reveal Observer
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+<!-- Prism JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>

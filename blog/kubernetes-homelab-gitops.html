@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a GitOps-Driven Kubernetes Homelab — Jeroen van Hoof</title>
+  <meta name="description" content="Explore how I built a Microk8s Kubernetes cluster on an Optiplex 3070, managed with ArgoCD, custom Helm deployments, and Sealed Secrets.">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .gradient-bg {
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    .dark .gradient-bg {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+  </style>
+  
+  <script>
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              html.dark svg path { fill: white !important; }
+              html.dark svg text { fill: white !important; }
+              html.dark svg rect { stroke: white !important; }
+              html:not(.dark) svg path { fill: black !important; }
+              html:not(.dark) svg text { fill: black !important; }
+              html:not(.dark) svg rect { stroke: black !important; }
+            </style>
+          </defs>
+          <g>
+            <path
+               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+               aria-label="J_" />
+            <rect
+               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
+               width="224.11226"
+               height="219.19101"
+               x="15.943868"
+               y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="../blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Article Layout -->
+<main class="pt-24 pb-16 min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 lg:px-8">
+    
+    <!-- Back to blog -->
+    <div class="mb-8 reveal active">
+      <a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">
+        <i class="material-icons" style="font-size: 18px;">arrow_back</i>
+        Back to Blog
+      </a>
+    </div>
+
+    <!-- Header info -->
+    <header class="mb-10 reveal active">
+      <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent text-xs">
+          DevOps
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">calendar_today</i>
+          April 3, 2026
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">schedule</i>
+          10 min read
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+        Designing and Building My GitOps-Driven Kubernetes Homelab
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Building a single-node high-efficiency Kubernetes cluster in a home environment requires balancing processing power, memory consumption, noise, and network isolation. In this article, I cover the hardware setup, Microk8s configurations, system-level optimizations, Helm deployment solutions, and Sealed Secrets workflows.
+      </p>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active">
+      <img src="../build/img/homelab.png" alt="Homelab Dashboards Screenshot" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Article Content -->
+    <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+      <p class="leading-relaxed">
+        For systems and MLOps platform engineers, a home laboratory is the ultimate sandbox. It is an environment where you can test architectural configurations, deploy heavy enterprise databases, experiment with code coverage engines, and test cloud-native telemetry setups without worrying about cloud cost meters or production downtimes.
+      </p>
+      
+      <p class="leading-relaxed">
+        Instead of running massive, heat-generating server racks, I built my home cluster around a compact, high-efficiency system and customized **Microk8s** to drive a completely declarative GitOps configuration. Here is the operational blueprint of my setup.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Host System Hardware Specs
+      </h2>
+      <p class="leading-relaxed">
+        Since a homelab runs 24/7/365, power efficiency and noise are primary design constraints. I chose a refurbished **Dell Optiplex 3070** as the primary host system. It packs excellent single-core and multi-core power within a small form factor:
+      </p>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <h4 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+          <i class="material-icons text-accent" style="font-size: 20px;">dns</i>
+          Optiplex 3070 Host Profile
+        </h4>
+        <ul class="list-disc pl-5 space-y-2 text-sm">
+          <li><strong>CPU:</strong> Intel Core i7-9700 (8 Cores, 8 Threads, up to 4.70 GHz). Perfect for handling concurrency and hosting automated build jobs.</li>
+          <li><strong>Memory:</strong> 16GB DDR4 RAM. Fully optimized through custom telemetry trims.</li>
+          <li><strong>Storage:</strong> 1.5TB SSD storage. Separated dynamically using specialized storage classes.</li>
+          <li><strong>Form Factor:</strong> Small Form Factor (SFF). Extremely quiet and fits perfectly in a small shelf.</li>
+        </ul>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Orchestration with Microk8s
+      </h2>
+      <p class="leading-relaxed">
+        I opted for **Microk8s** as the cluster orchestrator due to its lightweight profile and convenient, native packaging of core services. Rather than installing heavy manifest scripts, I leveraged a series of core and community addons to quickly structure the foundation of my cluster.
+      </p>
+
+      <p class="leading-relaxed">
+        The following Microk8s addons are actively enabled in my environment:
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+        <div class="p-4 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+          <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-accent"></span> Core Addons
+          </h5>
+          <ul class="list-disc pl-5 space-y-1 text-xs text-slate-600 dark:text-slate-400">
+            <li><strong>dns:</strong> CoreDNS for cluster service discovery.</li>
+            <li><strong>cert-manager:</strong> Automates SSL certificate handling.</li>
+            <li><strong>ingress:</strong> HTTP proxying for cluster-wide routing.</li>
+            <li><strong>ha-cluster:</strong> Configures single-node high-availability.</li>
+            <li><strong>metrics-server:</strong> Core service metrics for API access.</li>
+            <li><strong>helm & helm3:</strong> Helm chart installation capabilities.</li>
+            <li><strong>hostpath-storage:</strong> Standard hostpath directory storage.</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+          <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Community Addons
+          </h5>
+          <ul class="list-disc pl-5 space-y-1 text-xs text-slate-600 dark:text-slate-400">
+            <li><strong>argocd:</strong> Drives declarative continuous delivery.</li>
+            <li><strong>openebs:</strong> Robust storage orchestration on bare-metal.</li>
+            <li><strong>observability:</strong> Slashes cluster metrics logging overhead.</li>
+            <li><strong>community:</strong> Connects community addon repositories.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Memory Optimization: Trimming Observability
+      </h2>
+      <p class="leading-relaxed">
+        Running a fully-loaded Prometheus and Grafana stack can easily consume 6GB+ of RAM on a host node—which is a huge tax in a 16GB RAM constraint. 
+      </p>
+      
+      <p class="leading-relaxed">
+        To address this, I customized the Microk8s observability addon. By enforcing a modern, highly-optimized version of the Prometheus Operator stack, I slashed the telemetry footprint:
+      </p>
+
+      <div class="my-6">
+        <pre class="bg-slate-950 text-emerald-400 p-6 rounded-lg text-sm overflow-x-auto font-mono"><code>microk8s enable observability --kube-prometheus-stack-version=72.7.0</code></pre>
+      </div>
+      
+      <p class="leading-relaxed">
+        <strong>The Result:</strong> Telemetry memory usage dropped by **more than half**, freeing up valuable system memory to host actual application payloads!
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Workarounds & Custom Helm Deployments
+      </h2>
+      <p class="leading-relaxed">
+        In complex setups, you often hit real-world issues where GitOps engines like ArgoCD struggle to deploy specific, deep-nested Helm templates natively. For instance, my **MLflow** stack requires targeted initial configuration parameters.
+      </p>
+      
+      <p class="leading-relaxed">
+        To work around ArgoCD sync failures for MLflow, I decoupled its lifecycle and installed it directly via Helm OCI registries, patching the network configuration on-the-fly to operate without a cloud load balancer:
+      </p>
+
+      <div class="my-6">
+        <pre class="bg-slate-950 text-emerald-400 p-6 rounded-lg text-sm overflow-x-auto font-mono"><code># Install MLflow with custom PostgreSQL authentication
+helm install mlflow oci://registry-1.docker.io/bitnamicharts/mlflow \
+  --set postgresql.auth.password=&lt;password&gt; \
+  --set postgresql.auth.username=jerry \
+  --set tracking.auth.password=&lt;password&gt;
+
+# Patch the service type to ClusterIP since no native LoadBalancer is present
+kubectl patch svc mlflow-tracking -n default -p '{"spec": {"type": "ClusterIP"}}'
+
+# Install the Kagent CRDs separately in its own namespace
+helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
+  --version 0.9.9 \
+  --namespace kagent \
+  --create-namespace</code></pre>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Cluster App Directory
+      </h2>
+      <p class="leading-relaxed">
+        My homelab currently runs an array of containerized apps that span across developer tools, home media, single-sign-on (SSO) systems, and AI portals:
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-6 text-center">
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          💻 Glance (Dashboard)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🐙 ArgoCD (GitOps)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🧠 Open WebUI (Local AI)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🔍 SonarQube (Static Analysis)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          📊 Grafana (Observability)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          ⚙️ N8N (Workflow Automation)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🎬 Jellyfin (Media Player)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🎵 Koel (Music Streamer)
+        </div>
+        <div class="p-3 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold">
+          🛡️ Authentik (Identity Access)
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Secrets Security with Sealed Secrets
+      </h2>
+      <p class="leading-relaxed">
+        Commiting plain-text secret manifests to public Git is a catastrophic security vulnerability. To protect API tokens, database keys, and passwords, I use Bitnami's **Sealed Secrets**.
+      </p>
+      
+      <p class="leading-relaxed">
+        Instead of staging plain `secret.yaml` files, I encrypt them locally using a client-side command. The `kubeseal` utility automatically hooks into my existing local `kubectl` cluster contexts to pull the cluster's public cryptographic certificate:
+      </p>
+
+      <div class="my-6">
+        <pre class="bg-slate-950 text-emerald-400 p-6 rounded-lg text-sm overflow-x-auto font-mono"><code>kubeseal -f secret.yaml -o yaml > sealed.yaml</code></pre>
+      </div>
+
+      <p class="leading-relaxed">
+        The resulting `sealed.yaml` is safe to commit publicly. Once pulled by ArgoCD and pushed to the cluster, the cluster-side **Sealed Secrets controller** decrypts it in memory to create a standard, secure Kubernetes `Secret` dynamically.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
+        Summary
+      </h2>
+      <p class="leading-relaxed">
+        My single-node Optiplex homelab is proof that you don't need heavy datacenters to learn enterprise systems. Utilizing Microk8s, implementing focused optimizations, and integrating declarative GitOps workflows establishes a scalable environment that makes running self-hosted apps incredibly reliable and fun.
+      </p>
+    </article>
+
+    <!-- Author Profile -->
+    <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active">
+      <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="text-center sm:text-left">
+        <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">MLOps Platform Architect</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Jeroen designs, scales, and operates production ML infrastructure. He specializes in distributed containers orchestration, GitOps automation, and system reliability frameworks.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Current Year
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // Theme Toggle
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    themeToggleLightIcon.classList.remove('hidden');
+  } else {
+    themeToggleDarkIcon.classList.remove('hidden');
+  }
+
+  themeToggleBtn.addEventListener('click', function() {
+    themeToggleDarkIcon.classList.toggle('hidden');
+    themeToggleLightIcon.classList.toggle('hidden');
+
+    if (localStorage.getItem('color-theme')) {
+      if (localStorage.getItem('color-theme') === 'light') {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      }
+    } else {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+    }
+  });
+
+  // Scroll Reveal Observer
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
