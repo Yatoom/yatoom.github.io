@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Evolution of Skin Perfection: Custom Themes, Ansible, and Bot Wars — Jeroen van Hoof</title>
-  <meta name="description" content="A deep dive into the technical journey of Skin Perfection: from custom child themes and SCSS to Trellis-based deployments and surviving aggressive AI crawlers.">
+  <title>The Evolution of Skin Perfection: Custom Themes, Ansible, and Bot Wars | Jeroen van Hoof</title>
+  <meta name="description" content="A deep dive into the technical journey of Skin Perfection: from building a custom Storefront child theme to surviving aggressive AI crawlers with Ansible and Cloudflare.">
 
   <!-- Theme Color -->
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
@@ -15,9 +15,6 @@
 
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- Prism Syntax Highlighting -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -34,27 +31,6 @@
   </script>
 
   <style>
-    /* Prism Theme Overrides for Dark Mode */
-    .dark .prose pre[class*="language-"] {
-      background: #0f172a !important; /* slate-950 */
-    }
-
-    /* Prism Theme Overrides for Light Mode */
-    .prose pre[class*="language-"] {
-      background: #f8fafc !important; /* slate-50 */
-      border: 1px solid #e2e8f0 !important; /* slate-200 */
-    }
-    .dark .prose pre[class*="language-"] {
-      border: 1px solid #1e293b !important; /* slate-800 */
-    }
-
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 0.75rem 0.75rem !important;
-      font-size: 0.875rem !important;
-      line-height: 1.25rem !important;
-    }
-
     .gradient-bg {
       background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
     }
@@ -169,14 +145,14 @@
         </span>
         <span class="flex items-center gap-1">
           <i class="material-icons" style="font-size: 14px;">schedule</i>
-          8 min read
+          5 min read
         </span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
         The Evolution of Skin Perfection: Custom Themes, Ansible, and Bot Wars
       </h1>
       <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-        Building a high-end web presence for Skin Perfection required more than just a template. This is the story of how we moved from expensive PHP hosting to a streamlined Ansible-driven infrastructure, while navigating the challenges of custom design and aggressive AI crawlers.
+        Skin Perfection needed more than a standard template. This post covers the move from expensive shared hosting to a streamlined Ansible-driven infrastructure, and how we handled custom design and aggressive AI crawlers along the way.
       </p>
     </header>
 
@@ -187,140 +163,95 @@
 
     <!-- Article Content -->
     <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
-      <p class="leading-relaxed">
-        Every project begins with a vision. For Skin Perfection, the goal was a clean, premium aesthetic that reflected their brand's commitment to quality. Instead of reaching for a bloated, off-the-shelf theme, we decided to build something tailored from the ground up.
-      </p>
-
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Crafting a Custom Visual Identity
       </h2>
       <p class="leading-relaxed">
-        Skin Perfection works extensively with natural products from brands like Chi, Lakshimi, and Botanical Beauty. Consequently, the design couldn't be just another "premium beauty" template; it had to breathe organic simplicity. We used the "Organic Goodness" theme as a starting point but pushed the boundaries to create a truly bespoke identity. To keep the project maintainable while allowing for deep customization, we implemented a <strong>Child Theme</strong> architecture. This allowed us to inherit core functionality while overriding specific components and styles without breaking update paths.
+        Every site starts with a specific identity in mind. For Skin Perfection, the goal was a clean, premium aesthetic that reflected their brand's commitment to quality. Instead of reaching for a heavy, off-the-shelf theme, I built a lean child theme tailored to their needs.
+      </p>
+      <p class="leading-relaxed">
+        Skin Perfection works with natural products from brands like Chi, Lakshimi, and Botanical Beauty. Most beauty templates felt too commercial for a niche, organic salon. We chose a <strong>Warm Editorial</strong> aesthetic, an organic minimalist style using warm creams and sage greens. The goal was an airy, uncluttered grid that prioritizes content and natural imagery over complex UI elements.
+      </p>
+      <p class="leading-relaxed">
+        To implement this, I built a custom <strong>Storefront child theme</strong> using <strong>Sass</strong> and <strong>Webpack</strong>. This modular frontend architecture allowed us to maintain a lightweight footprint while utilizing PHP hooks to inject bespoke layouts directly into the WooCommerce core.
       </p>
 
       <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
         <h4 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <i class="material-icons text-accent" style="font-size: 20px;">brush</i>
-          Frontend Tech Stack
+          <i class="material-icons text-accent" style="font-size: 20px;">palette</i>
+          Design & Styling Decisions
         </h4>
-        <ul class="list-disc pl-5 space-y-2 text-sm">
-          <li><strong>Custom Landing Page:</strong> A completely bespoke entry point designed for maximum conversion and brand storytelling.</li>
-          <li><strong>WooCommerce Integration:</strong> Beyond being a beauty salon, the site features a full-scale webshop powered by WooCommerce, allowing customers to purchase their favorite natural products directly.</li>
-          <li><strong>SCSS Styling:</strong> Using SASS for modular, maintainable styles. This allowed us to handle complex layouts and animations with ease.</li>
-          <li><strong>Responsive Architecture:</strong> Optimized for everything from mobile devices to high-resolution desktops.</li>
+        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+          <li><strong>Warm Palette:</strong> Low-contrast creams and grounding sage greens for a holistic, calming atmosphere.</li>
+          <li><strong>Editorial Typography:</strong> Elegant serif headings paired with clean, functional sans-serif body text.</li>
+          <li><strong>Airy Grid:</strong> Uncluttered layouts with flat UI elements that provide generous room for content to breathe.</li>
+          <li><strong>Tech Focus:</strong> A modern build pipeline using <strong>Webpack</strong> for bundling and <strong>Sass</strong> for maintainable, modular stylesheets.</li>
         </ul>
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Infrastructure: From PCExtreme to Hetzner
+        Slashing Costs and Boosting Efficiency
       </h2>
       <p class="leading-relaxed">
-        Initially, the website was hosted on PCExtreme. Over time, however, we saw the costs creep up—eventually reaching €20 for a relatively simple PHP server. For a site that requires high performance but doesn't need massive enterprise resources, it was time to rethink the hosting strategy.
-      </p>
-
-      <p class="leading-relaxed">
-        As someone very familiar with Docker and Kubernetes, I considered using them—they make deployment pipelines incredibly smooth. However, for a single-site setup, they introduce significant resource overhead that simply doesn't justify the cost. Sometimes a more traditional approach is better. The goal was maximum performance with minimal overhead and high reproducibility.
+        Initially, the website was hosted on a traditional shared PHP-hosting environment where costs were growing and performance was declining. While I considered using Docker or Kubernetes to leverage my existing expertise, the resource overhead didn't justify the cost for a single-site setup. Instead, I prioritized architectural efficiency with minimal overhead and high reproducibility through a more tailored approach.
       </p>
 
       <div class="my-8 p-6 bg-accent/5 dark:bg-accent/10 rounded-2xl border border-accent/20">
         <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Enter Trellis & Bedrock</h3>
         <p class="text-slate-700 dark:text-slate-300 mb-4">
-          I discovered <strong>Roots.io</strong>, the organization behind professional WordPress development tools like <strong>Bedrock</strong> and <strong>Trellis</strong>. We implemented Bedrock to handle the WordPress installation itself. Unlike standard WordPress, Bedrock allows us to declaratively manage all plugins and their versions from code via Composer, leveraging their own specialized WP Packages repository.
+          I moved the project to <strong>Bedrock</strong> and <strong>Trellis</strong> by Roots. Bedrock allows us to declaratively manage all plugins and their versions from code via Composer, using their specialized WP Packages repository.
         </p>
         <p class="text-slate-700 dark:text-slate-300 mb-4">
-          For deployment and provisioning, we used <strong>Trellis</strong>, which uses Ansible to provide a rock-solid, optimized LEMP stack. One of its standout features is how it handles deployments: it uses a symlink-based atomic deployment strategy. This allows us to roll back instantly if a deployment breaks the site, all while preserving the data in the SQL server.
+          For deployment and provisioning, <strong>Trellis</strong> provides an optimized LEMP stack via Ansible. It uses a symlink-based atomic deployment strategy, allowing for near-instant rollbacks if a deployment fails, all while preserving database integrity.
         </p>
         <p class="text-slate-700 dark:text-slate-300">
-          The resource overhead is incredibly low. We migrated the entire site to the cheapest <strong>Hetzner</strong> cloud server (at just €5.40 per month), and it runs smoother than ever for a fraction of the previous cost.
+          The resource overhead is minimal. I migrated the entire site to a basic <strong>Hetzner</strong> cloud server (€5.40/month), where it runs significantly faster than it did on the previous shared hosting.
         </p>
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Performance Tuning: Memory Over CPU
+        Optimizing Wordpress
       </h2>
       <p class="leading-relaxed">
-        Initially, the default Trellis configuration was a bit too conservative for our needs. The server had plenty of unused RAM, while the CPU was being pushed to its limits during traffic spikes. We decided to tune the <strong>PHP-FPM</strong> and <strong>OPcache</strong> settings to better utilize the available hardware.
-      </p>
-
-      <p class="leading-relaxed">
-        First, we significantly increased the <strong>php_memory_limit</strong> from 96M to <strong>512M</strong>. This gave WordPress and WooCommerce the breathing room needed for heavy backend tasks without hitting memory exhaustion errors.
-      </p>
-
-      <p class="leading-relaxed">
-        Next, we focused on <strong>PHP-FPM workers</strong>. These are the child processes that handle individual web requests. If you have too many, the CPU spends all its time "context switching" between them (suffocating the processor); too few, and users have to wait for a worker to become free. We reduced the maximum number of children while increasing the initial pool for better responsiveness.
+        WordPress has its limits, and a small virtual server even more so. Initially, the default Trellis configuration was a bit too conservative for our hardware. The server had plenty of unused RAM, while the CPU was being pushed to its limits during traffic spikes. To better utilize these resources, I shifted toward a <strong>memory-over-CPU strategy</strong>, tuning the execution environment to handle heavy backend tasks like complex order processing without suffocating under high concurrency.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
         <div class="p-4 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
           <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center gap-2">
             <i class="material-icons text-accent" style="font-size: 18px;">settings_suggest</i>
-            PHP-FPM Workers
+            Optimized Process Pooling
           </h5>
-          <ul class="list-none space-y-1 text-xs text-slate-600 dark:text-slate-400">
-            <li><strong>pm.max_children:</strong> 10 &rarr; <strong>6</strong></li>
-            <li><strong>pm.start_servers:</strong> 1 &rarr; <strong>2</strong></li>
-          </ul>
+          <p class="text-xs text-slate-600 dark:text-slate-400">
+            Balanced the concurrency model to match the server's CPU profile, reducing overhead and improving stability during high-traffic events.
+          </p>
         </div>
         <div class="p-4 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
           <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center gap-2">
             <i class="material-icons text-accent" style="font-size: 18px;">memory</i>
-            OPcache Tuning
+            Aggressive Bytecode Caching
           </h5>
-          <ul class="list-none space-y-1 text-xs text-slate-600 dark:text-slate-400">
-            <li><strong>Memory Consumption:</strong> 128M &rarr; <strong>256M</strong></li>
-            <li><strong>Max Accelerated Files:</strong> 4000 &rarr; <strong>10000</strong></li>
-            <li><strong>Interned Strings:</strong> 8M &rarr; <strong>16M</strong></li>
-          </ul>
+          <p class="text-xs text-slate-600 dark:text-slate-400">
+            Expanded the memory footprint for compiled scripts, ensuring the entire application core and all plugins stay resident in RAM for near-instant execution.
+          </p>
         </div>
       </div>
 
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Responding to Bot Traffic
+      </h2>
       <p class="leading-relaxed">
-        By bumping <strong>php_opcache_max_accelerated_files</strong> to 10,000, we ensured that every single file in the WordPress core, WooCommerce, and all active plugins could be cached in memory. This drastically reduces disk I/O and CPU overhead, as the server no longer needs to re-read and re-compile the PHP scripts for every single request.
+        Optimization only goes so far if the server is overwhelmed by aggressive crawler traffic. Recently, I observed an intense surge in activity from AI crawlers. Meta, in particular, was generating over <strong>11,000 requests</strong> in a single morning. Likely attempting to catch up with Google and Bing, the Meta bots seemed to get caught in a loop, scanning every possible WooCommerce product filter combination and creating a localized DoS effect that overwhelmed the small Hetzner instance.
+      </p>
+      <p class="leading-relaxed">
+        I responded by integrating <strong>Cloudflare</strong> as a proxy layer, implementing custom firewall rules, regional restrictions, and granular rate limiting. This setup ensures that origin resources are reserved for genuine customers, filtering out aggressive bots at the edge before they ever touch the application layer.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        The Crawler Crisis
+        Monitoring & Reliability
       </h2>
       <p class="leading-relaxed">
-        Everything was running perfectly until the site started experiencing mysterious slowdowns and occasional outages. There were no spikes in user traffic, so I started digging through the Nginx access logs.
-      </p>
-
-      <p class="leading-relaxed">
-        The culprit? <strong>AI and search crawlers.</strong> Meta, in particular, was being incredibly aggressive. In one instance, we recorded over <strong>11,000 requests</strong> between 2:00 AM and 9:00 AM—likely an aggressive retry loop or a poorly configured scraping mechanism.
-      </p>
-
-      <p class="leading-relaxed">
-        Initially, they were attempting to scan every possible product variation by iterating through every combination of <strong>WooCommerce product filters</strong>. We quickly updated the <code>robots.txt</code> to disallow these crawl paths, but even with those restrictions in place, the volume remained high enough to overwhelm the small Hetzner instance. It was effectively a localized DoS attack disguised as indexing.
-      </p>
-
-      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Defense in Depth
-      </h2>
-      <p class="leading-relaxed">
-        My first line of defense was the server-level firewall (<strong>ufw</strong>). I manually blocked the most offending IP ranges, but it was a game of whack-a-mole. I needed a more scalable solution.
-      </p>
-
-      <p class="leading-relaxed">
-        I integrated <strong>Cloudflare</strong> as a proxy layer. This provided a suite of sophisticated tools to regulate traffic at the edge:
-      </p>
-
-      <div class="p-6 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
-        <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-3 flex items-center gap-2">
-          <i class="material-icons text-accent" style="font-size: 20px;">security</i>
-          Cloudflare Security Stack
-        </h5>
-        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
-          <li><strong>Rate Limiting:</strong> Prevents any single IP from overwhelming the server.</li>
-          <li><strong>Regional Restrictions:</strong> Limited traffic to relevant geographic regions.</li>
-          <li><strong>Bot Regulation:</strong> Automatically identifies and challenges non-compliant bots.</li>
-        </ul>
-      </div>
-
-      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Beyond the Edge: Monitoring & Reliability
-      </h2>
-      <p class="leading-relaxed">
-        Security is only half the battle. While Cloudflare handles the traffic at the edge, I need to know if the origin server is actually healthy. To ensure high availability and catch issues independently of the edge network, I rely on a separate, self-hosted monitoring stack.
+        Security is only half the battle. While Cloudflare handles the traffic at the edge, I still need to know if the origin server is actually healthy. To ensure high availability and catch issues independently of the edge network, I rely on a separate, self-hosted monitoring stack using <strong>Uptime Kuma</strong>.
       </p>
 
       <div class="p-6 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
@@ -328,16 +259,16 @@
           <i class="material-icons text-accent" style="font-size: 20px;">analytics</i>
           Independent Monitoring
         </h5>
-        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
-          <li><strong>Uptime Kuma:</strong> A simple, self-hosted monitoring tool deployed in my homelab. It pings the site every minute from an external network and sends instant alerts if any latency or downtime is detected.</li>
-        </ul>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          Deployed in my homelab, Uptime Kuma pings the site every minute from my home network, sending instant alerts if any latency or downtime is detected, ensuring visibility even when the edge network is stable.
+        </p>
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Conclusion
+        Final Thoughts
       </h2>
       <p class="leading-relaxed">
-        The Skin Perfection project highlights the importance of matching technology to the problem. By moving to a declarative, Ansible-managed infrastructure on Hetzner, we achieved better performance and lower costs. By layering Cloudflare's security on top of our custom theme, we built a site that isn't just beautiful, but resilient against the modern landscape of aggressive web crawlers.
+        The Skin Perfection project shows the value of right-sizing infrastructure to the actual needs of the project. By moving to a declarative, Ansible-managed infrastructure on Hetzner, we improved stability and lowered costs. By layering Cloudflare's security on top of our custom theme, we built a site that is both functional and resilient against aggressive web crawlers.
       </p>
     </article>
 
@@ -424,10 +355,6 @@
   }, observerOptions);
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
-
-<!-- Prism JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 
 </body>
 </html>
