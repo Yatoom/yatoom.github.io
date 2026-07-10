@@ -61,6 +61,25 @@
     .dark ::-webkit-scrollbar-thumb {
       background: #475569;
     }
+
+    /* Enhanced Link Visibility */
+    article a {
+      color: #3B82F6 !important;
+      font-weight: 600;
+      text-decoration: underline !important;
+      text-underline-offset: 4px;
+      transition: all 0.2s;
+    }
+    article a:hover {
+      color: #2563EB !important;
+      text-decoration-thickness: 2px;
+    }
+    .dark article a {
+      color: #60a5fa !important;
+    }
+    .dark article a:hover {
+      color: #93c5fd !important;
+    }
   </style>
 
   <script>
@@ -190,30 +209,37 @@
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Slashing Costs and Boosting Efficiency
+        WordPress as Code
       </h2>
       <p class="leading-relaxed">
-        Initially, the website was hosted on a traditional shared PHP-hosting environment where costs were growing and performance was declining. While I considered using Docker or Kubernetes to leverage my existing expertise, the resource overhead didn't justify the cost for a single-site setup. Instead, I prioritized architectural efficiency with minimal overhead and high reproducibility through a more tailored approach.
+        I migrated the site to <a href="https://roots.io/bedrock/">Bedrock</a>, which treats the entire WordPress installation as a declarative set of dependencies. By leveraging <a href="https://wp-packages.org/">WP Packages</a>, the WordPress core, plugins, and themes are managed as standard <strong>Composer</strong> dependencies. This establishes a <strong>single source of truth</strong> and promotes an <strong>immutable architecture</strong> that prevents "dashboard drift," where manual production changes silently break environment parity.
+      </p>
+      <p class="leading-relaxed">
+        The lock-file ensures <strong>deterministic builds</strong> — every environment runs the exact same version of every plugin, down to the specific commit. That gives you a genuine <strong>audit trail</strong>: at any point you can see exactly which versions were deployed where, and trace any change back to its commit. This setup also lets <a href="https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart">Dependabot</a> automatically monitor for security updates and propose version upgrades via pull requests, instead of updates happening invisibly through a dashboard.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Slashing Costs and Infrastructure Efficiency
+      </h2>
+      <p class="leading-relaxed">
+        Initially, the website was hosted on a traditional shared <strong>PHP-hosting</strong> environment where costs were growing and performance was declining. While I considered using <strong>Docker</strong> or <strong>Kubernetes</strong> to leverage my existing expertise, the resource overhead didn't justify the cost for a single-site setup. Instead, I paired the Bedrock setup with <strong>Trellis</strong> (also by Roots.io) to create a low-overhead, high-efficiency pipeline that bridges the gap between development and production.
       </p>
 
       <div class="my-8 p-6 bg-accent/5 dark:bg-accent/10 rounded-2xl border border-accent/20">
-        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Enter Trellis & Bedrock</h3>
-        <p class="text-slate-700 dark:text-slate-300 mb-4">
-          I moved the project to <strong>Bedrock</strong> and <strong>Trellis</strong> by Roots. Bedrock allows us to declaratively manage all plugins and their versions from code via Composer, using their specialized WP Packages repository.
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Trellis: Lean Infrastructure</h3>
+        <p class="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          For provisioning and deployment, I chose <a href="https://roots.io/trellis/">Trellis</a>. Unlike generic container orchestration like <strong>Kubernetes</strong> — which carries meaningful resource overhead for its management plane — Trellis is built from the ground up exclusively for WordPress. It provisions a highly optimized <strong>LEMP stack</strong> based on Ansible that runs beautifully on a basic <strong>€5/month <a href="https://www.hetzner.com/">Hetzner</a> VPS</strong>.
         </p>
-        <p class="text-slate-700 dark:text-slate-300 mb-4">
-          For deployment and provisioning, <strong>Trellis</strong> provides an optimized LEMP stack via Ansible. It uses a symlink-based atomic deployment strategy, allowing for near-instant rollbacks if a deployment fails, all while preserving database integrity.
-        </p>
-        <p class="text-slate-700 dark:text-slate-300">
-          The resource overhead is minimal. I migrated the entire site to a basic <strong>Hetzner</strong> cloud server (€5.40/month), where it runs significantly faster than it did on the previous shared hosting.
+        <p class="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          Deploys use an <strong>atomic symlink strategy</strong>: a new release is fully built out, then the webroot symlink flips to it in one step, giving native <strong>zero-downtime updates</strong>. Rollback works the same way in reverse — pointing the symlink back at the previous release — so recovering from a bad deploy is instant, with no rebuild and no hunting for old plugin versions.
         </p>
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        Optimizing Wordpress
+        Optimizing WordPress
       </h2>
       <p class="leading-relaxed">
-        WordPress has its limits, and a small virtual server even more so. Initially, the default Trellis configuration was a bit too conservative for our hardware. The server had plenty of unused RAM, while the CPU was being pushed to its limits during traffic spikes. To better utilize these resources, I shifted toward a <strong>memory-over-CPU strategy</strong>, tuning the execution environment to handle heavy backend tasks like complex order processing without suffocating under high concurrency.
+        Even with an optimized stack like Trellis, WordPress has its limits—especially on a small virtual server. Initially, the default configuration was a bit too conservative for the Hetzner hardware. The server had plenty of unused RAM, while the CPU was being pushed to its limits during traffic spikes. To better utilize these resources, I shifted toward a <strong>memory-over-CPU strategy</strong>, tuning the execution environment to handle heavy backend tasks like complex order processing without suffocating under high concurrency.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
@@ -241,7 +267,7 @@
         Responding to Bot Traffic
       </h2>
       <p class="leading-relaxed">
-        Optimization only goes so far if the server is overwhelmed by aggressive crawler traffic. Recently, I observed an intense surge in activity from AI crawlers. Meta, in particular, was generating over <strong>11,000 requests</strong> in a single morning. Likely attempting to catch up with Google and Bing, the Meta bots seemed to get caught in a loop, scanning every possible WooCommerce product filter combination and creating a localized DoS effect that overwhelmed the small Hetzner instance.
+        Optimization only goes so far if the server is overwhelmed by aggressive crawler traffic. Recently, I observed an intense surge in activity from AI crawlers. <strong>Meta</strong>, in particular, was generating over <strong>11,000 requests</strong> in a single morning. Likely attempting to catch up with Google and Bing, the Meta bots seemed to get caught in a loop, scanning every possible <strong>WooCommerce</strong> product filter combination and creating a localized DoS effect that overwhelmed the small <strong>Hetzner</strong> instance.
       </p>
       <p class="leading-relaxed">
         I responded by integrating <strong>Cloudflare</strong> as a proxy layer, implementing custom firewall rules, regional restrictions, and granular rate limiting. This setup ensures that origin resources are reserved for genuine customers, filtering out aggressive bots at the edge before they ever touch the application layer.
@@ -257,7 +283,7 @@
       <div class="p-6 bg-slate-100 dark:bg-slate-900/40 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
         <h5 class="font-bold text-slate-900 dark:text-white text-sm mb-3 flex items-center gap-2">
           <i class="material-icons text-accent" style="font-size: 20px;">analytics</i>
-          Independent Monitoring
+          Uptime Monitoring
         </h5>
         <p class="text-sm text-slate-600 dark:text-slate-400">
           Deployed in my homelab, Uptime Kuma pings the site every minute from my home network, sending instant alerts if any latency or downtime is detected, ensuring visibility even when the edge network is stable.
