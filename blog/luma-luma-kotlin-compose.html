@@ -32,68 +32,9 @@
       }
     }
   </script>
-  
-  <style>
-    /* Prism Theme Overrides for Dark Mode */
-    .dark .prose pre[class*="language-"] {
-      background: #0f172a !important; /* slate-950 */
-    }
 
-    /* Prism Theme Overrides for Light Mode */
-    .prose pre[class*="language-"] {
-      background: #f8fafc !important; /* slate-50 */
-      border: 1px solid #e2e8f0 !important; /* slate-200 */
-    }
-    .dark .prose pre[class*="language-"] {
-      border: 1px solid #1e293b !important; /* slate-800 */
-    }
-
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 0.75rem 0.75rem !important;
-      font-size: 0.875rem !important;
-      line-height: 1.25rem !important;
-    }
-
-    .gradient-bg {
-      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    }
-    .dark .gradient-bg {
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-    }
-    
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
-    }
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    .dark ::-webkit-scrollbar-thumb {
-      background: #475569;
-    }
-  </style>
-  
-  <script>
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  </script>
+  <link rel="stylesheet" href="../build/css/blog.css">
+  <script src="../build/js/blog.js"></script>
 </head>
 <body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
 
@@ -232,9 +173,9 @@
         To overcome this, we bypassed nested composables for the main board. Instead, we used a single **`Canvas`** component and performed low-level 2D math to calculate grid coordinate matrices.
       </p>
 
-      <div class="my-6">
-        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border-b border-slate-200 dark:border-slate-800 rounded-t-lg">BoardCanvas.kt</span>
-        <pre class="!bg-slate-950 !p-6 rounded-b-lg text-sm overflow-x-auto font-mono !m-0"><code class="language-kotlin">Canvas(
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">BoardCanvas.kt</span>
+        <pre><code class="language-kotlin">Canvas(
     modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
@@ -356,56 +297,6 @@
     </div>
   </div>
 </footer>
-
-<script>
-  // Current Year
-  document.getElementById('current-year').textContent = new Date().getFullYear();
-
-  // Theme Toggle
-  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-  const themeToggleBtn = document.getElementById('theme-toggle');
-
-  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-  } else {
-    themeToggleDarkIcon.classList.remove('hidden');
-  }
-
-  themeToggleBtn.addEventListener('click', function() {
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    if (localStorage.getItem('color-theme')) {
-      if (localStorage.getItem('color-theme') === 'light') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-      }
-    } else {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-      }
-    }
-  });
-
-  // Scroll Reveal Observer
-  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-      }
-    });
-  }, observerOptions);
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
 
 <!-- Prism JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>

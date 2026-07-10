@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A (Not So) Simple Fortune: Building a Robust Voronoi Diagram in Python | Jeroen van Hoof</title>
+  <meta name="description" content="A retrospective on implementing Fortune's sweep line algorithm and the engineering required to turn a compact geometric theory into a robust Python package.">
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Prism Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="../build/css/blog.css">
+  <script src="../build/js/blog.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              html.dark svg path { fill: white !important; }
+              html.dark svg text { fill: white !important; }
+              html.dark svg rect { stroke: white !important; }
+              html:not(.dark) svg path { fill: black !important; }
+              html:not(.dark) svg text { fill: black !important; }
+              html:not(.dark) svg rect { stroke: black !important; }
+            </style>
+          </defs>
+          <g>
+            <path
+               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+               aria-label="J_" />
+            <rect
+               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
+               width="224.11226"
+               height="219.19101"
+               x="15.943868"
+               y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="../blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Article Layout -->
+<main class="pt-24 pb-16 min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 lg:px-8">
+
+    <!-- Back to blog -->
+    <div class="mb-8 reveal active">
+      <a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">
+        <i class="material-icons" style="font-size: 18px;">arrow_back</i>
+        Back to Blog
+      </a>
+    </div>
+
+    <!-- Header info -->
+    <header class="mb-10 reveal active">
+      <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent text-xs">
+          Python
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">calendar_today</i>
+          November 12, 2024
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">schedule</i>
+          6 min read
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+        A (Not So) Simple Fortune: Building a Robust Voronoi Diagram in Python
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Fortune's algorithm is a masterpiece of computational geometry. It is elegant, efficient, and notoriously difficult to implement. This is a look at the engineering required to turn a textbook description into the <em>Foronoi</em> package.
+      </p>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active">
+      <img src="../build/img/triangle.gif" alt="Voronoi Diagram Visualization" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Article Content -->
+    <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Introduction
+      </h2>
+      <p class="leading-relaxed">
+        I wrote <strong>Foronoi</strong> while taking a computational geometry course. The textbook description of Fortune's sweep-line algorithm is elegant and compact, fitting neatly into a few pages of pseudo-code. But as any developer knows, the distance between "mathematically proven" and "production-ready" is measured in edge cases.
+      </p>
+      <p class="leading-relaxed">
+        Translating each line of the book revealed dozens of hidden engineering tasks. This post explains the small algorithms and data structures that make the implementation robust, and why the repository is a useful resource for anyone looking to understand this complex algorithm.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Algorithm in One Picture
+      </h2>
+      <p class="leading-relaxed">
+        The goal is simple: given a set of site points, produce a Voronoi diagram partitioning the plane so every region contains the points closest to one site.
+      </p>
+      <p class="leading-relaxed">
+        Fortune's sweep-line algorithm works by moving a horizontal line from top to bottom. As it moves, it maintains the <strong>beachline</strong>—an x-ordered sequence of parabolic arcs that separate processed sites (above the sweep line) from unprocessed space. Two event types drive the algorithm:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>SiteEvent:</strong> A new site reaches the sweep line, triggering the insertion of a new arc.</li>
+        <li><strong>CircleEvent:</strong> Three consecutive arcs converge, causing an arc to disappear and producing a Voronoi vertex.</li>
+      </ul>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <h4 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+          <i class="material-icons text-accent" style="font-size: 20px;">event</i>
+          The Core Event Loop
+        </h4>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+          The main loop orchestrates the entire sweep. It processes events from a priority queue (ordered by y-coordinate) until it's empty, delegating to specific handlers for site and circle events.
+        </p>
+        <pre><code class="language-python">def create_diagram(self, points):
+    self.initialize(points)
+
+    while not self.event_queue.empty():
+        event = self.event_queue.get()
+        self.sweep_line = event.yd
+
+        if isinstance(event, CircleEvent) and event.is_valid:
+            self.handle_circle_event(event)
+        elif isinstance(event, SiteEvent):
+            self.handle_site_event(event)
+
+        self.notify_observers(Message.STEP_FINISHED)
+
+    self.bounding_poly.finish_edges(self.edges, self._vertices)</code></pre>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Beachline: A Tree of Parabolic Arcs
+      </h2>
+      <p class="leading-relaxed">
+        The beachline is the heart of Fortune's algorithm. In code, it’s implemented as a balanced binary search tree where leaves are arcs and internal nodes represent moving breakpoints. This structure is critical for performance, supporting O(log n) operations for:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Location:</strong> Finding the arc directly above a specific x-coordinate.</li>
+        <li><strong>Split/Insert:</strong> Replacing a leaf arc with three new leaves when a new site creates a middle arc.</li>
+        <li><strong>Remove:</strong> Deleting an arc when a circle event fires and reconnecting the neighboring nodes.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Edge Construction and DCEL
+      </h2>
+      <p class="leading-relaxed">
+        Every breakpoint between two arcs traces a Voronoi edge as the sweep progresses. When two breakpoints meet at a circle event, a Voronoi vertex is created. To represent the resulting diagram, Foronoi uses a <strong>Doubly Connected Edge List (DCEL)</strong> (or half-edge) structure.
+      </p>
+      <p class="leading-relaxed">
+        This allows the resulting graph to be traversed efficiently, clipped to bounding boxes, and exported for visualization. Each edge knows its "twin," its origin vertex, and its neighboring faces.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Diving into the Implementation
+      </h2>
+      <p class="leading-relaxed">
+        Translating geometric theory into Python requires mapping abstract steps to concrete data structures. The implementation follows the descriptions in <em>"Computational Geometry: Algorithms and Applications"</em> by de Berg et al.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Handling Site Events</h3>
+      <p class="leading-relaxed">
+        When a site event occurs, the sweep-line has reached a new point. This triggers the insertion of a new parabolic arc into the beachline.
+      </p>
+      <p class="leading-relaxed">
+        First, we locate the existing arc <code>α</code> vertically above the new site. Since the beachline is a balanced BST, we can find this in O(log n) time. Any pending circle events for this arc are now "false alarms" and must be invalidated.
+      </p>
+      <pre><code class="language-python">def handle_site_event(self, event):
+    point_i = event.point
+    new_arc = Arc(origin=point_i)
+
+    # 1. Search beachline for arc above point
+    arc_node = Tree.find_leaf_node(self.status_tree, key=point_i.xd)
+    arc_above = arc_node.get_value()
+
+    # 2. Remove false alarm circle event
+    if arc_above.circle_event:
+        arc_above.circle_event.remove()</code></pre>
+
+      <p class="leading-relaxed mt-6">
+        The existing arc is then split into three. We replace the single leaf in our tree with a new subtree representing the sequence (p<sub>j</sub>, p<sub>i</sub>, p<sub>j</sub>), where p<sub>i</sub> is our new site.
+      </p>
+      <pre><code class="language-python">    # 3. Replace leaf with new subtree
+    # (p_j) -> (p_j, p_i, p_j)
+    root = self.create_subtree(arc_above, new_arc)
+    self.status_tree = arc_node.replace_leaf(root)</code></pre>
+
+      <p class="leading-relaxed mt-6">
+        Finally, we initialize the new Voronoi edges—the boundaries between these sites—and check for any new potential circle events created by the new triple of arcs.
+      </p>
+      <pre><code class="language-python">    # 4. Create new half-edges
+    self.create_half_edges(arc_above, new_arc)
+
+    # 5. Check for new circle events
+    self._check_circles(neighbors)</code></pre>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-12">Handling Circle Events</h3>
+      <p class="leading-relaxed">
+        Circle events represent the moment an arc disappears from the beachline. This happens when three sites' boundaries converge at a single point—a Voronoi vertex.
+      </p>
+
+      <p class="leading-relaxed">
+        When this happens, we remove the disappearing arc from the beachline and record the new vertex at the center of the circle defined by the three involved sites.
+      </p>
+      <pre><code class="language-python">def handle_circle_event(self, event):
+    # 1. Delete disappearing arc leaf
+    arc_node = event.arc_pointer
+    self.status_tree = self.remove_arc(arc_node)
+
+    # 2. Create Voronoi vertex
+    v = Vertex(event.center.x, event.center.y)
+    self._vertices.add(v)</code></pre>
+
+      <p class="leading-relaxed mt-6">
+        The two half-edges that were being traced by the arc's breakpoints are "closed" at this new vertex. Simultaneously, a new half-edge begins, moving away from this vertex as the remaining two sites now share a boundary.
+      </p>
+      <pre><code class="language-python">    # 3. Connect edges to vertex
+    event.edge_left.origin = v
+    event.edge_right.origin = v
+
+    # Create new edge for the new breakpoint
+    new_edge = HalfEdge(origin=v)
+    self.edges.append(new_edge)
+
+    # 4. Check for new convergence
+    self._check_circles(new_neighbors)</code></pre>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-12">Supporting Utilities</h3>
+      <p class="leading-relaxed mb-6">
+        Beyond the core sweep, several specialized utilities handle the geometric heavy lifting:
+      </p>
+
+      <div class="space-y-8">
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-md mb-2">Shoelace — Polygon Area</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Implemented using NumPy for efficient vector operations on the resulting cell vertices.</p>
+          <pre><code class="language-python">def _shoelace(x, y):
+    return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))</code></pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-md mb-2">Numerical Predicates</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Robust checks for line intersections and clockwise orientation to avoid topological errors.</p>
+          <pre><code class="language-python">@staticmethod
+def check_clockwise(a, b, c, center):
+  angle_1 = Algebra.calculate_angle(a, center)
+  angle_2 = Algebra.calculate_angle(b, center)
+  angle_3 = Algebra.calculate_angle(c, center)
+  # Ensure sites are oriented correctly around the circle center
+  counter_clockwise = (angle_3 - angle_1) % 360 > (angle_3 - angle_2) % 360
+  return not counter_clockwise</code></pre>
+        </div>
+      </div>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <h4 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+          <i class="material-icons text-accent" style="font-size: 20px;">architecture</i>
+          Algebra Utilities Explained
+        </h4>
+        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+          <li><strong>Distance / magnitude / norm:</strong> Helpers for Euclidean distance and vector normalization used for clipping and comparisons.</li>
+          <li><strong>Line-ray intersection:</strong> <code>line_ray_intersection_point</code> computes intersections using robust vector math, checking for parallelism to avoid division by zero.</li>
+          <li><strong>get_intersection:</strong> Wrapper that converts results to <code>Coordinate</code> objects, used when clipping half-edges to the bounding polygon.</li>
+          <li><strong>Angle and clockwise tests:</strong> Used when validating candidate circle events to ensure sites are oriented correctly around the circle center.</li>
+        </ul>
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Lazy Invalidation of Circle Events</h3>
+      <pre><code class="language-python">class CircleEvent(Event):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.is_valid = True
+
+    def remove(self):
+        # Mark this circle event as a false alarm
+        self.is_valid = False
+        return self</code></pre>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Closing the Loop: Bounding and Finishing
+      </h2>
+      <p class="leading-relaxed">
+        In pure theory, a Voronoi diagram on an infinite plane has edges that extend to infinity. For any practical application, we need to clip these edges to a bounding box or polygon.
+      </p>
+      <p class="leading-relaxed">
+        Once the event queue is empty, the algorithm transitions from a dynamic sweep to a static "finishing" phase. The remaining internal nodes in the status tree represent these half-infinite edges.
+      </p>
+      <pre><code class="language-python"># Finishing the diagram
+self.edges = self.bounding_poly.finish_edges(
+    edges=self.edges,
+    vertices=self._vertices,
+    points=self.sites
+)
+
+self.edges, self._vertices = self.bounding_poly.finish_polygon(
+    self.edges, self._vertices, self.sites
+)</code></pre>
+      <p class="leading-relaxed mt-6">
+        The <code>finish_edges</code> method calculates where the infinite rays intersect the bounding polygon, creating new vertices at those intersections. <code>finish_polygon</code> then ensures all cells are closed by adding boundary edges between these new vertices.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Tricky Bits & Edge Cases
+      </h2>
+      <p class="leading-relaxed">
+        The real challenge lies in the edge cases. A naive implementation will often fail when sites are perfectly aligned or coincident. Foronoi handles these through careful tie-breaking and numerical cleanup.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Zero-Length Edges</h3>
+      <p class="leading-relaxed">
+        When two site events occur at the exact same location (or very close), the algorithm can produce edges with zero length and duplicate vertices. This happens because the circle event math collapses down to a single point.
+      </p>
+      <pre><code class="language-python">def clean_up_zero_length_edges(self):
+    resulting_edges = []
+    for edge in self.edges:
+        start, end = edge.origin, edge.twin.origin
+        if start.xd == end.xd and start.yd == end.yd:
+            # Combine vertices and move connected edges
+            v1, v2 = edge.origin, edge.twin.origin
+            for connected in v1.connected_edges:
+                connected.origin = v2
+                v2.connected_edges.append(connected)
+            self._vertices.remove(v1)
+            edge.delete()
+        else:
+            resulting_edges.append(edge)
+    self.edges = resulting_edges</code></pre>
+
+      <p class="leading-relaxed">
+        Other handled scenarios include:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Simultaneous Events:</strong> Tie-breaking for sites with the same y-coordinate using x-coordinates.</li>
+        <li><strong>Near-Collinearity:</strong> Robust handling of sites that are almost on a straight line, which can lead to nearly-parallel beachline breakpoints.</li>
+        <li><strong>Topological Correctness:</strong> Ensuring the DCEL structure maintains perfect <code>twin</code> and <code>next</code> pointers even after clipping.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Observers: Visualizing the Invisible
+      </h2>
+      <p class="leading-relaxed">
+        One of the biggest hurdles in implementing Fortune's algorithm is that the beachline and event queue are conceptual moving targets. To make debugging and learning easier, Foronoi implements a robust <strong>Observer Pattern</strong>.
+      </p>
+      <p class="leading-relaxed">
+        The algorithm acts as a <code>Subject</code>, notifying attached observers whenever a significant event occurs. This decouples the core geometric logic from visualization code.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">The TreeObserver</h3>
+      <p class="leading-relaxed">
+        The <code>TreeObserver</code> renders the <strong>beachline status tree</strong> using GraphViz. It provides a visual representation of the BST's structure as arcs are inserted and removed, making it possible to see the tree rebalance in real-time.
+      </p>
+      <div class="pt-2 mb-6">
+        <code class="text-xs text-accent bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">foronoi/observers/tree_observer.py</code>
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">The VoronoiObserver</h3>
+      <p class="leading-relaxed">
+        Hooking into Matplotlib, the <code>VoronoiObserver</code> renders the spatial state of the construction. It captures intermediate steps, clipping stages, and the final diagram, allowing for the creation of animations like the one at the top of this post.
+      </p>
+      <div class="pt-2 mb-6">
+        <code class="text-xs text-accent bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">foronoi/observers/voronoi_observer.py</code>
+      </div>
+
+      <p class="leading-relaxed">
+        By simply attaching an observer, you can transform the abstract algorithm into an interactive educational tool:
+      </p>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 my-6">
+        <pre><code class="language-python">v = Voronoi(polygon)
+
+# Attach observers to peek into the internals
+v.attach_observer(TreeObserver(callback=save_frame))
+v.attach_observer(VoronoiObserver())
+
+# The algorithm now notifies observers at every step
+v.create_diagram(points)</code></pre>
+      </div>
+
+      <p class="leading-relaxed">
+        It’s an ideal tool for learning how sweep-line algorithms actually function under the hood, allowing developers to hook into the algorithm's lifecycle without modifying the core geometry logic.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Final Thoughts
+      </h2>
+      <p class="leading-relaxed">
+        Fortune’s algorithm is a reminder that the best algorithms are often the ones that require the most care in implementation. <em>Foronoi</em> assembles the complex pieces—resilient event queues, beachline trees, and DCEL bookkeeping—into a readable, documented package that’s perfect for both production use and academic exploration.
+      </p>
+      <p class="leading-relaxed">
+        You can check out the source code and examples on <a href="https://github.com/Yatoom/foronoi">GitHub</a>.
+      </p>
+    </article>
+
+    <!-- Author Profile -->
+    <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active">
+      <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="text-center sm:text-left">
+        <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">DevOps & Platform Engineer</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Jeroen builds scalable systems and enjoys diving into the intersection of computational geometry and robust software engineering.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Prism JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>
