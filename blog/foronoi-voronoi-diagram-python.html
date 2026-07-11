@@ -19,6 +19,21 @@
   <!-- Prism Syntax Highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -43,15 +58,15 @@
   <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
     <div class="flex items-center gap-3">
       <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
-        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
           <defs>
             <style>
-              html.dark svg path { fill: white !important; }
-              html.dark svg text { fill: white !important; }
-              html.dark svg rect { stroke: white !important; }
-              html:not(.dark) svg path { fill: black !important; }
-              html:not(.dark) svg text { fill: black !important; }
-              html:not(.dark) svg rect { stroke: black !important; }
+              html.dark .logo-svg path { fill: white !important; }
+              html.dark .logo-svg text { fill: white !important; }
+              html.dark .logo-svg rect { stroke: white !important; }
+              html:not(.dark) .logo-svg path { fill: black !important; }
+              html:not(.dark) .logo-svg text { fill: black !important; }
+              html:not(.dark) .logo-svg rect { stroke: black !important; }
             </style>
           </defs>
           <g>
@@ -132,10 +147,10 @@
         Introduction
       </h2>
       <p class="leading-relaxed">
-        I wrote <strong>Foronoi</strong> while taking a computational geometry course. The textbook description of Fortune's sweep-line algorithm is elegant and compact, fitting neatly into a few pages of pseudo-code. But as any developer knows, the distance between "mathematically proven" and "production-ready" is measured in edge cases.
+        I wrote <a href="https://github.com/Yatoom/foronoi">Foronoi</a> while taking a computational geometry course. The textbook description of Fortune's sweep-line algorithm is elegant and compact, fitting neatly into a few pages of pseudo-code. But as any developer knows, the distance between "mathematically proven" and "production-ready" is measured in edge cases.
       </p>
       <p class="leading-relaxed">
-        Translating each line of the book revealed dozens of hidden engineering tasks. This post explains the small algorithms and data structures that make the implementation robust, and why the repository is a useful resource for anyone looking to understand this complex algorithm.
+        Translating each line of the book revealed dozens of hidden engineering tasks. This post explains the small algorithms and data structures that make the implementation robust. We'll also see why Fortune's algorithm is <strong>optimal</strong>—since the problem of sorting $n$ real numbers can be reduced to computing a Voronoi diagram, we know the $\Omega(n \log n)$ lower bound is the best we can hope for.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
@@ -144,8 +159,24 @@
       <p class="leading-relaxed">
         The goal is simple: given a set of site points, produce a Voronoi diagram partitioning the plane so every region contains the points closest to one site.
       </p>
+
+      <!-- Sweep-line Visualization -->
+      <div class="my-8 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <img src="images/sweep-line.png" alt="Sweep-line and Beachline Arcs" class="w-full h-auto rounded-lg">
+        <p class="text-center text-xs text-slate-500 mt-4 italic">The beachline consists of parabolic arcs. The intersections between these arcs, known as breakpoints, trace out the Voronoi edges as the sweep-line moves downwards.</p>
+      </div>
+
       <p class="leading-relaxed">
-        Fortune's sweep-line algorithm works by moving a horizontal line from top to bottom. As it moves, it maintains the <strong>beachline</strong>—an x-ordered sequence of parabolic arcs that separate processed sites (above the sweep line) from unprocessed space. Two event types drive the algorithm:
+        Fortune's sweep-line algorithm works by moving a horizontal line from top to bottom. As it moves, it maintains the <strong>beachline</strong>.
+      </p>
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <h4 class="font-bold text-slate-900 dark:text-white mb-2 italic text-sm">Why the Beachline?</h4>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          We can't just sweep the Voronoi edges because they depend on sites the line hasn't seen yet. However, for any point $q$ above the sweep-line $L$, we know its nearest site cannot be below $L$ if $q$ is closer to a site we've already seen than it is to the sweep-line itself. This "safety boundary" is defined by a parabola for each site, and their lower envelope forms the <strong>beachline</strong>.
+        </p>
+      </div>
+      <p class="leading-relaxed">
+        Two event types drive the algorithm:
       </p>
       <ul class="list-disc pl-5 space-y-2">
         <li><strong>SiteEvent:</strong> A new site reaches the sweep line, triggering the insertion of a new arc.</li>
@@ -181,10 +212,40 @@
         The Beachline: A Tree of Parabolic Arcs
       </h2>
       <p class="leading-relaxed">
-        The beachline is the heart of Fortune's algorithm. In code, it’s implemented as a balanced binary search tree where leaves are arcs and internal nodes represent moving breakpoints. This structure is critical for performance, supporting O(log n) operations for:
+        The beachline is the heart of Fortune's algorithm. In code, it’s implemented as a balanced binary search tree where leaves are arcs and internal nodes represent moving breakpoints. This structure is critical for performance, ensuring the beachline (which consists of at most $2n-1$ arcs) supports $O(\log n)$ operations. Importantly, while each arc is defined by one site, <strong>one site can contribute multiple arcs</strong> to the beachline.
       </p>
+
+      <!-- Tree Visualization -->
+      <div class="my-8 p-6 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+        <svg viewBox="0 0 600 300" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- Internal Nodes (Breakpoints) -->
+          <circle cx="300" cy="50" r="20" class="fill-white dark:fill-slate-800 stroke-slate-400" stroke-width="2" />
+          <text x="300" y="55" text-anchor="middle" class="text-[10px] fill-slate-600 dark:fill-slate-400 font-mono font-bold">B(1,2)</text>
+
+          <line x1="285" y1="65" x2="165" y2="135" stroke="currentColor" class="text-slate-400 dark:text-slate-500" stroke-width="2" />
+          <line x1="315" y1="65" x2="435" y2="135" stroke="currentColor" class="text-slate-400 dark:text-slate-500" stroke-width="2" />
+
+          <circle cx="150" cy="150" r="20" class="fill-white dark:fill-slate-800 stroke-slate-400" stroke-width="2" />
+          <text x="150" y="155" text-anchor="middle" class="text-[10px] fill-slate-600 dark:fill-slate-400 font-mono font-bold">B(0,1)</text>
+
+          <!-- Leaves (Arcs) -->
+          <rect x="40" y="240" width="60" height="30" rx="4" class="fill-accent stroke-accent" fill-opacity="0.1" stroke-width="2" />
+          <text x="70" y="260" text-anchor="middle" class="text-[12px] fill-accent font-bold font-mono">Arc 0</text>
+
+          <rect x="170" y="240" width="60" height="30" rx="4" class="fill-accent stroke-accent" fill-opacity="0.1" stroke-width="2" />
+          <text x="200" y="260" text-anchor="middle" class="text-[12px] fill-accent font-bold font-mono">Arc 1</text>
+
+          <rect x="420" y="150" width="60" height="30" rx="4" class="fill-accent stroke-accent" fill-opacity="0.1" stroke-width="2" />
+          <text x="450" y="170" text-anchor="middle" class="text-[12px] fill-accent font-bold font-mono">Arc 2</text>
+
+          <line x1="135" y1="165" x2="80" y2="240" stroke="currentColor" class="text-slate-400 dark:text-slate-500" stroke-width="2" />
+          <line x1="165" y1="165" x2="190" y2="240" stroke="currentColor" class="text-slate-400 dark:text-slate-500" stroke-width="2" />
+        </svg>
+        <p class="text-center text-xs text-slate-500 mt-4 italic">Internal nodes (breakpoints) store ordered tuples of sites $\langle p_i, p_j \rangle$ and maintain a pointer to the half-edge they are currently tracing in the DCEL.</p>
+      </div>
+
       <ul class="list-disc pl-5 space-y-2">
-        <li><strong>Location:</strong> Finding the arc directly above a specific x-coordinate.</li>
+        <li><strong>Location:</strong> Finding the arc directly above a specific x-coordinate by calculating breakpoint positions on-the-fly.</li>
         <li><strong>Split/Insert:</strong> Replacing a leaf arc with three new leaves when a new site creates a middle arc.</li>
         <li><strong>Remove:</strong> Deleting an arc when a circle event fires and reconnecting the neighboring nodes.</li>
       </ul>
@@ -195,6 +256,12 @@
       <p class="leading-relaxed">
         Every breakpoint between two arcs traces a Voronoi edge as the sweep progresses. When two breakpoints meet at a circle event, a Voronoi vertex is created. To represent the resulting diagram, Foronoi uses a <strong>Doubly Connected Edge List (DCEL)</strong> (or half-edge) structure.
       </p>
+
+      <!-- DCEL Visualization -->
+      <div class="my-8 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <img src="images/dcel.webp" alt="Doubly Connected Edge List (DCEL)" class="w-full h-auto rounded-lg">
+        <p class="text-center text-xs text-slate-500 mt-4 italic">The DCEL structure: each edge is composed of two "half-edges" pointing in opposite directions, linking vertices and faces into a searchable graph.</p>
+      </div>
       <p class="leading-relaxed">
         This allows the resulting graph to be traversed efficiently, clipped to bounding boxes, and exported for visualization. Each edge knows its "twin," its origin vertex, and its neighboring faces.
       </p>
@@ -207,11 +274,16 @@
       </p>
 
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Handling Site Events</h3>
+      <!-- Site Event Visualization -->
+      <div class="my-6 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <img src="images/site-event.png" alt="Site Event - New Arc Appearance" class="w-full h-auto rounded-lg">
+        <p class="text-center text-xs text-slate-500 mt-4 italic">When the sweep-line hits a new site, a new parabolic arc appears on the beachline, initially splitting an existing arc into two pieces.</p>
+      </div>
       <p class="leading-relaxed">
-        When a site event occurs, the sweep-line has reached a new point. This triggers the insertion of a new parabolic arc into the beachline.
+        When a site event occurs, the sweep-line has reached a new point. This triggers the insertion of a new parabolic arc into the beachline. This is the only way a new arc can appear.
       </p>
       <p class="leading-relaxed">
-        First, we locate the existing arc <code>α</code> vertically above the new site. Since the beachline is a balanced BST, we can find this in O(log n) time. Any pending circle events for this arc are now "false alarms" and must be invalidated.
+        First, we locate the existing arc <code>α</code> vertically above the new site. The $x$-coordinate of the breakpoints in our tree is calculated on-the-fly using the sites and the current sweep-line position. Any pending circle events for this arc are now "false alarms" and must be invalidated.
       </p>
       <pre><code class="language-python">def handle_site_event(self, event):
     point_i = event.point
@@ -234,7 +306,7 @@
     self.status_tree = arc_node.replace_leaf(root)</code></pre>
 
       <p class="leading-relaxed mt-6">
-        Finally, we initialize the new Voronoi edges—the boundaries between these sites—and check for any new potential circle events created by the new triple of arcs.
+        Finally, we initialize the new Voronoi edges. At a site event, <strong>two new breakpoints</strong> are created. They initially coincide at the new site's location and move in opposite directions to trace out the same Voronoi edge separating the new site from the existing one.
       </p>
       <pre><code class="language-python">    # 4. Create new half-edges
     self.create_half_edges(arc_above, new_arc)
@@ -243,8 +315,16 @@
     self._check_circles(neighbors)</code></pre>
 
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-12">Handling Circle Events</h3>
+      <!-- Circle Event Visualization -->
+      <div class="my-6 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <img src="images/circle-event.png" alt="Circle Event - Arc Disappearance" class="w-full h-auto rounded-lg">
+        <p class="text-center text-xs text-slate-500 mt-4 italic">When two breakpoints converge, the arc between them disappears. This occurs during a <strong>Circle Event</strong>, triggered when the sweep-line reaches the bottom of a circle passing through three sites.</p>
+      </div>
       <p class="leading-relaxed">
-        Circle events represent the moment an arc disappears from the beachline. This happens when three sites' boundaries converge at a single point—a Voronoi vertex.
+        A <strong>Circle Event</strong> represents the convergence of two breakpoints. Geometrically, this happens at the center of the circumcircle defined by three sites. As the sweep-line moves, the middle arc between these sites shrinks until it vanishes. The event is called a "circle event" because the three involved sites lie on a unique circle whose lowest point is exactly where the sweep-line is when the event fires, and the circle's center becomes a Voronoi vertex.
+      </p>
+      <p class="leading-relaxed">
+        Circle events represent the moment an arc disappears from the beachline. This happens when three sites' boundaries converge at a single point—a Voronoi vertex. Every Voronoi vertex is guaranteed to be detected this way.
       </p>
 
       <p class="leading-relaxed">
@@ -314,6 +394,19 @@ def check_clockwise(a, b, c, center):
       </div>
 
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Lazy Invalidation of Circle Events</h3>
+      <p class="leading-relaxed">
+        While all site events are known before the sweep begins, <strong>circle events are dynamic</strong>. They are created and destroyed as the beachline's topological structure evolves. This brings us to a critical challenge: detecting valid circle events and handling "false alarms."
+      </p>
+      <p class="leading-relaxed">
+        A circle event is defined by three consecutive arcs on the beachline. At every event, the algorithm checks new triples that appear. However, not every triple results in an event:
+      </p>
+      <ul class="list-disc pl-5 space-y-2 text-slate-700 dark:text-slate-300">
+        <li><strong>Convergence:</strong> Breakpoints must move towards each other. If they diverge, no circle event will ever occur.</li>
+        <li><strong>False Alarms:</strong> Even if breakpoints converge, the triple might disappear (e.g., a new site splits one of the arcs) before the sweep-line reaches the convergence point.</li>
+      </ul>
+      <p class="leading-relaxed mt-4">
+        Instead of costly removals from the priority queue, Foronoi uses <strong>lazy invalidation</strong>. When a triple disappears, its associated event is simply marked as invalid.
+      </p>
       <pre><code class="language-python">class CircleEvent(Event):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -323,6 +416,9 @@ def check_clockwise(a, b, c, center):
         # Mark this circle event as a false alarm
         self.is_valid = False
         return self</code></pre>
+      <p class="leading-relaxed mt-4">
+        When the event loop encounters a circle event, it first checks <code>event.is_valid</code>. If it's a false alarm, it's discarded, and the sweep continues. This is made efficient by storing pointers from the beachline leaves (arcs) directly to their potential circle events in the queue.
+      </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Closing the Loop: Bounding and Finishing
@@ -330,6 +426,32 @@ def check_clockwise(a, b, c, center):
       <p class="leading-relaxed">
         In pure theory, a Voronoi diagram on an infinite plane has edges that extend to infinity. For any practical application, we need to clip these edges to a bounding box or polygon.
       </p>
+
+      <!-- Clipping Visualization -->
+      <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
+        <svg viewBox="0 0 600 300" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bounding Box -->
+          <rect x="100" y="50" width="400" height="200" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 dark:text-slate-600" stroke-dasharray="10 5" />
+
+          <!-- Infinite Edges (Faded) -->
+          <line x1="200" y1="150" x2="50" y2="100" stroke="currentColor" stroke-width="2" class="text-slate-300 dark:text-slate-700" />
+          <line x1="400" y1="150" x2="550" y2="250" stroke="currentColor" stroke-width="2" class="text-slate-300 dark:text-slate-700" />
+
+          <!-- Clipped Edges -->
+          <line x1="200" y1="150" x2="100" y2="116" stroke="currentColor" stroke-width="3" class="text-accent" />
+          <line x1="400" y1="150" x2="475" y2="200" stroke="currentColor" stroke-width="3" class="text-accent" />
+          <line x1="200" y1="150" x2="400" y2="150" stroke="currentColor" stroke-width="3" class="text-accent" />
+
+          <!-- Intersection Vertices -->
+          <circle cx="100" cy="116" r="4" class="fill-accent" />
+          <circle cx="475" cy="200" r="4" class="fill-accent" />
+
+          <!-- Labels -->
+          <text x="500" y="65" class="text-[10px] fill-slate-400 dark:fill-slate-500 font-bold">Bounding Box</text>
+          <text x="80" y="110" text-anchor="end" class="text-[10px] fill-accent font-bold">New Vertex</text>
+        </svg>
+        <p class="text-center text-xs text-slate-500 mt-4 italic">Infinite edges are intersected with the bounding polygon, and new vertices are injected to close the Voronoi cells.</p>
+      </div>
       <p class="leading-relaxed">
         Once the event queue is empty, the algorithm transitions from a dynamic sweep to a static "finishing" phase. The remaining internal nodes in the status tree represent these half-infinite edges.
       </p>
@@ -378,9 +500,10 @@ self.edges, self._vertices = self.bounding_poly.finish_polygon(
         Other handled scenarios include:
       </p>
       <ul class="list-disc pl-5 space-y-2">
-        <li><strong>Simultaneous Events:</strong> Tie-breaking for sites with the same y-coordinate using x-coordinates.</li>
+        <li><strong>Simultaneous Events:</strong> Tie-breaking for sites with the same y-coordinate using x-coordinates. If the first two sites are horizontal, special handling ensures the second site doesn't fail when searching for an arc above it.</li>
+        <li><strong>Collinear Sites:</strong> If three sites are collinear, they don't define a circle, so no circle event is generated.</li>
+        <li><strong>Site below Breakpoint:</strong> If a site is exactly below a breakpoint, the algorithm splits the breakpoint, effectively creating a zero-length arc that is immediately removed by a circle event.</li>
         <li><strong>Near-Collinearity:</strong> Robust handling of sites that are almost on a straight line, which can lead to nearly-parallel beachline breakpoints.</li>
-        <li><strong>Topological Correctness:</strong> Ensuring the DCEL structure maintains perfect <code>twin</code> and <code>next</code> pointers even after clipping.</li>
       </ul>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
@@ -432,7 +555,7 @@ v.create_diagram(points)</code></pre>
         Final Thoughts
       </h2>
       <p class="leading-relaxed">
-        Fortune’s algorithm is a reminder that the best algorithms are often the ones that require the most care in implementation. <em>Foronoi</em> assembles the complex pieces—resilient event queues, beachline trees, and DCEL bookkeeping—into a readable, documented package that’s perfect for both production use and academic exploration.
+        Fortune’s algorithm is a masterpiece of efficiency, achieving <strong>$O(n \log n)$ time</strong> and <strong>$O(n)$ storage</strong>. It serves as a reminder that the best algorithms are often the ones that require the most care in implementation. <em>Foronoi</em> assembles the complex pieces—resilient event queues, beachline trees, and DCEL bookkeeping—into a readable, documented package that’s perfect for both production use and academic exploration.
       </p>
       <p class="leading-relaxed">
         You can check out the source code and examples on <a href="https://github.com/Yatoom/foronoi">GitHub</a>.

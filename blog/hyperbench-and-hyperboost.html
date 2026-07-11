@@ -233,6 +233,33 @@
         "Uncertainty is not an error; it's a signal. By quantifying what our model doesn't know, we can navigate the high-dimensional search space of hyperparameters with surgical precision."
       </blockquote>
 
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Benchmarks & Observations
+      </h2>
+      <p class="leading-relaxed">
+        Testing Hyperboost across different target algorithms revealed that the choice of configuration space significantly impacts performance. Here’s what we observed:
+      </p>
+      <ul class="list-disc pl-5 space-y-2 leading-relaxed text-sm">
+        <li><strong>Random Forest & XGBoost (High-Dim Success):</strong> Hyperboost consistently outperformed standard SMAC. These models have 4+ parameters with complex non-linearities (like RF's power-scaled <code>max_features</code>). CatBoost's tree-based structure is naturally suited for capturing these high-dimensional, tabular interactions.</li>
+        <li><strong>SGD (The Low-Dim Baseline):</strong> Performance was strong, but struggled to beat <strong>ROAR</strong>. In simple 2-parameter spaces (<code>alpha</code>, <code>eta0</code>), the overhead of a complex surrogate model often yields diminishing returns compared to the raw efficiency of random search.</li>
+        <li><strong>SVC (The Log-Scale Challenge):</strong> Performance was less than ideal. The SVC search space uses extremely wide log-ranges ($2^{-10}$ to $2^{10}$). Tree-based surrogates approximate space using axis-aligned "boxes," which makes them struggle with the smooth, continuous response surfaces of an SVM compared to the inherent smoothness of Gaussian Processes.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Next Steps: Beyond the "Magical" 0.3
+      </h2>
+      <p class="leading-relaxed">
+        In the implementation above, the <code>knowledge_unc ** 0.3</code> transformation serves as a form of <strong>variance scaling</strong>. Bayesian Optimization relies on the scale of uncertainty to balance exploration and exploitation. The <code>0.3</code> exponent (which is more aggressive than a standard square root) works well because it "squashes" extreme uncertainty values, preventing the optimizer from being distracted by model artifacts in distant regions of the search space.
+      </p>
+      <p class="leading-relaxed">
+        However, a hardcoded constant is a heuristic. More robust approaches include:
+      </p>
+      <ul class="list-disc pl-5 space-y-2 leading-relaxed text-sm">
+        <li><strong>NLL Calibration:</strong> Finding a scaling factor that minimizes the Negative Log-Likelihood on a validation set.</li>
+        <li><strong>Isotonic Regression:</strong> Using a secondary model to map raw uncertainty to actual observed Mean Squared Error.</li>
+        <li><strong>Exploration Weight Tuning:</strong> Instead of warping the uncertainty, we can return the standard deviation and tune the acquisition function's $\beta$ parameter (e.g., in UCB).</li>
+      </ul>
+
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6">
         Summary & Takeaways
       </h2>

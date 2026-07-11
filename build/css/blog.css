@@ -48,19 +48,38 @@ article a:hover {
   color: #93c5fd !important;
 }
 
-/* Prism Theme Overrides */
-.prose pre[class*="language-"] {
-  background: #f8fafc !important; /* slate-50 */
-  border: 1px solid #e2e8f0 !important; /* slate-200 */
-}
-.dark .prose pre[class*="language-"] {
-  background: #0f172a !important; /* slate-950 */
+/* Code Block Styling (Prism and Default) */
+.prose pre {
+  background: #0f172a !important; /* Force dark background for code blocks (slate-950) */
   border: 1px solid #1e293b !important; /* slate-800 */
+  border-radius: 0.75rem !important;
+  padding: 1.25rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.7142857 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  color: #f8fafc !important; /* Ensure text is readable on dark background */
 }
 
+.dark .prose pre {
+  background: #020617 !important; /* Even darker in dark mode (slate-950 or custom) */
+  border: 1px solid #1e293b !important;
+}
+
+/* Prism specific adjustments to ensure it overrides defaults correctly */
 pre[class*="language-"] {
-  margin: 0 !important;
-  border-radius: 0 0 0.75rem 0.75rem !important;
-  font-size: 0.875rem !important;
-  line-height: 1.25rem !important;
+  margin: 1.5rem 0 !important;
+  border-radius: 0.75rem !important;
+}
+
+code[class*="language-"] {
+  text-shadow: none !important;
+}
+
+/* Code block with filename header */
+.code-block-container pre {
+  margin-top: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top: none !important;
 }
