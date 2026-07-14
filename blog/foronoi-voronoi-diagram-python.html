@@ -209,10 +209,13 @@
       </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        The Beachline: A Tree of Parabolic Arcs
+        The Beachline & Status Tree
       </h2>
       <p class="leading-relaxed">
-        The beachline is the heart of Fortune's algorithm. In code, it’s implemented as a balanced binary search tree where leaves are arcs and internal nodes represent moving breakpoints. This structure is critical for performance, ensuring the beachline (which consists of at most $2n-1$ arcs) supports $O(\log n)$ operations. Importantly, while each arc is defined by one site, <strong>one site can contribute multiple arcs</strong> to the beachline.
+        In Fortune's algorithm, the sweep-line does not just need a generic ordered container. It needs a <strong>status structure</strong> that represents the current beachline as a sequence of arcs and breakpoints. That structure has to be dynamic, ordered by x-position, and able to update locally when a site event splits an arc or when a circle event removes one.
+      </p>
+      <p class="leading-relaxed">
+        The beachline is the heart of the algorithm. In code, it’s implemented as a <strong>self-balancing binary search tree</strong> (custom implementation) where leaves are arcs and internal nodes represent moving breakpoints. This structure is critical for performance, ensuring the beachline (which consists of at most $2n-1$ arcs) supports $O(\log n)$ operations. Importantly, while each arc is defined by one site, <strong>one site can contribute multiple arcs</strong> to the beachline.
       </p>
 
       <!-- Tree Visualization -->
@@ -244,11 +247,29 @@
         <p class="text-center text-xs text-slate-500 mt-4 italic">Internal nodes (breakpoints) store ordered tuples of sites $\langle p_i, p_j \rangle$ and maintain a pointer to the half-edge they are currently tracing in the DCEL.</p>
       </div>
 
-      <ul class="list-disc pl-5 space-y-2">
-        <li><strong>Location:</strong> Finding the arc directly above a specific x-coordinate by calculating breakpoint positions on-the-fly.</li>
-        <li><strong>Split/Insert:</strong> Replacing a leaf arc with three new leaves when a new site creates a middle arc.</li>
-        <li><strong>Remove:</strong> Deleting an arc when a circle event fires and reconnecting the neighboring nodes.</li>
-      </ul>
+      <p class="leading-relaxed">
+        This is why the tree in the project is a custom implementation rather than a plain Python list or a stock library container. A simple list would be easy to search, but it would not support the local tree edits that the algorithm requires. A generic tree from a library would also not expose the exact operations the algorithm relies on, such as parent links, rotations, height tracking, predecessor and successor lookup, and leaf replacement.
+      </p>
+      <p class="leading-relaxed">
+        The implementation adds a few operations that are not needed by an ordinary BST used only for storage. First, it can find the leaf corresponding to the arc above a given x-coordinate, which is how a new site locates the correct place in the beachline. Second, it can replace a leaf with a whole subtree when a new site splits an existing arc into two breakpoints and a new middle arc. Third, it supports deletion and rebalancing when a circle event removes an arc, and it can walk to neighboring arcs so the algorithm can detect new circle events. These operations are what make the structure a true status tree for Fortune's algorithm rather than just a generic balanced search tree.
+      </p>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <pre><code class="language-python">def find_leaf_node(root, key, **kwargs):
+    node = root
+    while node is not None:
+        if node.is_leaf():
+            return node
+        if key == node.get_key(**kwargs) and not node.is_leaf():
+            return node.left.maximum() if node.left is not None else node.right.minimum()
+        node = node.left if key < node.get_key(**kwargs) else node.right
+    return node</code></pre>
+      </div>
+
+      <div class="p-6 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+        <pre><code class="language-python">self.status_tree = arc_node_above_point.replace_leaf(replacement=root, root=self.status_tree)
+self.status_tree = Tree.balance_and_propagate(root)</code></pre>
+      </div>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Edge Construction and DCEL
