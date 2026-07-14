@@ -445,49 +445,64 @@ def check_clockwise(a, b, c, center):
         Closing the Loop: Bounding and Finishing
       </h2>
       <p class="leading-relaxed">
-        In pure theory, a Voronoi diagram on an infinite plane has edges that extend to infinity. For any practical application, we need to clip these edges to a bounding box or polygon.
+        Voronoi edges are conceptually infinite. For any practical application, we need to clip these edges to a finite region. The package goes beyond the usual rectangular bounding box by supporting arbitrary polygon clipping, so you can clip against triangles, country-like outlines, or any other simple polygon you provide.
       </p>
 
       <!-- Clipping Visualization -->
       <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
-        <svg viewBox="0 0 600 300" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
-          <!-- Bounding Box -->
-          <rect x="100" y="50" width="400" height="200" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 dark:text-slate-600" stroke-dasharray="10 5" />
-
-          <!-- Infinite Edges (Faded) -->
-          <line x1="200" y1="150" x2="50" y2="100" stroke="currentColor" stroke-width="2" class="text-slate-300 dark:text-slate-700" />
-          <line x1="400" y1="150" x2="550" y2="250" stroke="currentColor" stroke-width="2" class="text-slate-300 dark:text-slate-700" />
-
-          <!-- Clipped Edges -->
-          <line x1="200" y1="150" x2="100" y2="116" stroke="currentColor" stroke-width="3" class="text-accent" />
-          <line x1="400" y1="150" x2="475" y2="200" stroke="currentColor" stroke-width="3" class="text-accent" />
-          <line x1="200" y1="150" x2="400" y2="150" stroke="currentColor" stroke-width="3" class="text-accent" />
-
-          <!-- Intersection Vertices -->
-          <circle cx="100" cy="116" r="4" class="fill-accent" />
-          <circle cx="475" cy="200" r="4" class="fill-accent" />
-
-          <!-- Labels -->
-          <text x="500" y="65" class="text-[10px] fill-slate-400 dark:fill-slate-500 font-bold">Bounding Box</text>
-          <text x="80" y="110" text-anchor="end" class="text-[10px] fill-accent font-bold">New Vertex</text>
-        </svg>
+        <img src="images/clipping.png" alt="Clipping visualization"/>
         <p class="text-center text-xs text-slate-500 mt-4 italic">Infinite edges are intersected with the bounding polygon, and new vertices are injected to close the Voronoi cells.</p>
       </div>
-      <p class="leading-relaxed">
-        Once the event queue is empty, the algorithm transitions from a dynamic sweep to a static "finishing" phase. The remaining internal nodes in the status tree represent these half-infinite edges.
-      </p>
-      <pre><code class="language-python"># Finishing the diagram
-self.edges = self.bounding_poly.finish_edges(
-    edges=self.edges,
-    vertices=self._vertices,
-    points=self.sites
-)
 
-self.edges, self._vertices = self.bounding_poly.finish_polygon(
-    self.edges, self._vertices, self.sites
-)</code></pre>
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Bounding shapes & clipping</h3>
+      <p class="leading-relaxed mt-4">
+        The key idea is to treat the clipping region as an ordered ring of vertices and then trim each Voronoi edge to the part that lies inside that region. This is done in two stages. First, the code checks whether a point or a candidate endpoint lies inside the polygon using a classic ray-casting test: a ray is traced from the point to infinity, and the number of times it crosses the polygon boundary is counted.
+      </p>
+      <pre><code class="language-python">def inside(self, point):
+    vertices = self.points + self.points[0:1]
+    x = point.xd
+    y = point.yd
+    inside = False
+
+    for i in range(0, len(vertices) - 1):
+        j = i + 1
+        xi = vertices[i].xd
+        yi = vertices[i].yd
+        xj = vertices[j].xd
+        yj = vertices[j].yd
+
+        intersect = ((yi > y) != (yj > y)) and (
+            x < (xj - xi) * (y - yi) / (yj - yi) + xi
+        )
+        if intersect:
+            inside = not inside
+
+    return inside</code></pre>
       <p class="leading-relaxed mt-6">
-        The <code>finish_edges</code> method calculates where the infinite rays intersect the bounding polygon, creating new vertices at those intersections. <code>finish_polygon</code> then ensures all cells are closed by adding boundary edges between these new vertices.
+        Second, the implementation needs the exact point where a Voronoi edge crosses a polygon edge. That is done with a ray-line segment intersection test in the algebra helpers. The routine constructs a ray from the edge endpoint, forms a perpendicular direction vector, and solves for the parameter where the ray meets the segment. If that intersection lies on the segment and along the ray, it is accepted.
+      </p>
+      <pre><code class="language-python">def line_ray_intersection_point(ray_orig, ray_end, point_1, point_2):
+    orig = np.array(ray_orig, dtype=float)
+    end = np.array(ray_end, dtype=float)
+    direction = np.array(Algebra.norm(end - orig), dtype=float)
+    point_1 = np.array(point_1, dtype=float)
+    point_2 = np.array(point_2, dtype=float)
+
+    v1 = orig - point_1
+    v2 = point_2 - point_1
+    v3 = np.array([-direction[1], direction[0]])
+
+    if np.dot(v2, v3) == 0:
+        return []
+
+    t1 = np.cross(v2, v1) / np.dot(v2, v3)
+    t2 = np.dot(v1, v3) / np.dot(v2, v3)
+
+    if t1 > 0.0 and 0.0 <= t2 <= 1.0:
+        return [orig + t1 * direction]
+    return []</code></pre>
+      <p class="leading-relaxed mt-6">
+        These two primitives are combined during clipping: if an edge is partially outside the polygon, the code finds the boundary intersection, creates a new vertex there, and keeps only the inside portion of the edge. That is what makes the package suitable for structured regions rather than just axis-aligned boxes.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
