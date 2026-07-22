@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Architecting a High-Scale Data & Analytics Platform — Jeroen van Hoof</title>
-  <meta name="description" content="A deep dive into building a production-grade data and analytics platform for a major financial institution using Pulumi, Databricks, and AzureML.">
+  <meta name="description" content="A deep dive into evolving a secure, self-service data and AI platform for enterprise banking across batch, real-time, monitoring, streaming, and generative AI workloads.">
 
   <!-- Theme Color -->
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
@@ -106,11 +106,11 @@
         </span>
         <span class="flex items-center gap-1">
           <i class="material-icons" style="font-size: 14px;">calendar_today</i>
-          October 15, 2023
+          October 15, 2023 · Updated July 22, 2026
         </span>
         <span class="flex items-center gap-1">
           <i class="material-icons" style="font-size: 14px;">schedule</i>
-          8 min read
+          13 min read
         </span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
@@ -134,6 +134,9 @@
       <p class="leading-relaxed">
         We set out to build a comprehensive production platform for data and analytics designed to bridge this gap. The goal was simple: enable data scientists to move fast while ensuring the infrastructure remains secure, compliant, and easy to manage.
       </p>
+      <p class="leading-relaxed">
+        Over several years, that foundation evolved from a model-serving solution into a broader internal developer platform spanning batch execution, low-latency APIs, monitoring, streaming, and generative AI. This retrospective focuses not only on the resulting architecture, but also on the engineering practices and design decisions that allowed it to scale across teams.
+      </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         A Multi-Platform Ecosystem
@@ -148,22 +151,94 @@
       </ul>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        The Core Pillars: Batch and Real-Time
+        Batch Platform: From Jobs to Streaming
       </h2>
       <p class="leading-relaxed">
-        The platform was designed around two primary workloads:
+        The Batch Platform was the first core workload capability. It orchestrates heavy processing jobs with <strong>Databricks</strong> and <strong>Airflow</strong>, using data-aware scheduling to manage cross-DAG dependencies. As demand grew, it evolved toward event-driven and streaming patterns that could react to upstream signals without abandoning the cost efficiency of batch processing.
       </p>
-      <ul class="list-disc pl-5 space-y-2">
-        <li><strong>Batch Platform:</strong> Focused on orchestrating heavy data processing jobs, backed by <strong>Databricks</strong> and <strong>Airflow</strong>. We leveraged Airflow's data-aware scheduling to manage cross-DAG dependencies, and with the advent of Airflow 3.0, we've moved towards event-driven scheduling to trigger processes based on real-time upstream signals.</li>
-        <li><strong>Real-Time Serving:</strong> Dedicated to serving models as APIs with low latency, utilizing <strong>AzureML Managed Endpoints</strong> and <strong>Kong</strong> as the API gateway.</li>
-      </ul>
-      <p class="leading-relaxed mt-4">
-        To support these, we integrated a <strong>Model Store</strong> using <strong>MLFlow</strong> for experiment tracking and model registration. While we initially explored CosmosDB and Redis for feature store functionality, benchmarking led us to <strong>Postgres</strong>. We observed nearly <strong>5x lower latency</strong> with Postgres for our specific access patterns. Furthermore, Postgres excelled in bulk loading—ingesting millions of rows in minutes rather than the hours it took with the parallelized single-request model of CosmosDB.
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Beyond the Happy Path</h3>
+      <p class="leading-relaxed">
+        Production model delivery is more than scheduling a notebook or exposing an endpoint. The platform also had to support <strong>ad-hoc runs</strong>, <strong>dry runs</strong>, repeatable test models, and controlled promotion between environments. A maintained dummy model exercised the entire path—from registration and artifact transfer to infrastructure deployment and execution—so platform changes could be validated before they reached customer workloads.
       </p>
+      <p class="leading-relaxed">
+        The batch offering grew beyond its original compute pattern as well. We added optional capabilities such as <strong>Neo4j</strong>, external storage, and other specialized processing services without forcing every workload to carry their operational cost. This became an important design principle: keep the core path opinionated, but expose extensions through explicit, composable interfaces.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Batch Self-Service and Observability</h3>
+      <p class="leading-relaxed">
+        One of the core tenets of the Batch Platform was to put the user in the driver’s seat without requiring them to be infrastructure experts. A <strong>declarative YAML interface</strong> lets teams define jobs, schedules, compute, and monitoring settings in version control, while GitOps performs validation, package scanning, ITSM integration, and controlled rollout.
+      </p>
+
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">workload.yaml</span>
+        <pre><code class="language-yaml">clusters:
+  default:
+    spark_version: 15.4.x-scala2.12
+    node_type_id: Standard_D3_v2
+    runtime_engine: PHOTON
+    autoscale:
+      min_workers: 2
+      max_workers: 5
+
+tasks:
+  predict:
+    cluster: default
+    timeout_seconds: -1
+    max_retries: 0
+    python_libraries:
+      - risk-scoring-model
+    python_wheel_task:
+      package_name: risk_scoring_model
+      entry_point: predict
+      named_parameters: {}
+    depends_on: []
+
+airflow:
+  schedule: "5 9 * * 1-5"
+  tags: [risk, scoring]
+  outlets: ["landing/risk/scores"]
+  input_dataset_names: ["defined/features/customer", "defined/features/account"]
+  input_dataset_trigger_rule: ALL
+  max_concurrent_runs: 1
+
+notify:
+  on_failure: [team@example.com]
+  on_success: [team@example.com]</code></pre>
+      </div>
+
+      <p class="leading-relaxed">
+        The configuration describes more than a scheduled notebook: it declares the cluster policy, wheel-based task, execution limits, dependencies, input and output datasets, concurrency, and operational notifications. The platform can therefore generate the Databricks and Airflow resources consistently while preserving the controls required for a production data flow.
+      </p>
+
+      <p class="leading-relaxed">
+        For observability, we integrated <strong>OpenTelemetry</strong>, allowing product developers to send custom log statements directly to their dedicated <strong>Application Insights</strong> workspace. This empowers teams to manage their own alerts, build custom dashboards, and perform deep log searches without platform-level bottlenecks.
+      </p>
+      <p class="leading-relaxed">
+        As demand for fresher data grew, the Batch Platform also expanded into <strong>Spark Structured Streaming</strong>. We made the trade-off explicit: <strong>incremental batch processing</strong> is generally more cost-efficient but introduces more latency, while <strong>continuous processing</strong> lowers latency at a higher compute cost. Supporting both lets teams choose an execution model that fits the use case rather than forcing every workload into a real-time design.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Real-Time Serving: Low-Latency Models with Safe Releases
+      </h2>
 
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Optimizing for Milliseconds</h3>
       <p class="leading-relaxed">
         Before committing to AzureML, we conducted extensive benchmarking to ensure we could meet the bank's strict latency requirements. By right-scaling for transaction volume and optimizing queue lengths and worker counts—assuming a 5ms model execution time—we fine-tuned the serving layer. We implemented stress testing using <strong>semaphores</strong> to precisely map how different throughput levels impacted P99 latency.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Designing the Real-Time Platform</h3>
+      <p class="leading-relaxed">
+        The real-time story was deliberately shaped around an <strong>Azure-native managed-service model</strong>. We used <strong>Azure Machine Learning Managed Online Endpoints</strong> for serving and <strong>Bicep</strong> for infrastructure definition, which kept the platform aligned with the bank's operational and governance expectations while minimizing custom control-plane complexity.
+      </p>
+      <p class="leading-relaxed">
+        Architecture decisions also helped keep the responsibilities clear. <strong>Python</strong> remained the primary language for data-science and model-serving code, while <strong>C#</strong> was used for platform services and APIs outside that core data-science boundary. Requests were routed through <strong>Kong</strong> with a broker-style API layer, while model traffic splitting and mirroring were managed declaratively on the Azure ML side. This made it possible to introduce safer rollout patterns without forcing every model team to become infrastructure operators.
+      </p>
+      <p class="leading-relaxed">
+        A further design choice was to collapse feature lookup and inference into the <strong>managed online endpoint</strong> itself, so the client could submit a single request and receive both retrieval and prediction in one flow. That simplified the external contract and helped keep the serving layer focused on the use case that mattered most: low-latency, governed inference.
+      </p>
+      <p class="leading-relaxed">
+        The serving path was supported by a <strong>Model Store</strong> using <strong>MLflow</strong> for experiment tracking and model registration. For online feature-store access, benchmarking led us away from Cosmos DB and Redis to <strong>Postgres</strong>. We observed nearly <strong>5x lower latency</strong> for our access patterns, while bulk loading millions of rows took minutes rather than hours. This was a reminder that managed-service choices still need to be tested against the workload's actual latency and ingestion profile.
       </p>
 
       <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
@@ -188,38 +263,68 @@
         </div>
       </div>
 
-      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
-        The Developer Experience: Configuration as Code
-      </h2>
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Declarative Delivery for Live Endpoints</h3>
       <p class="leading-relaxed">
-        One of the core tenets of the platform was to put the user in the driver’s seat without requiring them to be infrastructure experts. We achieved this through a <strong>declarative YAML interface</strong>. Users define their jobs and API endpoints in simple configuration files, referring to assets stored in private package repositories or the model store.
+        For real-time serving, we built a declarative CLI around AzureML endpoints and deployments. It validates configuration before a change reaches Azure, translates intent into repeatable infrastructure operations, and makes safer rollout patterns available without requiring every model team to understand the AzureML control plane. The same configuration-driven approach later informed the wider platform architecture.
+      </p>
+      <p class="leading-relaxed">
+        The CLI follows a simple but deliberate <strong>validate, plan, apply</strong> workflow. Teams keep endpoint definitions, model versions, scoring assets, compute settings, and routing rules in version control; the tool compares that desired state with the live AzureML workspace and shows the proposed endpoint, deployment, and traffic changes before reconciling them. This gave model teams an infrastructure-as-code operating model without turning a production release into a series of portal actions or one-off scripts.
+      </p>
+
+      <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-8">One Repository per Customer or Application</h4>
+      <p class="leading-relaxed">
+        Each customer or application owns a dedicated configuration repository. At its root, reusable compute templates and platform-managed environment metadata are kept separate from endpoint definitions. An endpoint directory contains versioned deployments, their scoring code and Conda environment, tests, and a routing declaration. This creates a small, reviewable boundary around each serving API while preventing model teams from duplicating shared workspace or identity settings.
       </p>
 
       <div class="my-6 code-block-container">
-        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">workload.yaml</span>
-        <pre><code class="language-yaml"># Example Workload Configuration
-job:
-  name: risk-scoring-batch
-  compute: databricks-high-mem
-  schedule: "0 2 * * *"
-  notebook: /production/risk/scoring_logic
-  monitoring:
-    lakehouse_enabled: true
-    alerts: ["critical", "slack"]</code></pre>
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">repository layout</span>
+        <pre><code class="language-none">configuration/
+├── templates/compute.yaml
+├── platform-internal/metadata_production.yaml
+└── endpoints/risk-score/v2/
+    ├── routing.yaml
+    ├── tests/
+    └── deployments/
+        ├── stable/
+        │   ├── definition.yaml
+        │   ├── conda.yaml
+        │   └── code/score.py
+        └── candidate/...</code></pre>
       </div>
 
-      <p class="leading-relaxed mt-4">
-        Our GitOps process handles the rest—performing automated validation, package scanning, and ITSM integration before initiating a safe rollout. This reduces time-to-production while enforcing best practices across the board.
+      <p class="leading-relaxed">
+        A deployment descriptor selects a registered model and named compute template; the accompanying runtime and scoring assets are part of the desired state. The CLI hashes those deployment assets, allowing it to distinguish an unchanged deployment from one that requires a controlled update. Routing then declares the production and evaluation topology instead of leaving it to a manual gateway change.
+      </p>
+
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">routing.yaml</span>
+        <pre><code class="language-yaml">traffic:
+  stable: 100
+mirror:
+  candidate: 20</code></pre>
+      </div>
+      <p class="leading-relaxed">
+        Here, <strong>stable</strong> returns every production response, while 20% of requests are mirrored to <strong>candidate</strong> for evaluation without changing the caller’s result. Compute profiles, environment connection details, and package-feed settings remain reusable or platform-managed; application teams concentrate on the endpoint version, model assets, and desired traffic policy.
       </p>
       <p class="leading-relaxed">
-        For observability, we integrated <strong>OpenTelemetry</strong>, allowing product developers to send custom log statements directly to their dedicated <strong>Application Insights</strong> workspace. This empowers teams to manage their own alerts, build custom dashboards, and perform deep log searches without platform-level bottlenecks.
+        Its most important responsibility was protecting <strong>live traffic</strong>. The planner rejected invalid routing—such as traffic targeting an undeclared deployment or percentages that do not form a valid distribution—and the apply flow blocked updates or removals that could interrupt a deployment still serving requests. Instead, safe release patterns became explicit: create and wait for a new deployment, gradually route or mirror traffic, move traffic away from the previous version, then retire it. Readiness checks and autoscaling coordination supported that transition, making progressive releases repeatable rather than dependent on operator judgement.
+      </p>
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Security, Traceability, and Reproducibility</h3>
+      <p class="leading-relaxed">
+        In a regulated environment, the developer journey must produce evidence by default. Our delivery controls covered dependency scanning, immutable artifacts, least-privilege permissions, deployment traceability, centralized logging, and reproducible model runs. Model artifacts moved from experimentation into serving through a defined handover rather than an informal copy step, preserving the relationship between source, model version, configuration, approvals, and runtime deployment.
+      </p>
+      <p class="leading-relaxed">
+        These controls were implemented as reusable pipeline components instead of project-specific checklists. Automated tests, linters, configuration validation, and quality gates made compliance part of the paved road. That approach reduced audit effort while making the secure path the easiest path for developers.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Evolution to an Internal Developer Platform
       </h2>
       <p class="leading-relaxed">
-        As the platform grew, we expanded support for multiple simultaneous jobs, streaming workloads, and composable infrastructure. For streaming, we implemented <strong>Spark Structured Streaming</strong>, navigating the trade-offs between <strong>incremental batch processing</strong> (cost-efficient, higher latency) and <strong>continuous processing</strong> (lower latency, higher compute cost).
+        As the ecosystem grew, the goal was not to replace Batch, Real-Time Serving, Reporting, BI Apps, or Contextual Insights with one oversized platform. Instead, the Internal Developer Platform consolidated the <strong>shared developer experience</strong> beneath them: self-service capabilities, composable infrastructure, delivery standards, security controls, and operational guardrails. Each platform could retain its domain-specific interface while benefiting from a consistent foundation.
+      </p>
+      <p class="leading-relaxed">
+        The batch architecture also moved away from the historical assumption that one customer maps to one job. A declarative source of truth can describe multiple jobs and their optional capabilities, while deployment and execution remain separate concerns. This removes the need to rebuild infrastructure merely to run work, improves resource utilization, and lets the platform scale capabilities independently from individual customer lifecycles.
       </p>
       <p class="leading-relaxed">
         We chose <strong>Pulumi</strong> as our foundation for three key reasons:
@@ -242,6 +347,19 @@ job:
       <p class="leading-relaxed mt-4">
         Everything is semantically versioned, which allows us to compose environments from stable or experimental releases. This makes it incredibly easy to roll out updates incrementally; a user can choose to run their <strong>Dev environment on version 1.2.0</strong> while keeping <strong>Production stable on 1.0.0</strong>. We also use this to spin up temporary "alpha" spokes to test the latest bleeding-edge features without affecting any existing workloads. We use <strong>Renovate</strong> to ensure that updates to underlying components are rolled out automatically and safely.
       </p>
+      <p class="leading-relaxed">
+        This separation of concerns also shaped the <strong>real-time platform</strong> itself. We kept serving responsibilities focused inside the managed endpoint layer while delegating batch processing, feature preparation, evidence movement, and the broader supporting data plane to <strong>MSP-Batch</strong> and <strong>GDP</strong>. It was an architectural choice that made the platform easier to reason about: not every component had to become a monolith, and ownership boundaries remained explicit.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Monitoring as a Platform Capability
+      </h2>
+      <p class="leading-relaxed">
+        Infrastructure health is only one part of operating analytics in production; teams also need to understand model and data behavior. We introduced model portals where users could inspect logs, create dashboards, and configure alerts without waiting for a platform engineer. We then explored <strong>Lakehouse Monitoring</strong> as a configurable workspace capability, integrating it with the wider data ecosystem rather than treating monitoring as a standalone tool.
+      </p>
+      <p class="leading-relaxed">
+        This naturally led to broader lifecycle questions: how do we retain evidence, compare champion and challenger models, trace intermediate datasets, or compose multiple models into a governed chain? Working through these concrete use cases with the data platform teams helped shape storage and metadata boundaries. More recent capabilities such as <strong>MLflow 3</strong> are interesting in this context, but only when they solve a validated platform need rather than adding technology for its own sake.
+      </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         The Rise of GenAI and Agentic Systems
@@ -253,7 +371,13 @@ job:
         To move away from "spaghetti" implementations—where teams were manually parsing PDFs, hardcoding page ranges, and relying on fragile third-party extraction APIs—we provided standardized building blocks. Users can now configure their entire indexing pipeline declaratively via JSON, ensuring a robust and repeatable process.
       </p>
       <p class="leading-relaxed">
+        The first RAG implementation deliberately separated the configurable indexing pipeline, centrally managed middleware and authentication, and the user interface. A template-based customizable UI provided the long-term path, while a simpler fallback interface reduced dependencies and allowed the MVP to deliver value earlier. This separation also made it possible to improve retrieval and governance without coupling those changes to the chat experience.
+      </p>
+      <p class="leading-relaxed">
         For more complex requirements, we expanded the platform to support <strong>Azure Container Apps</strong>. This allows teams to deploy custom <strong>LangChain</strong> or <strong>LangGraph</strong> code, which can be exposed through our Kong gateway. This architectural shift has enabled our users to transition from simple chatbots to fully <strong>agentic systems</strong> capable of sophisticated reasoning and tool use.
+      </p>
+      <p class="leading-relaxed">
+        We also investigated an <strong>AI Gateway</strong> for centralized policy enforcement, routing, observability, and cost controls around model APIs. As with the RAG blueprint, the objective was not to mandate a new service prematurely, but to identify which concerns should be solved once by the platform instead of repeatedly by every AI product team.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
@@ -273,9 +397,46 @@ job:
           <strong>PaaS Self-Service:</strong> On top of the spoke, product developers choose which PaaS offerings they need (Databricks, AzureML, AI Search, etc.) via a self-service catalog.
         </li>
         <li>
-          <strong>Workload Projects:</strong> The final layer where the actual code and models live. Developers trigger deployments to these managed services via Git merges.
+          <strong>Workload Projects:</strong> The final layer where the actual code and models live. A Git merge can deploy directly through a Pulumi project, but not every workload is encapsulated that way: some capabilities require platform automation to create a pull request in a dedicated repository, invoke a purpose-built CLI, or start another controlled delivery workflow.
         </li>
       </ol>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">The Architecture in Practice</h3>
+      <p class="leading-relaxed">
+        These layers establish a clear ownership model across <strong>workload projects</strong>, shared <strong>capability projects</strong>, and a protected <strong>core spoke</strong>. Workloads own their orchestration, jobs, application code, and declarative search configuration. Their delivery is intentionally interface-driven rather than tied to one implementation: Pulumi is used where it fits, while other capabilities can be reconciled through repository pull requests, platform CLIs, or controlled pipelines. Capability projects provide reusable services such as Databricks, Azure AI Search, Azure OpenAI, SQL, and web hosting. The core spoke owns cross-cutting foundations: Entra identities, virtual networking, private endpoints, storage, Key Vault, diagnostics, and security controls.
+      </p>
+      <p class="leading-relaxed">
+        The resulting design is private by default. Processing, search, model services, and storage communicate through private endpoints in a spoke virtual network, with subnet boundaries, network security groups, and centralized firewall policy governing those paths. Workload identities receive only the permissions they need, while teams receive separate operational and monitoring access. Secrets reach compute through Key Vault-backed integrations rather than appearing in notebooks, applications, or deployment configuration.
+      </p>
+      <p class="leading-relaxed">
+        The end-to-end data flow follows those boundaries: Airflow orchestrates governed Databricks jobs; outputs and source documents land in managed storage; configured search pipelines create indexes; and RAG applications retrieve relevant context before Azure OpenAI generates a response. Application telemetry, platform diagnostics, and job logs are routed to dedicated monitoring and log-storage paths. This lets individual workloads evolve independently while preserving a consistent security, networking, and observability baseline.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        From Platform Components to a Product Operating Model
+      </h2>
+      <p class="leading-relaxed">
+        The next iteration treats the platform as a product rather than a collection of infrastructure components. Its goal is to give capability teams a portal-driven, self-service experience built from paved <strong>golden paths</strong>: reusable capabilities with clear ownership, supported delivery flows, operational integration, and guardrails that reflect enterprise architecture and Azure Well-Architected principles.
+      </p>
+      <p class="leading-relaxed">
+        This changes the role of the Internal Developer Platform. Instead of asking every team to interpret network, security, and deployment standards, the portal and its reusable building blocks make approved choices available by default. A shared service-management model then connects platform applications and subapplications to ownership, lifecycle, impact analysis, and operational responsibilities. Common naming, terminology, lifecycle conventions, and centrally maintained dependencies reinforce that experience across teams and repositories.
+      </p>
+      <p class="leading-relaxed">
+        The target foundation is a <strong>dual-hub, hub-and-spoke network</strong> with dedicated connectivity, data, and management subscriptions alongside application-owned spokes. General outbound traffic is governed through the firewall, while private endpoint traffic uses private routing and centrally managed DNS. Application spokes normally own their private endpoints; only truly shared services belong in the hub. Monitoring follows the same philosophy: a central Log Analytics workspace per environment, protected by RBAC and private access, gives the platform a consistent operational view without making every workload invent its own telemetry foundation.
+      </p>
+      <p class="leading-relaxed">
+        Some details of this target architecture are deliberately still being validated—such as environment boundaries, data-platform integration, and private monitoring connectivity. Keeping those choices visible as active architecture work, rather than treating them as settled prematurely, is part of the governance model: decisions are captured as ADRs, supported by evidence, communicated, and revisited as implementation feedback arrives.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Architecture Is Also an Operating Model
+      </h2>
+      <p class="leading-relaxed">
+        The platform did not scale through technology alone. We used <strong>docs-as-code decision logs</strong> to record context, alternatives, ownership, and consequences alongside the systems they affected. What started as a team-level practice eventually expanded to architecture governance across a wider organization, making decisions searchable and their rationale durable.
+      </p>
+      <p class="leading-relaxed">
+        Reusable components were paired with knowledge transfer, live demonstrations, developer sessions, and incremental ownership. Establishing a new real-time team required codebases and documentation, but also review practices, mentoring, and a shared language for declarative infrastructure and GitOps. These social interfaces matter as much as APIs: a design only becomes a platform capability when other teams can understand, operate, and extend it safely.
+      </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Final Thoughts: Moving Toward Code Governance
@@ -296,9 +457,9 @@ job:
       <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
       <div class="text-center sm:text-left">
         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
-        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">DevOps & Platform Engineer</p>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">Solution Architect & Platform Engineer</p>
         <p class="text-sm text-slate-500 dark:text-slate-400">
-          Jeroen builds scalable systems and specializes in cloud infrastructure, Internal Developer Platforms, and data engineering.
+          Jeroen designs scalable cloud and AI platforms, specializing in Internal Developer Platforms, MLOps, data engineering, and solution architecture.
         </p>
       </div>
     </div>
