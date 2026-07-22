@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecting a High-Scale Data & Analytics Platform — Jeroen van Hoof</title>
+  <meta name="description" content="A deep dive into building a production-grade data and analytics platform for a major financial institution using Pulumi, Databricks, and AzureML.">
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Prism Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: '#3B82F6',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="../build/css/blog.css">
+  <script src="../build/js/blog.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              html.dark svg path { fill: white !important; }
+              html.dark svg text { fill: white !important; }
+              html.dark svg rect { stroke: white !important; }
+              html:not(.dark) svg path { fill: black !important; }
+              html:not(.dark) svg text { fill: black !important; }
+              html:not(.dark) svg rect { stroke: black !important; }
+            </style>
+          </defs>
+          <g>
+            <path
+               style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123"
+               d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"
+               aria-label="J_" />
+            <rect
+               style="fill:none;stroke-width:17.8144;stroke-dasharray:none"
+               width="224.11226"
+               height="219.19101"
+               x="15.943868"
+               y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="../blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Article Layout -->
+<main class="pt-24 pb-16 min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 lg:px-8">
+
+    <!-- Back to blog -->
+    <div class="mb-8 reveal active">
+      <a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">
+        <i class="material-icons" style="font-size: 18px;">arrow_back</i>
+        Back to Blog
+      </a>
+    </div>
+
+    <!-- Header info -->
+    <header class="mb-10 reveal active">
+      <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent text-xs">
+          Cloud Architecture
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">calendar_today</i>
+          October 15, 2023
+        </span>
+        <span class="flex items-center gap-1">
+          <i class="material-icons" style="font-size: 14px;">schedule</i>
+          8 min read
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+        Architecting a High-Scale Data & Analytics Platform for Enterprise Banking
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Building the foundation for production-grade AI: From declarative YAML configurations to a multi-layered Internal Developer Platform (IDP) powered by Pulumi.
+      </p>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active">
+      <img src="../build/img/analytics-platform.png" alt="Enterprise Analytics Platform Architecture" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Article Content -->
+    <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+      <p class="leading-relaxed">
+        Transitioning from experimental data science to production-grade analytics is a significant hurdle for any large organization. In the context of a major financial institution, this challenge is amplified by strict regulatory requirements, security constraints, and the need for absolute reliability.
+      </p>
+      <p class="leading-relaxed">
+        We set out to build a comprehensive production platform for data and analytics designed to bridge this gap. The goal was simple: enable data scientists to move fast while ensuring the infrastructure remains secure, compliant, and easy to manage.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        A Multi-Platform Ecosystem
+      </h2>
+      <p class="leading-relaxed">
+        While the <strong>Batch</strong> and <strong>Real-Time</strong> pillars formed the core of our initial offering, the ecosystem quickly expanded to include specialized platforms that addressed unique organizational needs. These platforms, often merged into our area after their initial inception, brought their own architectural flavors and operational models:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Reporting Platform:</strong> Offering a "road to production" for <strong>PowerBI</strong> dashboards, backed by <strong>Databricks</strong>, <strong>Synapse</strong>, or <strong>ADF</strong>. Initially infrastructure-focused, it evolved to provide a streamlined deployment flow where dashboards and their underlying data models are automatically updated via CI/CD pipelines whenever a repository changes.</li>
+        <li><strong>BI App Platform:</strong> Dedicated to hosting bespoke web applications for analytics. This stack utilized <strong>Azure App Service</strong>, <strong>Azure Front Door</strong>, and <strong>Azure Container Registry (ACR)</strong>, with automated deployment gates to ensure security and consistency for custom front-end tools.</li>
+        <li><strong>Contextual Insights:</strong> A specialized platform where the focus was on a <strong>widget-based user interface</strong>. This allowed users to build highly customized, interactive dashboards from a library of components, all backed by managed infrastructure that handled the underlying data complexity.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Core Pillars: Batch and Real-Time
+      </h2>
+      <p class="leading-relaxed">
+        The platform was designed around two primary workloads:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Batch Platform:</strong> Focused on orchestrating heavy data processing jobs, backed by <strong>Databricks</strong> and <strong>Airflow</strong>. We leveraged Airflow's data-aware scheduling to manage cross-DAG dependencies, and with the advent of Airflow 3.0, we've moved towards event-driven scheduling to trigger processes based on real-time upstream signals.</li>
+        <li><strong>Real-Time Serving:</strong> Dedicated to serving models as APIs with low latency, utilizing <strong>AzureML Managed Endpoints</strong> and <strong>Kong</strong> as the API gateway.</li>
+      </ul>
+      <p class="leading-relaxed mt-4">
+        To support these, we integrated a <strong>Model Store</strong> using <strong>MLFlow</strong> for experiment tracking and model registration. While we initially explored CosmosDB and Redis for feature store functionality, benchmarking led us to <strong>Postgres</strong>. We observed nearly <strong>5x lower latency</strong> with Postgres for our specific access patterns. Furthermore, Postgres excelled in bulk loading—ingesting millions of rows in minutes rather than the hours it took with the parallelized single-request model of CosmosDB.
+      </p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Optimizing for Milliseconds</h3>
+      <p class="leading-relaxed">
+        Before committing to AzureML, we conducted extensive benchmarking to ensure we could meet the bank's strict latency requirements. By right-scaling for transaction volume and optimizing queue lengths and worker counts—assuming a 5ms model execution time—we fine-tuned the serving layer. We implemented stress testing using <strong>semaphores</strong> to precisely map how different throughput levels impacted P99 latency.
+      </p>
+
+      <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
+        <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide">The Tech Stack</h4>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div class="p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-accent">Orchestration</div>
+            <div class="text-sm font-medium">Airflow</div>
+          </div>
+          <div class="p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-accent">Compute</div>
+            <div class="text-sm font-medium">Databricks</div>
+          </div>
+          <div class="p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-accent">Serving</div>
+            <div class="text-sm font-medium">AzureML</div>
+          </div>
+          <div class="p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-accent">Infrastructure</div>
+            <div class="text-sm font-medium">Pulumi</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Developer Experience: Configuration as Code
+      </h2>
+      <p class="leading-relaxed">
+        One of the core tenets of the platform was to put the user in the driver’s seat without requiring them to be infrastructure experts. We achieved this through a <strong>declarative YAML interface</strong>. Users define their jobs and API endpoints in simple configuration files, referring to assets stored in private package repositories or the model store.
+      </p>
+
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">workload.yaml</span>
+        <pre><code class="language-yaml"># Example Workload Configuration
+job:
+  name: risk-scoring-batch
+  compute: databricks-high-mem
+  schedule: "0 2 * * *"
+  notebook: /production/risk/scoring_logic
+  monitoring:
+    lakehouse_enabled: true
+    alerts: ["critical", "slack"]</code></pre>
+      </div>
+
+      <p class="leading-relaxed mt-4">
+        Our GitOps process handles the rest—performing automated validation, package scanning, and ITSM integration before initiating a safe rollout. This reduces time-to-production while enforcing best practices across the board.
+      </p>
+      <p class="leading-relaxed">
+        For observability, we integrated <strong>OpenTelemetry</strong>, allowing product developers to send custom log statements directly to their dedicated <strong>Application Insights</strong> workspace. This empowers teams to manage their own alerts, build custom dashboards, and perform deep log searches without platform-level bottlenecks.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Evolution to an Internal Developer Platform
+      </h2>
+      <p class="leading-relaxed">
+        As the platform grew, we expanded support for multiple simultaneous jobs, streaming workloads, and composable infrastructure. For streaming, we implemented <strong>Spark Structured Streaming</strong>, navigating the trade-offs between <strong>incremental batch processing</strong> (cost-efficient, higher latency) and <strong>continuous processing</strong> (lower latency, higher compute cost).
+      </p>
+      <p class="leading-relaxed">
+        We chose <strong>Pulumi</strong> as our foundation for three key reasons:
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Immediate Configuration Parsing:</strong> Being able to use a real programming language to parse and validate user configurations directly inside the IaC logic.</li>
+        <li><strong>APIs as Resources:</strong> Pulumi allows us to manage high-level APIs (like Databricks clusters or AzureML endpoints) as first-class resources.</li>
+        <li><strong>Stack References:</strong> A powerful way to pass outputs between different layers of the infrastructure, making it easy to stack layers together.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">The Delivery Pipeline Layers</h3>
+      <p class="leading-relaxed">
+        We structured our delivery into three distinct layers to maintain separation of concerns:
+      </p>
+      <ul class="list-decimal pl-5 space-y-2">
+        <li><strong>Components:</strong> The reusable blueprints and Pulumi components.</li>
+        <li><strong>Projects:</strong> Specific implementations of those blueprints for different capabilities.</li>
+        <li><strong>Deploy:</strong> The actual deployment pipelines containing the stacks (the configuration inputs for specific environments).</li>
+      </ul>
+      <p class="leading-relaxed mt-4">
+        Everything is semantically versioned, which allows us to compose environments from stable or experimental releases. This makes it incredibly easy to roll out updates incrementally; a user can choose to run their <strong>Dev environment on version 1.2.0</strong> while keeping <strong>Production stable on 1.0.0</strong>. We also use this to spin up temporary "alpha" spokes to test the latest bleeding-edge features without affecting any existing workloads. We use <strong>Renovate</strong> to ensure that updates to underlying components are rolled out automatically and safely.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Rise of GenAI and Agentic Systems
+      </h2>
+      <p class="leading-relaxed">
+        As the landscape shifted towards Generative AI, we introduced a <strong>RAG (Retrieval-Augmented Generation) blueprint</strong>. In this setup, <strong>Databricks</strong> handles the heavy lifting of chunking and embedding, while <strong>Azure AI Search</strong> serves as a passive vector database.
+      </p>
+      <p class="leading-relaxed">
+        To move away from "spaghetti" implementations—where teams were manually parsing PDFs, hardcoding page ranges, and relying on fragile third-party extraction APIs—we provided standardized building blocks. Users can now configure their entire indexing pipeline declaratively via JSON, ensuring a robust and repeatable process.
+      </p>
+      <p class="leading-relaxed">
+        For more complex requirements, we expanded the platform to support <strong>Azure Container Apps</strong>. This allows teams to deploy custom <strong>LangChain</strong> or <strong>LangGraph</strong> code, which can be exposed through our Kong gateway. This architectural shift has enabled our users to transition from simple chatbots to fully <strong>agentic systems</strong> capable of sophisticated reasoning and tool use.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        The Four-Layer Infrastructure Architecture
+      </h2>
+      <p class="leading-relaxed">
+        To manage the scale of a bank, we organized the physical infrastructure into four hierarchical layers:
+      </p>
+      <ol class="list-decimal pl-5 space-y-4 mt-4">
+        <li>
+          <strong>The Global Layer:</strong> Contains the "Hub" infrastructure—Firewalls, DNS resolvers, Private Endpoints for cross-org data access, and Front Door for application access.
+        </li>
+        <li>
+          <strong>Subscription Vending:</strong> For every new project, we automatically vend a subscription populated with a "Spoke" network, Key Vault, Log Analytics, and Azure Container Registry.
+        </li>
+        <li>
+          <strong>PaaS Self-Service:</strong> On top of the spoke, product developers choose which PaaS offerings they need (Databricks, AzureML, AI Search, etc.) via a self-service catalog.
+        </li>
+        <li>
+          <strong>Workload Projects:</strong> The final layer where the actual code and models live. Developers trigger deployments to these managed services via Git merges.
+        </li>
+      </ol>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Final Thoughts: Moving Toward Code Governance
+      </h2>
+      <p class="leading-relaxed">
+        By combining the flexibility of Pulumi with a rigid "Golden Path" approach for most developers, we've created a platform that scales. The bank's requirements for security and compliance are met through automated gates, while the product developers get a "cloud-native" experience that abstracts away the complexity of managing a subscription or a virtual network.
+      </p>
+      <p class="leading-relaxed">
+        However, while we’ve focused heavily on infrastructure, deployment flows, and configuration, the next frontier is the <strong>application code itself</strong>. We see immense value in initiatives that use <strong>Cookiecutter templates</strong> to help teams "start right and stay right." Providing standardized scaffolds for the code—not just the infrastructure—is the final piece of the puzzle to ensure consistency and quality across the enterprise.
+      </p>
+      <p class="leading-relaxed">
+        It’s a reminder that in enterprise engineering, the best platform isn't just about the technology—it's about the interface you provide to your developers.
+      </p>
+    </article>
+
+    <!-- Author Profile -->
+    <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active">
+      <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="text-center sm:text-left">
+        <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">DevOps & Platform Engineer</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Jeroen builds scalable systems and specializes in cloud infrastructure, Internal Developer Platforms, and data engineering.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <div>
+        <p class="text-sm font-bold text-slate-900 dark:text-white">
+          Jeroen van Hoof
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
+<!-- Prism JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>
