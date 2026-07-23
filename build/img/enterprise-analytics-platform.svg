@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Enterprise Analytics Platform</title>
+  <desc id="desc">A layered enterprise analytics platform architecture with global foundations, self-service capabilities, and workload delivery.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="workload" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="180%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200" stroke="#60a5fa" stroke-opacity=".06"/>
+  <text x="70" y="76" fill="#f8fafc" font-family="ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700">Enterprise Analytics Platform</text>
+  <text x="70" y="109" fill="#94a3b8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="17">A paved road from global foundations to governed workloads</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="145" width="1060" height="82" rx="16" fill="#1e3a8a" stroke="#60a5fa" stroke-opacity=".55"/>
+    <text x="100" y="180" fill="#93c5fd" font-family="ui-monospace, monospace" font-size="15" font-weight="700">GLOBAL FOUNDATION</text>
+    <text x="100" y="207" fill="#e2e8f0" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18">Identity · Hub networking · Firewall · Private DNS · Front Door · Observability</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="252" width="1060" height="92" rx="16" fill="#164e63" stroke="#22d3ee" stroke-opacity=".55"/>
+    <text x="100" y="289" fill="#67e8f9" font-family="ui-monospace, monospace" font-size="15" font-weight="700">SELF-SERVICE CAPABILITIES</text>
+    <g fill="#083344" stroke="#67e8f9" stroke-opacity=".5"><rect x="100" y="302" width="145" height="25" rx="8"/><rect x="260" y="302" width="145" height="25" rx="8"/><rect x="420" y="302" width="145" height="25" rx="8"/><rect x="580" y="302" width="145" height="25" rx="8"/><rect x="740" y="302" width="145" height="25" rx="8"/><rect x="900" y="302" width="190" height="25" rx="8"/></g>
+    <g fill="#cffafe" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" text-anchor="middle"><text x="172" y="320">Databricks</text><text x="332" y="320">Azure ML</text><text x="492" y="320">AI Search</text><text x="652" y="320">Container Apps</text><text x="812" y="320">Web Hosting</text><text x="995" y="320">Storage &amp; SQL</text></g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="369" width="1060" height="188" rx="16" fill="#172554" stroke="#818cf8" stroke-opacity=".55"/>
+    <text x="100" y="405" fill="#c7d2fe" font-family="ui-monospace, monospace" font-size="15" font-weight="700">WORKLOAD DELIVERY</text>
+    <g>
+      <rect x="100" y="426" width="208" height="98" rx="12" fill="url(#workload)"/>
+      <rect x="328" y="426" width="208" height="98" rx="12" fill="#155e75"/>
+      <rect x="556" y="426" width="208" height="98" rx="12" fill="#3730a3"/>
+      <rect x="784" y="426" width="306" height="98" rx="12" fill="#334155"/>
+      <g fill="#fff" font-family="ui-sans-serif, system-ui, sans-serif"><text x="122" y="462" font-size="17" font-weight="700">GitOps Configuration</text><text x="122" y="489" font-size="13">Desired state in Git</text><text x="350" y="462" font-size="17" font-weight="700">Validate &amp; Gate</text><text x="350" y="489" font-size="13">Policy · security · quality</text><text x="578" y="462" font-size="17" font-weight="700">Reconcile</text><text x="578" y="489" font-size="13">Pulumi · CLI · bundles</text><text x="806" y="462" font-size="17" font-weight="700">Operate &amp; Observe</text><text x="806" y="489" font-size="13">Logs · metrics · alerts · evidence</text></g>
+    </g>
+    <path d="M308 475H324M536 475H552M764 475H780" stroke="#67e8f9" stroke-width="3" stroke-linecap="round"/>
+    <path d="M324 469l8 6-8 6M552 469l8 6-8 6M780 469l8 6-8 6" fill="none" stroke="#67e8f9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g fill="#22d3ee"><circle cx="1064" cy="81" r="5"/><circle cx="1084" cy="81" r="5"/><circle cx="1104" cy="81" r="5"/></g>
+</svg>

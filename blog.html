@@ -208,6 +208,9 @@
         <button data-category="DevOps" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
           DevOps
         </button>
+        <button data-category="Go" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
+          Go
+        </button>
         <button data-category="Python" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all filter-btn">
           Python
         </button>
@@ -256,6 +259,16 @@
   // Blog Post Dataset
   const posts = [
     {
+      title: "Go Is Deliberately Practical—and That Is Its Superpower",
+      url: "blog/go-practical-language-for-platform-engineering.html",
+      date: "July 23, 2026",
+      readTime: "9 min read",
+      category: "Go",
+      excerpt: "Why Go's deliberate constraints—fast builds, explicit errors, goroutines, and a simple deployment model—make it compelling for platforms, CLIs, and cloud services.",
+      tags: ["Go", "Platform Engineering", "Concurrency", "Cloud Native", "CLI"],
+      image: "build/img/golang-platform-engineering.svg"
+    },
+    {
       title: "Architecting a High-Scale Data & Analytics Platform for Enterprise Banking",
       url: "blog/scaling-enterprise-analytics-platform.html",
       date: "October 14, 2023",
@@ -263,7 +276,7 @@
       category: "MLOps",
       excerpt: "Building a production-grade foundation for AI: From declarative YAML configurations to a multi-layered Internal Developer Platform (IDP) powered by Pulumi.",
       tags: ["Pulumi", "Azure", "Databricks", "MLOps", "IDP"],
-      image: "build/img/analytics-platform.png"
+      image: "build/img/enterprise-analytics-platform.svg"
     },
     {
       title: "A (Not So) Simple Fortune: Building a Robust Voronoi Diagram in Python",

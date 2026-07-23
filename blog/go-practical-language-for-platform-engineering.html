@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Go: The Deliberately Practical Language for Platform Engineering — Jeroen van Hoof</title>
+  <meta name="description" content="Why Go's deliberate constraints—fast builds, explicit errors, goroutines, and a simple deployment model—make it a compelling language for platforms, CLIs, and cloud services.">
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { accent: '#3B82F6', go: '#00ADD8' } } }
+    }
+  </script>
+  <link rel="stylesheet" href="../build/css/blog.css">
+  <script src="../build/js/blog.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none" aria-label="Home">
+      <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><defs><style>html.dark svg path { fill: white !important; } html.dark svg rect { stroke: white !important; } html:not(.dark) svg path { fill: black !important; } html:not(.dark) svg rect { stroke: black !important; }</style></defs><path style="font-weight:bold;font-size:170.497px;font-family:Roboto;stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/><rect style="fill:none;stroke-width:17.8144;stroke-dasharray:none" width="224.11226" height="219.19101" x="15.943868" y="18.404495"/></svg>
+    </a>
+    <div class="hidden md:flex items-center gap-x-8"><a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a><a href="../blog.html" class="text-sm font-semibold leading-6 text-accent font-bold transition">Blog</a></div>
+    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode"><svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z"/></svg></button>
+  </div>
+</nav>
+<main class="pt-24 pb-16 min-h-screen"><div class="mx-auto max-w-4xl px-6 lg:px-8">
+  <div class="mb-8 reveal active"><a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="material-icons" style="font-size:18px">arrow_back</i>Back to Blog</a></div>
+  <header class="mb-10 reveal active">
+    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-go/10 font-bold text-go text-xs">Go &amp; Platform Engineering</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">calendar_today</i>July 23, 2026</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">schedule</i>9 min read</span></div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">Go Is Deliberately Practical—and That Is Its Superpower</h1>
+    <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">Go does not try to offer every abstraction. It makes a focused trade: less language surface, more predictable teams, builds, binaries, and services.</p>
+  </header>
+  <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active bg-slate-950 relative">
+    <div class="absolute inset-0 opacity-30" style="background-image:linear-gradient(rgba(0,173,216,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(0,173,216,.35) 1px,transparent 1px);background-size:32px 32px"></div>
+    <div class="relative h-full flex flex-col justify-center px-8 sm:px-16"><p class="font-mono text-go text-sm sm:text-base mb-3">$ go build ./cmd/platform-api</p><div class="flex items-center gap-4"><span class="font-mono text-5xl sm:text-7xl font-bold text-white">Go</span><span class="h-14 w-px bg-go/50"></span><span class="font-mono text-sm sm:text-lg text-slate-300">build fast<br>ship simply<br>scale calmly</span></div><p class="mt-6 max-w-xl text-sm sm:text-base text-slate-400">A language designed around the day-to-day realities of large engineering systems.</p></div>
+  </div>
+  <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+    <p class="leading-relaxed">The usual language debate starts with features: Which language is fastest? Which has the nicest type system? Which feels most expressive? Those questions matter, but platform engineering has a different unit of success: can a team build, review, deploy, and operate a service confidently six months from now?</p>
+    <p class="leading-relaxed">That is the terrain Go was designed for. Born at Google in response to the friction of large C++ codebases, Go optimizes the system around the code: compilation, collaboration, deployment, concurrency, and operations. Its most divisive omissions are often the point.</p>
+    <div class="my-8 grid sm:grid-cols-3 gap-4 not-prose"><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">bolt</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Fast feedback</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Compile and test frequently without turning local iteration into a wait.</p></div><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">account_tree</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Visible concurrency</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Model independent work directly, with cancellation built into the design.</p></div><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">inventory_2</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Simple delivery</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A small deployment surface for CLIs, controllers, and services.</p></div></div>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The constraint is the product</h2>
+    <p class="leading-relaxed">Go does not have class inheritance, exceptions, method overloading, operator overloading, or implicit type conversions. Developers arriving from richer languages can initially read this list as a deficit. In practice, it is a statement of intent: code should make its control flow and dependencies easy to see.</p>
+    <p class="leading-relaxed">The same idea shows up in <strong>gofmt</strong>. Formatting is not a repository-wide negotiation, a linter preset, or a review comment. There is a canonical answer. This sounds small until a project has dozens of contributors, automated changes, and code produced by AI assistants. Conventions reduce the number of plausible-but-different implementations and leave code review time for the decisions that actually carry risk.</p>
+    <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">Go trades local cleverness for global legibility.</blockquote>
+    <p class="leading-relaxed">This is not an argument that every design must be minimal. It is an argument that abstractions should earn their cost. Composition through small interfaces and plain structs often keeps a service understandable without forcing readers to reconstruct a hierarchy or a chain of magic behavior.</p>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Concurrency without losing the cancellation path</h2>
+    <p class="leading-relaxed">Goroutines make concurrent work inexpensive to start, while channels give teams a vocabulary for communicating results. But the production value is not “millions of goroutines.” It is writing concurrent work that has a clear owner, bounded lifetime, and cancellation story.</p>
+    <p class="leading-relaxed">Consider a platform API gathering independent status checks. The important details are not the goroutine keyword; they are propagating the request context, bounding the deadline, and returning one understandable result to the caller.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">internal/status/checks.go</span><pre><code class="language-go">func Collect(ctx context.Context, checks []Check) []Result {
+    results := make(chan Result, len(checks))
+
+    for _, check := range checks {
+        check := check // keep this goroutine's input explicit
+        go func() {
+            results &lt;- check.Run(ctx)
+        }()
+    }
+
+    collected := make([]Result, 0, len(checks))
+    for range checks {
+        collected = append(collected, &lt;-results)
+    }
+    return collected
+}</code></pre></div>
+    <p class="leading-relaxed">This is intentionally modest. A real implementation still needs timeouts, error policy, metrics, and possibly a concurrency limit. Go does not remove those operational choices; it makes the concurrency primitive small enough that those choices remain visible. Pair this with <code>context.Context</code>, the race detector, and a testable boundary around I/O, and concurrent services become much less mysterious.</p>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Explicit errors are operational data</h2>
+    <p class="leading-relaxed">Go’s repeated <code>if err != nil</code> is frequently criticized as ceremony. It can be repetitive, but it has a valuable property: failure handling happens where the failure becomes meaningful. A service can decide whether an error should be retried, translated into an HTTP response, attached to a trace, or treated as fatal—without an exception silently crossing several layers.</p>
+    <p class="leading-relaxed">For platform code, errors are part of the interface. A CLI should distinguish an invalid configuration from a denied cloud permission and a transient network failure. A controller should expose a condition that tells an operator what to fix. Go encourages this discipline through ordinary return values rather than a special control-flow mechanism.</p>
+    <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner"><h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">A useful Go review question</h3><p class="text-slate-700 dark:text-slate-300 mb-0">“If this dependency fails at 02:00, does this code preserve enough context for the next engineer to understand what happened and what to do?”</p></div>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The deployment shape matters</h2>
+    <p class="leading-relaxed">A Go program is commonly compiled into one executable containing its application code and Go runtime. That is an attractive operational shape for CLIs, Kubernetes controllers, agents, and HTTP services: a small container image can contain the binary and a certificate bundle rather than a language runtime and environment manager.</p>
+    <p class="leading-relaxed">“One binary” is a design goal, not magic. Native dependencies, especially through CGO, can change that picture. Cross-compilation, target architecture, configuration, secrets, certificates, and observability still need deliberate design. The point is not that deployment becomes free; it is that the default has fewer moving parts.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Dockerfile</span><pre><code class="language-dockerfile">FROM golang:1.24 AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/platform-api ./cmd/platform-api
+
+FROM gcr.io/distroless/static-debian12
+COPY --from=build /out/platform-api /platform-api
+USER nonroot:nonroot
+ENTRYPOINT ["/platform-api"]</code></pre></div>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Where Go fits especially well</h2>
+    <p class="leading-relaxed">Go is at home in the connective tissue of a modern organization: the software that glues services, identities, clusters, repositories, and cloud APIs together. Its standard library is notably strong for networking, HTTP, cryptography, templating, testing, and command-line work; its ecosystem has grown around cloud-native software for good reason.</p>
+    <ul class="list-disc pl-5 space-y-2"><li><strong>Platform APIs and controllers:</strong> reconcile desired state and report it clearly.</li><li><strong>Internal CLIs:</strong> distribute a consistent, self-contained tool to many developer machines or CI runners.</li><li><strong>Backend and edge services:</strong> handle high I/O concurrency with fast start-up and modest resource use.</li><li><strong>Automation and integration services:</strong> make APIs, queues, and infrastructure workflows explicit and easy to ship.</li></ul>
+    <p class="leading-relaxed">That does not make Go the universal default. Data science remains far more productive in Python. Rich enterprise application frameworks can make C# or Java the better local choice. Work involving close hardware control may need Rust or C++. The useful question is not “is Go best?” but “does this workload benefit from Go’s operational and collaborative defaults?”</p>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">A language for the whole lifecycle</h2>
+    <p class="leading-relaxed">The strongest case for Go is cumulative. Fast builds shorten feedback loops. A small language and standard formatting simplify onboarding. Static typing and tooling catch issues before deployment. Goroutines and channels provide pragmatic concurrency. A straightforward executable shape simplifies delivery. None is individually unique; together, they reinforce a calm engineering workflow.</p>
+    <p class="leading-relaxed">In platform engineering, that calm is a feature. The software has to work across teams, environments, and on-call rotations—not merely impress in isolation. Go’s restraint gives teams a reliable foundation on which to build the more interesting parts of the system.</p>
+  </article>
+  <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active"><img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm"><div class="text-center sm:text-left"><h2 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h2><p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">Solution Architect &amp; Platform Engineer</p><p class="text-sm text-slate-500 dark:text-slate-400">Jeroen designs scalable cloud and AI platforms, specializing in Internal Developer Platforms, MLOps, data engineering, and solution architecture.</p></div></div>
+</div></main>
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900"><div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8"><div><p class="text-sm font-bold text-slate-900 dark:text-white">Jeroen van Hoof</p><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p></div><div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm"><a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a><a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a><a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a></div></div></footer>
+<script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

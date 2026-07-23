@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Go platform engineering</title>
+  <desc id="desc">A stylized Go programming language illustration with build, ship, and scale messaging.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#38bdf8" stroke-opacity=".2"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1000" cy="80" r="220" fill="#0ea5e9" fill-opacity=".12"/>
+  <circle cx="170" cy="580" r="210" fill="#22d3ee" fill-opacity=".08"/>
+  <text x="115" y="200" fill="#22d3ee" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="30">$ go build ./cmd/platform-api</text>
+  <text x="110" y="375" fill="#fff" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="170" font-weight="700">Go</text>
+  <line x1="410" y1="250" x2="410" y2="405" stroke="#22d3ee" stroke-opacity=".7" stroke-width="3"/>
+  <text x="455" y="290" fill="#cbd5e1" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34">build fast</text>
+  <text x="455" y="340" fill="#cbd5e1" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34">ship simply</text>
+  <text x="455" y="390" fill="#cbd5e1" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34">scale calmly</text>
+  <text x="115" y="500" fill="#94a3b8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="28">The deliberately practical language for platform engineering</text>
+</svg>
