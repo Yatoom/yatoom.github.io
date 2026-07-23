@@ -388,7 +388,7 @@ mirror:
       </p>
       <ol class="list-decimal pl-5 space-y-4 mt-4">
         <li>
-          <strong>The Global Layer:</strong> Contains the "Hub" infrastructure—Firewalls, DNS resolvers, Private Endpoints for cross-org data access, and Front Door for application access.
+          <strong>The Global Layer:</strong> Contains the "Hub" infrastructure—Firewalls, DNS resolvers, Private Endpoints for cross-org data access, and a hub-owned Azure Front Door entry point for public application and API access.
         </li>
         <li>
           <strong>Subscription Vending:</strong> For every new project, we automatically vend a subscription populated with a "Spoke" network, Key Vault, Log Analytics, and Azure Container Registry.
@@ -400,6 +400,9 @@ mirror:
           <strong>Workload Projects:</strong> The final layer where the actual code and models live. A Git merge can deploy directly through a Pulumi project, but not every workload is encapsulated that way: some capabilities require platform automation to create a pull request in a dedicated repository, invoke a purpose-built CLI, or start another controlled delivery workflow.
         </li>
       </ol>
+      <p class="leading-relaxed mt-6">
+        <strong>Azure Front Door</strong> provides the governed edge for workloads that need to be reachable by users or external clients. Instead of exposing each application independently, it centralizes custom-domain and TLS handling, Web Application Firewall policy, health-aware routing, and global traffic distribution before requests reach the appropriate application backend. Keeping this entry point in the global layer gives product teams a consistent, protected route to their web applications and APIs while the platform retains control over the shared internet-facing boundary.
+      </p>
 
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">The Architecture in Practice</h3>
       <p class="leading-relaxed">
@@ -428,6 +431,37 @@ mirror:
         Some details of this target architecture are deliberately still being validated—such as environment boundaries, data-platform integration, and private monitoring connectivity. Keeping those choices visible as active architecture work, rather than treating them as settled prematurely, is part of the governance model: decisions are captured as ADRs, supported by evidence, communicated, and revisited as implementation feedback arrives.
       </p>
 
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">From Application Configuration to Reconciliation</h3>
+      <p class="leading-relaxed">
+        The resulting delivery model gives each registered application its own <strong>workload-configuration repository</strong>. It is the single source of truth for the application’s intended state—not a home for shared platform infrastructure or full application source code. Application metadata sits alongside environment folders, which in turn contain capability-specific configurations such as Databricks jobs, AzureML endpoints, web applications, or containers. Small deployment assets may live with the configuration when a capability needs them, but application code is built elsewhere and referenced by an immutable version.
+      </p>
+
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">application configuration repository</span>
+        <pre><code class="language-none">application-config/
+├── metadata/
+│   └── application.yaml          # Application identity and ownership
+├── environments/
+│   ├── test/
+│   └── production/
+│       ├── databricks-jobs/      # Scheduled data and ML workloads
+│       ├── azureml-endpoints/    # Real-time model endpoints
+│       ├── container-apps/       # Containerized applications
+│       └── web-apps/             # Web-facing applications
+└── pipelines/
+    ├── validate.yaml             # Pull-request checks
+    └── deploy.yaml               # Deployment requests after merge</code></pre>
+      </div>
+      <p class="leading-relaxed">
+        Put simply: <strong>metadata</strong> identifies the application and its owner; <strong>environments</strong> records what should run in each target environment; and <strong>pipelines</strong> validate and request the delivery of approved changes. A team only adds the capability folders it needs, so an application with batch jobs and an API does not have to carry configuration for reporting or containers.
+      </p>
+      <p class="leading-relaxed">
+        Environments are represented as folders rather than branches, so a reviewer can inspect the complete desired state for each target directly in Git. This intentionally favors fully hydrated, <strong>WET configuration</strong> over hidden transformation steps: some values may be repeated between environments, but the exact result to be deployed is visible in the change itself. A pull request validates application metadata, configuration, permitted deployment assets, and capability-specific contracts before it can be merged.
+      </p>
+      <p class="leading-relaxed">
+        After a merge, delivery automation identifies the changed application and environment workloads, then asks the matching platform capability to reconcile them. That capability loads the configuration at the immutable merge commit, runs its own validations and gates, and reports status back to the application repository. This preserves one consistent GitOps experience while allowing each capability to use the deployment mechanism that fits its domain: <strong>Pulumi</strong> for infrastructure-oriented reconciliation, <strong>Databricks Declarative Automation Bundles</strong> for Databricks workloads, or a dedicated CLI and other controlled workflows where appropriate.
+      </p>
+
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
         Architecture Is Also an Operating Model
       </h2>
@@ -436,6 +470,19 @@ mirror:
       </p>
       <p class="leading-relaxed">
         Reusable components were paired with knowledge transfer, live demonstrations, developer sessions, and incremental ownership. Establishing a new real-time team required codebases and documentation, but also review practices, mentoring, and a shared language for declarative infrastructure and GitOps. These social interfaces matter as much as APIs: a design only becomes a platform capability when other teams can understand, operate, and extend it safely.
+      </p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
+        Next Steps: Extending the Golden Path
+      </h2>
+      <p class="leading-relaxed">
+        <strong>Backstage</strong> could become the front door to this operating model. Its software catalog can make workload ownership, documentation, APIs, dependencies, and operational links discoverable in one place. Scaffolder templates could then create a new workload repository with the right configuration structure, CI/CD pipelines, documentation, and ownership metadata already in place. Rather than replacing capability-specific delivery mechanisms, a Backstage action can orchestrate them: creating a pull request, starting a controlled pipeline, or invoking the appropriate platform CLI while giving teams a consistent self-service experience.
+      </p>
+      <p class="leading-relaxed">
+        The same pattern can extend to workloads that are better suited to <strong>Kubernetes</strong> than managed endpoints or data services. Teams could keep Helm charts, Kustomize overlays, or other Kubernetes manifests alongside their application configuration, with <strong>Argo CD</strong> reconciling the approved Git state into a cluster. This is another capability-specific path alongside Pulumi and Databricks Declarative Automation Bundles, not a competing configuration model. The platform would still supply the guardrails—namespace and identity provisioning, network policies, secret integration, image controls, observability, and deployment checks—while Argo CD provides the continuous GitOps reconciliation loop. This adds a container-runtime option to the golden path without forcing every workload away from AzureML, Databricks, or other managed services.
+      </p>
+      <p class="leading-relaxed">
+        The <strong>Pulumi Kubernetes Operator</strong> offers a complementary route when a workload needs to manage cloud infrastructure and Kubernetes resources together. It represents a Pulumi stack as a Kubernetes custom resource, then runs and continuously reconciles that stack from within the cluster against its declared source and configuration. In practice, Argo CD can keep the Operator’s stack definition in sync from Git, while the Operator provisions or updates the Azure resources, identities, and Kubernetes resources required by that stack. This preserves Kubernetes-native GitOps without reducing the infrastructure layer to static manifests.
       </p>
 
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">
