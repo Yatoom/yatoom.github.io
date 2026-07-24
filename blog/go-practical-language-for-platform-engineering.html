@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Go: The Deliberately Practical Language for Platform Engineering — Jeroen van Hoof</title>
-  <meta name="description" content="Why Go's deliberate constraints—fast builds, explicit errors, goroutines, and a simple deployment model—make it a compelling language for platforms, CLIs, and cloud services.">
+  <title>Your CI/CD Scripts Have Become Software. Treat Them That Way—with Go — Jeroen van Hoof</title>
+  <meta name="description" content="When Bash, PowerShell, and Python pipeline scripts become shared delivery infrastructure, moving the logic into a versioned Go CLI can make releases safer, testable, and reproducible.">
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="../build/img/j.svg">
@@ -33,69 +33,264 @@
 <main class="pt-24 pb-16 min-h-screen"><div class="mx-auto max-w-4xl px-6 lg:px-8">
   <div class="mb-8 reveal active"><a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="material-icons" style="font-size:18px">arrow_back</i>Back to Blog</a></div>
   <header class="mb-10 reveal active">
-    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-go/10 font-bold text-go text-xs">Go &amp; Platform Engineering</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">calendar_today</i>July 23, 2026</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">schedule</i>9 min read</span></div>
-    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">Go Is Deliberately Practical—and That Is Its Superpower</h1>
-    <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">Go does not try to offer every abstraction. It makes a focused trade: less language surface, more predictable teams, builds, binaries, and services.</p>
+    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-go/10 font-bold text-go text-xs">Go &amp; CI/CD</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">calendar_today</i>July 24, 2026</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">schedule</i>20 min read</span></div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">Your CI/CD Scripts Have Become Software. Treat Them That Way—with Go</h1>
+    <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">Bash, PowerShell, and Python are excellent ways to start automating. But once a script deploys production for many teams, “just a script” is no longer an honest description.</p>
   </header>
   <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active bg-slate-950 relative">
     <div class="absolute inset-0 opacity-30" style="background-image:linear-gradient(rgba(0,173,216,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(0,173,216,.35) 1px,transparent 1px);background-size:32px 32px"></div>
-    <div class="relative h-full flex flex-col justify-center px-8 sm:px-16"><p class="font-mono text-go text-sm sm:text-base mb-3">$ go build ./cmd/platform-api</p><div class="flex items-center gap-4"><span class="font-mono text-5xl sm:text-7xl font-bold text-white">Go</span><span class="h-14 w-px bg-go/50"></span><span class="font-mono text-sm sm:text-lg text-slate-300">build fast<br>ship simply<br>scale calmly</span></div><p class="mt-6 max-w-xl text-sm sm:text-base text-slate-400">A language designed around the day-to-day realities of large engineering systems.</p></div>
+    <div class="relative h-full flex flex-col justify-center px-8 sm:px-16"><p class="font-mono text-slate-400 text-sm sm:text-base mb-3">pipeline.yml</p><div class="flex items-center gap-4"><span class="font-mono text-xl sm:text-3xl font-bold text-slate-300">scripts/</span><span class="text-3xl text-go">→</span><span class="font-mono text-xl sm:text-3xl font-bold text-white">platformctl</span></div><p class="mt-6 max-w-xl text-sm sm:text-base text-slate-400">Keep the pipeline declarative. Move delivery behavior into a tested, versioned executable.</p></div>
   </div>
+
   <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
-    <p class="leading-relaxed">The usual language debate starts with features: Which language is fastest? Which has the nicest type system? Which feels most expressive? Those questions matter, but platform engineering has a different unit of success: can a team build, review, deploy, and operate a service confidently six months from now?</p>
-    <p class="leading-relaxed">That is the terrain Go was designed for. Born at Google in response to the friction of large C++ codebases, Go optimizes the system around the code: compilation, collaboration, deployment, concurrency, and operations. Its most divisive omissions are often the point.</p>
-    <div class="my-8 grid sm:grid-cols-3 gap-4 not-prose"><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">bolt</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Fast feedback</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Compile and test frequently without turning local iteration into a wait.</p></div><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">account_tree</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Visible concurrency</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Model independent work directly, with cancellation built into the design.</p></div><div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">inventory_2</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Simple delivery</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A small deployment surface for CLIs, controllers, and services.</p></div></div>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The constraint is the product</h2>
-    <p class="leading-relaxed">Go does not have class inheritance, exceptions, method overloading, operator overloading, or implicit type conversions. Developers arriving from richer languages can initially read this list as a deficit. In practice, it is a statement of intent: code should make its control flow and dependencies easy to see.</p>
-    <p class="leading-relaxed">The same idea shows up in <strong>gofmt</strong>. Formatting is not a repository-wide negotiation, a linter preset, or a review comment. There is a canonical answer. This sounds small until a project has dozens of contributors, automated changes, and code produced by AI assistants. Conventions reduce the number of plausible-but-different implementations and leave code review time for the decisions that actually carry risk.</p>
+    <p class="leading-relaxed">Most delivery automation begins innocently: five lines of Bash to upload an artifact, a PowerShell function to configure an Azure resource, or a Python script to call three APIs. It works, so it grows. Soon it validates policy, chooses environments, retries requests, transforms JSON, handles credentials, coordinates deployments, and determines whether production is healthy.</p>
+    <p class="leading-relaxed">Eventually, a missing environment variable becomes an empty string. Half a deployment succeeds before the script exits. Reproducing the failure locally means reconstructing the shell, modules, interpreter, packages, command-line tools, and environment assembled by the build agent. Containers and disciplined dependency locking can solve much of this, but they also confirm the underlying point: the automation now has a runtime and a release process, whether the team acknowledges it or not.</p>
+    <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">The problem is not that scripts are bad. The problem is that production software is being managed as disposable glue.</blockquote>
+    <p class="leading-relaxed">My argument is deliberately narrower than “rewrite everything in Go”: <strong>keep small, local scripts</strong>. But when automation becomes a shared delivery contract, promote it into a real program. For many platform teams, Go is an unusually good language for that boundary.</p>
+
+    <div class="my-8 grid sm:grid-cols-3 gap-4 not-prose">
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">inventory_2</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">One artifact</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Ship a pinned executable instead of rebuilding an environment on every runner.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">fact_check</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Testable behavior</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Test policy, orchestration, errors, and output without deploying anything.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">device_hub</i><h2 class="mt-2 font-bold text-slate-900 dark:text-white">Explicit contracts</h2><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Use typed inputs, stable exit codes, and machine-readable results.</p></div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Enterprise language standards need workload boundaries</h2>
+    <p class="leading-relaxed">Most enterprise “approved language” lists were designed around business applications: customer-facing services, mobile applications, web front ends, and large domain systems. That is a sensible governance boundary, but it leaves a gap. CI/CD glue code, internal CLIs, developer automation, and infrastructure tooling have a different lifecycle and a different distribution problem.</p>
+    <p class="leading-relaxed">Applying an application-language standard unchanged to delivery tooling can produce an odd result: teams are permitted to write increasingly critical automation, but only in languages selected for a different workload shape. The better policy is scoped rather than universal. Recognize Go as a supported pro-code option specifically for:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>CI/CD orchestration that has outgrown embedded scripting;</li>
+      <li>internal command-line tools used by multiple teams;</li>
+      <li>developer-facing automation and platform engineering;</li>
+      <li>infrastructure tooling that must run frequently and consistently across environments.</li>
+    </ul>
+    <p class="leading-relaxed">This is not a proposal to change the approved language set for every business application. It is an acknowledgment that a cross-platform CLI invoked in every pipeline is not the same architectural workload as a banking API, a mobile app, or a data-science notebook.</p>
+    <div class="my-8 p-6 bg-go/5 rounded-2xl border border-go/30"><h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">The governance principle</h3><p class="text-slate-700 dark:text-slate-300 mb-0"><strong>Authorize the language together with its operating model.</strong> Supporting Go means extending code scanning, dependency governance, artifact publishing, signing, software bills of materials, pipeline templates, approved builder images, vulnerability checks, and ownership standards—not merely allowing <code>.go</code> files into a repository.</p></div>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Go is deliberately practical—and that is its superpower</h2>
+    <p class="leading-relaxed">The usual language debate starts with features: which language is fastest, has the richest type system, or feels most expressive? Those questions matter, but platform engineering has a different unit of success: can a team build, review, deploy, and operate this tool confidently six months from now?</p>
+    <p class="leading-relaxed">That is the terrain Go was designed for. Born at Google in response to the friction of large software systems, Go optimizes the system around the code: compilation, collaboration, deployment, concurrency, and operations. It does not try to offer every abstraction. It makes a focused trade: less language surface, more predictable teams, builds, binaries, and services.</p>
+    <div class="my-8 grid sm:grid-cols-3 gap-4 not-prose">
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">bolt</i><h3 class="mt-2 font-bold text-slate-900 dark:text-white">Fast feedback</h3><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Compile and test frequently without turning local iteration into a wait.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">format_align_left</i><h3 class="mt-2 font-bold text-slate-900 dark:text-white">Global legibility</h3><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A small language and canonical formatting reduce incidental differences.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">inventory_2</i><h3 class="mt-2 font-bold text-slate-900 dark:text-white">Simple delivery</h3><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A small deployment surface for CLIs, controllers, and services.</p></div>
+    </div>
+    <p class="leading-relaxed">Go has no class inheritance, exceptions, method overloading, operator overloading, or implicit type conversions. Developers arriving from richer languages can read that list as a deficit. In practice, it is a statement of intent: control flow and dependencies should be easy to see. Composition through small interfaces and plain structs often keeps a tool understandable without forcing readers to reconstruct a hierarchy or a chain of hidden behavior.</p>
+    <p class="leading-relaxed">The same idea appears in <code>gofmt</code>. Formatting is not a repository-wide negotiation, a linter preset, or a review comment. There is a canonical answer. This sounds small until a project has dozens of contributors, automated changes, and code produced by coding agents.</p>
     <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">Go trades local cleverness for global legibility.</blockquote>
-    <p class="leading-relaxed">This is not an argument that every design must be minimal. It is an argument that abstractions should earn their cost. Composition through small interfaces and plain structs often keeps a service understandable without forcing readers to reconstruct a hierarchy or a chain of magic behavior.</p>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Concurrency without losing the cancellation path</h2>
-    <p class="leading-relaxed">Goroutines make concurrent work inexpensive to start, while channels give teams a vocabulary for communicating results. But the production value is not “millions of goroutines.” It is writing concurrent work that has a clear owner, bounded lifetime, and cancellation story.</p>
-    <p class="leading-relaxed">Consider a platform API gathering independent status checks. The important details are not the goroutine keyword; they are propagating the request context, bounding the deadline, and returning one understandable result to the caller.</p>
-    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">internal/status/checks.go</span><pre><code class="language-go">func Collect(ctx context.Context, checks []Check) []Result {
-    results := make(chan Result, len(checks))
+    <p class="leading-relaxed">This restraint matters for shared delivery tooling. Pipeline code is read during reviews, incidents, migrations, and handovers. Its value comes less from elegant abstraction than from making the next effect—and the next possible failure—obvious.</p>
+    <p class="leading-relaxed">Go is also a proven choice in this exact domain rather than an experimental extrapolation. Docker, Kubernetes, and Terraform are prominent examples of infrastructure products written in Go. Their existence does not prove that every pipeline helper belongs in Go, but it does demonstrate that the language, tooling, and ecosystem fit long-lived, cross-platform infrastructure software.</p>
 
-    for _, check := range checks {
-        check := check // keep this goroutine's input explicit
-        go func() {
-            results &lt;- check.Run(ctx)
-        }()
-    }
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The moment a script stops being “just a script”</h2>
+    <p class="leading-relaxed">Line count is a poor measure. A 300-line one-off migration script may be perfectly fine; a 30-line script included by 200 repositories may be critical infrastructure. Consider moving the logic behind a supported CLI when several of these are true:</p>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Multiple repositories or teams depend on it.</li>
+      <li>It changes production state or enforces delivery policy.</li>
+      <li>It needs retries, timeouts, concurrency, rollback, or idempotency.</li>
+      <li>Linux and Windows implementations have started to drift.</li>
+      <li>Inputs are mostly undocumented environment variables.</li>
+      <li>Tests require mocking a shell, a filesystem layout, and several installed CLIs.</li>
+      <li>A change must be coordinated—or can break every consumer at once.</li>
+      <li>Failure output is meant for both people and pipeline logic.</li>
+    </ul>
+    <p class="leading-relaxed">At that point, the automation has an API whether you designed one or not. Environment variables are its parameters, console text is its response model, and exit codes are its error protocol. Go does not create that contract; it gives you better tools to make the contract intentional.</p>
 
-    collected := make([]Result, 0, len(checks))
-    for range checks {
-        collected = append(collected, &lt;-results)
-    }
-    return collected
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Why Go changes the operational equation</h2>
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">1. The runner receives a product, not a build environment</h3>
+    <p class="leading-relaxed">A Go program is commonly delivered as a single executable containing the application code and Go runtime. Build it once for your supported operating systems and architectures, publish checksums and signatures, and let pipelines pin a version. The release job downloads <code>platformctl v1.8.3</code>; it does not resolve packages from the network and hope today’s environment matches yesterday’s.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Build once, promote the same artifacts</span><pre><code class="language-bash">GOOS=linux   GOARCH=amd64 go build -trimpath -o dist/platformctl-linux-amd64 ./cmd/platformctl
+GOOS=windows GOARCH=amd64 go build -trimpath -o dist/platformctl-windows-amd64.exe ./cmd/platformctl
+GOOS=darwin  GOARCH=arm64 go build -trimpath -o dist/platformctl-darwin-arm64 ./cmd/platformctl</code></pre></div>
+    <p class="leading-relaxed">This is not magic. CGO and native libraries can complicate static linking and cross-compilation. Certificates, credentials, and configuration still exist. But for API-oriented delivery tools written with pure Go dependencies, the default deployment surface is refreshingly small.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">2. The contract travels with the artifact</h3>
+    <p class="leading-relaxed">The strongest argument is not that Python cannot validate data. It can. Pydantic can define excellent configuration models, reject missing fields, constrain values, and produce useful diagnostics. Type checkers, locked environments, and packaging tools can make Python delivery code robust. Likewise, disciplined Bash and PowerShell can validate every required variable before doing work.</p>
+    <p class="leading-relaxed">Go’s advantage is cumulative rather than exclusive: configuration structs, command options, interfaces, implementation, and compilation live in one consistently checked toolchain, and the resulting contract is shipped inside the executable. Changing a field or interface identifies affected call sites during the build. More importantly, consumers do not need the source environment, Pydantic version, type checker, interpreter, or package resolver to run the validated program.</p>
+    <p class="leading-relaxed">Compilation does not prove that a deployment is correct, and static typing is not the reason by itself to rewrite working Python. It is one part of a broader operational shape: validate once, test once, build once, and promote the same immutable artifact.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">3. Testing becomes normal engineering, not shell archaeology</h3>
+    <p class="leading-relaxed">Put command parsing at the edge and delivery behavior in ordinary functions. Policy checks can be table-tested. HTTP dependencies can be replaced with test servers. Filesystems and command execution can sit behind narrow interfaces. Integration tests can exercise the compiled CLI and assert its stdout, stderr, and exit code.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">The CI loop for the delivery tool itself</span><pre><code class="language-bash">gofmt -w .
+go vet ./...
+go test ./...
+go test -race ./...</code></pre></div>
+    <p class="leading-relaxed">The strongest migration technique is black-box compatibility testing: describe what the old script does from the outside, then run the same cases against the replacement. Flipp used this approach while replacing Bash deployment scripts with Go—an important lesson because migration safety came from preserving observable behavior, not from trusting the rewrite.</p>
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Why the feedback loop also works well with coding agents</h3>
+    <p class="leading-relaxed">Go does not make AI-generated code correct. It makes incorrect output easier to reject and acceptable output easier to standardize. <code>gofmt</code> removes mechanical uncertainty, while the compiler gives an agent precise feedback about types, assignments, imports, methods, and interfaces. Fast builds make it practical to repeat that loop after every change.</p>
+    <p class="leading-relaxed">The language also offers fewer competing patterns than many general-purpose languages. Conventions for errors, HTTP, JSON, tests, flags, and cancellation are widely recognizable. That narrows the space of plausible implementations and reduces formatting noise in generated diffs.</p>
+    <div class="my-8 p-6 bg-amber-50 dark:bg-amber-950/20 rounded-2xl border border-amber-200 dark:border-amber-900/60"><h4 class="text-sm font-bold text-amber-800 dark:text-amber-300 mb-3 uppercase tracking-wide">Consistency is not design judgement</h4><p class="text-slate-700 dark:text-slate-300 mb-0">An agent can compile a dangerous retry, leak a secret into a log, start unbounded goroutines, or implement the wrong authorization rule. State the timeout, retry safety, concurrency limit, cancellation behavior, redaction policy, and destructive-operation constraints. Formatting and compilation are guardrails, not reviewers.</p></div>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">4. Failures can become data</h3>
+    <p class="leading-relaxed">A pipeline should not parse “something went wrong” to decide whether input was invalid, authentication failed, policy rejected a release, or a platform API timed out. A CLI can reserve stable exit codes, write diagnostics to stderr, emit JSON to stdout, redact secrets, and include a correlation ID.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">A machine-readable deployment result</span><pre><code class="language-json">{
+  "status": "failed",
+  "application": "payments-api",
+  "environment": "production",
+  "correlationId": "9bd40e03-9ef6-4b14-88bf-d961cd4122e8",
+  "error": {
+    "code": "POLICY_VALIDATION_FAILED",
+    "message": "Production deployments require two deployment owners."
+  }
 }</code></pre></div>
-    <p class="leading-relaxed">This is intentionally modest. A real implementation still needs timeouts, error policy, metrics, and possibly a concurrency limit. Go does not remove those operational choices; it makes the concurrency primitive small enough that those choices remain visible. Pair this with <code>context.Context</code>, the race detector, and a testable boundary around I/O, and concurrent services become much less mysterious.</p>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Explicit errors are operational data</h2>
-    <p class="leading-relaxed">Go’s repeated <code>if err != nil</code> is frequently criticized as ceremony. It can be repetitive, but it has a valuable property: failure handling happens where the failure becomes meaningful. A service can decide whether an error should be retried, translated into an HTTP response, attached to a trace, or treated as fatal—without an exception silently crossing several layers.</p>
-    <p class="leading-relaxed">For platform code, errors are part of the interface. A CLI should distinguish an invalid configuration from a denied cloud permission and a transient network failure. A controller should expose a condition that tells an operator what to fix. Go encourages this discipline through ordinary return values rather than a special control-flow mechanism.</p>
-    <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner"><h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">A useful Go review question</h3><p class="text-slate-700 dark:text-slate-300 mb-0">“If this dependency fails at 02:00, does this code preserve enough context for the next engineer to understand what happened and what to do?”</p></div>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The deployment shape matters</h2>
-    <p class="leading-relaxed">A Go program is commonly compiled into one executable containing its application code and Go runtime. That is an attractive operational shape for CLIs, Kubernetes controllers, agents, and HTTP services: a small container image can contain the binary and a certificate bundle rather than a language runtime and environment manager.</p>
-    <p class="leading-relaxed">“One binary” is a design goal, not magic. Native dependencies, especially through CGO, can change that picture. Cross-compilation, target architecture, configuration, secrets, certificates, and observability still need deliberate design. The point is not that deployment becomes free; it is that the default has fewer moving parts.</p>
-    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Dockerfile</span><pre><code class="language-dockerfile">FROM golang:1.24 AS build
-WORKDIR /src
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/platform-api ./cmd/platform-api
+    <p class="leading-relaxed">Go’s repetitive <code>if err != nil</code> is useful here. Every boundary must decide whether to add context, retry, translate the error, or stop. That is exactly the discipline deployment automation needs.</p>
+    <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner"><h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">A useful Go review question</h4><p class="text-slate-700 dark:text-slate-300 mb-0">“If this dependency fails at 02:00, does this code preserve enough context for the next engineer to understand what happened and what to do?”</p></div>
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">5. Concurrent work can keep its cancellation path</h3>
+    <p class="leading-relaxed">Delivery tools often wait on independent operations: checking regions, validating repositories, querying deployment status, or uploading artifacts. Goroutines make that work inexpensive to express. The production value is not “millions of goroutines”; it is that concurrency can have a clear owner, bounded lifetime, and cancellation story through <code>context.Context</code>.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Bounded concurrent validation</span><pre><code class="language-go">func ValidateAll(ctx context.Context, targets []Target) error {
+    group, ctx := errgroup.WithContext(ctx)
+    group.SetLimit(8)
 
-FROM gcr.io/distroless/static-debian12
-COPY --from=build /out/platform-api /platform-api
-USER nonroot:nonroot
-ENTRYPOINT ["/platform-api"]</code></pre></div>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Where Go fits especially well</h2>
-    <p class="leading-relaxed">Go is at home in the connective tissue of a modern organization: the software that glues services, identities, clusters, repositories, and cloud APIs together. Its standard library is notably strong for networking, HTTP, cryptography, templating, testing, and command-line work; its ecosystem has grown around cloud-native software for good reason.</p>
-    <ul class="list-disc pl-5 space-y-2"><li><strong>Platform APIs and controllers:</strong> reconcile desired state and report it clearly.</li><li><strong>Internal CLIs:</strong> distribute a consistent, self-contained tool to many developer machines or CI runners.</li><li><strong>Backend and edge services:</strong> handle high I/O concurrency with fast start-up and modest resource use.</li><li><strong>Automation and integration services:</strong> make APIs, queues, and infrastructure workflows explicit and easy to ship.</li></ul>
-    <p class="leading-relaxed">That does not make Go the universal default. Data science remains far more productive in Python. Rich enterprise application frameworks can make C# or Java the better local choice. Work involving close hardware control may need Rust or C++. The useful question is not “is Go best?” but “does this workload benefit from Go’s operational and collaborative defaults?”</p>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">A language for the whole lifecycle</h2>
-    <p class="leading-relaxed">The strongest case for Go is cumulative. Fast builds shorten feedback loops. A small language and standard formatting simplify onboarding. Static typing and tooling catch issues before deployment. Goroutines and channels provide pragmatic concurrency. A straightforward executable shape simplifies delivery. None is individually unique; together, they reinforce a calm engineering workflow.</p>
-    <p class="leading-relaxed">In platform engineering, that calm is a feature. The software has to work across teams, environments, and on-call rotations—not merely impress in isolation. Go’s restraint gives teams a reliable foundation on which to build the more interesting parts of the system.</p>
+    for _, target := range targets {
+      target := target
+      group.Go(func() error {
+        if err := validateTarget(ctx, target); err != nil {
+          return fmt.Errorf("validate %s: %w", target.Name, err)
+        }
+        return nil
+      })
+    }
+    return group.Wait()
+  }</code></pre></div>
+    <p class="leading-relaxed">A real implementation still needs timeouts, metrics, retry policy, and idempotency. Go does not remove those choices. It gives them a small, visible vocabulary and a race detector with which to challenge the implementation.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Make YAML boring again</h2>
+    <p class="leading-relaxed">Pipeline YAML should describe the workflow: stages, dependencies, approvals, environments, service connections, and artifact promotion. It should not contain a second programming language made from conditionals, embedded shell, string interpolation, and vendor-specific expressions.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">A deliberately thin pipeline step</span><pre><code class="language-yaml">- script: |
+    ./platformctl deploy \
+      --config deploy.yaml \
+      --environment production \
+      --output json \
+      --non-interactive
+  displayName: Deploy application</code></pre></div>
+    <p class="leading-relaxed">This boundary matters. The CI/CD product still owns identity injection, approvals, stages, and environment gates. The Go tool owns validation, orchestration, API calls, timeouts, retries, idempotency, redaction, and output. The same executable can run on a laptop, in a pull request, and in a release job.</p>
+    <p class="leading-relaxed">Prefer calling stable service APIs or SDKs directly where that improves control and testability. When invoking a vendor CLI remains pragmatic, isolate it behind one package, pin the CLI version, pass arguments without a shell when possible, and capture stdout, stderr, and exit status explicitly.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Success does not have to mean building a new Kubernetes</h2>
+    <p class="leading-relaxed">The strongest Go stories are not all fleet-wide microservice rewrites. Often the useful boundary is much smaller: a command that depended on a local environment, a release step assembled from shell scripts, or a service coordinating managed cloud APIs. The goal is to promote the parts that have become shared, stateful, or operationally important into maintainable tools.</p>
+    <div class="my-8 grid gap-4 not-prose">
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6"><div class="flex items-center justify-between gap-4"><h3 class="font-bold text-slate-900 dark:text-white">Flipp: deployment scripts became a platform product</h3><span class="text-xs font-mono text-go">Bash → Go</span></div><p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">Flipp’s scripts packaged and deployed services, checked permissions, and encoded shared continuous-delivery behavior. As their platform grew to hundreds of consumers, implicit contracts, limited testability, and risky upgrades became platform problems. The team moved the logic to Go and used black-box tests to preserve compatibility.</p><a href="https://stackoverflow.blog/2022/03/09/rewriting-bash-scripts-in-go-using-black-box-testing/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-sm font-semibold text-accent hover:text-blue-600 transition">Read the Flipp migration story <span class="ml-1">→</span></a></section>
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6"><div class="flex items-center justify-between gap-4"><h3 class="font-bold text-slate-900 dark:text-white">Bitly: migrate when the boundary is clear</h3><span class="text-xs font-mono text-go">legacy → Go</span></div><p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">After validating Go with NSQ, Bitly described writing new services in Go and porting legacy services over time. That incremental model is more credible than a rewrite program: choose one bounded tool or service, prove its operational value, and expand only where it helps.</p><a href="https://bitly.com/blog/why-we-write-everything-in-go/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-sm font-semibold text-accent hover:text-blue-600 transition">Read Bitly’s account <span class="ml-1">→</span></a></section>
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6"><div class="flex items-center justify-between gap-4"><h3 class="font-bold text-slate-900 dark:text-white">Capital One: Go without operating a new platform</h3><span class="text-xs font-mono text-go">Managed API</span></div><p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">Capital One shared its experience building a serverless credit-offers API in Go. The team used managed infrastructure while learning the language and delivering endpoints. Go can simplify an application boundary without requiring a new cluster or control plane.</p><a href="https://medium.com/capital-one-tech/a-serverless-and-go-journey-credit-offers-api-74ef1f9fde7f" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-sm font-semibold text-accent hover:text-blue-600 transition">Read the Capital One case study <span class="ml-1">→</span></a></section>
+    </div>
+    <p class="leading-relaxed">Case studies are not universal benchmarks. Their shared pattern is more useful than a headline number: begin at a boundary with clear inputs and outputs, retain managed services, and make deployment more repeatable—not more elaborate.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">A concrete migration: script bundle to <code>platformctl</code></h2>
+    <p class="leading-relaxed">Imagine reusable scripts that validate configuration, upload a Databricks wheel, deploy an App Service package, update an Azure AI Search index, and publish a release summary. Do not translate every line into Go. First design the contract that consumers already depend on.</p>
+    <div class="my-8 grid md:grid-cols-2 gap-4 not-prose">
+      <section class="rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/20 p-6"><p class="text-xs font-bold uppercase tracking-wide text-rose-600 dark:text-rose-400">Before: implicit contract</p><ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300"><li>Environment variables scattered across templates</li><li>Human-oriented output parsed with regex</li><li>Latest shared script changes every consumer</li><li>Different <code>.sh</code> and <code>.ps1</code> behavior</li><li>Partial success has no durable result model</li></ul></section>
+      <section class="rounded-xl border border-go/30 bg-go/5 p-6"><p class="text-xs font-bold uppercase tracking-wide text-go">After: supported interface</p><ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300"><li>Versioned configuration with schema validation</li><li>JSON output and documented exit codes</li><li>Pinned, signed CLI releases</li><li>Equivalent binaries from one codebase</li><li>Dry-run, idempotency, and correlation IDs</li></ul></section>
+    </div>
+    <p class="leading-relaxed">A useful internal structure is intentionally unexciting:</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Keep framework code at the edge</span><pre><code class="language-text">cmd/platformctl/       flags, stdin/stdout/stderr, exit codes
+internal/config/       parsing and validation
+internal/policy/       pure delivery rules
+internal/deploy/       orchestration and idempotency
+internal/platform/     Azure, Databricks, GitHub, Kubernetes clients
+internal/result/       stable machine-readable output</code></pre></div>
+    <p class="leading-relaxed">Whether the CLI framework is Cobra, urfave/cli, Kong, or the standard <code>flag</code> package matters less than the boundary. Commands should be thin. Business rules should not know which CI system invoked them.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Cobra or Typer for an internal CLI?</h3>
+    <p class="leading-relaxed"><a href="https://github.com/spf13/cobra" target="_blank" rel="noopener noreferrer">Cobra</a> and <a href="https://typer.tiangolo.com/" target="_blank" rel="noopener noreferrer">Typer</a> can expose the same high-quality command contract. Typer derives the interface concisely from typed Python functions. Cobra makes the command hierarchy, flags, and execution wiring explicit in Go. The decision is less about which library is better than about where the workflow lives, who owns it, and how the artifact must be distributed.</p>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">cmd/platformctl/validate.go — Cobra</span><pre><code class="language-go">func newValidateCommand() *cobra.Command {
+    var config, environment string
+
+    cmd := &amp;cobra.Command{
+      Use: "validate",
+      RunE: func(cmd *cobra.Command, _ []string) error {
+        return validateDeployment(cmd.Context(), config, environment)
+      },
+    }
+    cmd.Flags().StringVar(&amp;config, "config", "", "Configuration path")
+    cmd.Flags().StringVar(&amp;environment, "environment", "", "Target environment")
+    return cmd
+  }</code></pre></div>
+    <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">platformctl.py — Typer with Pydantic validation</span><pre><code class="language-python">from pathlib import Path
+  import typer
+  from pydantic import BaseModel
+
+  class Deployment(BaseModel):
+    application: str
+    environment: str
+
+  app = typer.Typer()
+
+  @app.command()
+  def validate(config: Path) -&gt; None:
+    deployment = Deployment.model_validate_json(config.read_text())
+    validate_deployment(deployment)</code></pre></div>
+    <p class="leading-relaxed">The Python example is intentionally strong: Pydantic handles runtime validation rather than pretending Python cannot. Typer is often the right choice beside notebooks, model SDKs, MLflow, or Databricks code. Cobra becomes compelling when the CLI itself is a versioned, cross-platform, cross-team platform capability that should run without an interpreter or application dependency graph.</p>
+    <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner"><h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">Practical default</h4><p class="text-slate-700 dark:text-slate-300 mb-0">Use Typer when a Python-owning team needs a focused CLI beside Python code. Use Cobra when the workflow is becoming a supported delivery product. In both cases, keep commands thin, validate at the boundary, return stable exit codes, support non-interactive execution, and offer structured output.</p></div>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Bash starts it, Python grows it, Go productizes it</h2>
+    <p class="leading-relaxed">A useful language policy should help teams choose, not merely approve or prohibit. The progression is not a maturity ranking; it reflects the shape of the task. Pick the smallest tool that provides the engineering properties the workflow actually needs.</p>
+    <div class="my-6 overflow-x-auto not-prose rounded-xl border border-slate-200 dark:border-slate-800">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white"><tr><th class="p-4">Task shape</th><th class="p-4">Practical default</th><th class="p-4">Why</th></tr></thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-600 dark:text-slate-400">
+          <tr><td class="p-4">One-liners and shell utilities such as <code>tar</code> or <code>ssh</code></td><td class="p-4 font-semibold text-slate-900 dark:text-white">Bash / PowerShell</td><td class="p-4">Already available, direct, and easy to inspect</td></tr>
+          <tr><td class="p-4">Pipeline logic centered on SDKs, YAML, JSON, or APIs</td><td class="p-4 font-semibold text-slate-900 dark:text-white">Python</td><td class="p-4">Readable, productive, and rich in libraries</td></tr>
+          <tr><td class="p-4">Cross-platform CLI shared across teams or invoked in many jobs</td><td class="p-4 font-semibold text-slate-900 dark:text-white">Go</td><td class="p-4">Versioned executable, fast startup, explicit contracts, and simple distribution</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">Bash is duct tape, Python is the toolkit, and Go is the factory. Pick the smallest one that still lets you sleep at night.</blockquote>
+    <p class="leading-relaxed"><strong>Bash and PowerShell are great starters, but often poor finishers.</strong> Their availability makes them ideal for wrappers and short compositions of existing tools. Complexity rises when substantial state, string processing, arrays, cleanup, and multi-step error handling accumulate. PowerShell’s object pipeline gives it considerably more structure than Bash, especially on Windows, but neither should become the default home for an internal platform product simply because the first version was a script.</p>
+    <p class="leading-relaxed"><strong>Python is the sweet spot for most pipeline programming.</strong> It is readable, broadly known, and supported by excellent cloud and data SDKs. With Pydantic, tests, type checking, linting, locked dependencies, and deliberate packaging, it can support serious delivery tools. The case for Go begins where the operational simplicity of the distributed artifact matters more than Python’s authoring speed and ecosystem proximity.</p>
+    <p class="leading-relaxed"><strong>Go is the production path for a narrower class of automation.</strong> It catches unused imports and variables, makes error handling explicit, builds quickly, starts quickly, and commonly produces a self-contained executable. Those characteristics are especially valuable for tools invoked in every job, distributed to many teams, embedded in minimal containers, or supported across Linux, macOS, and Windows.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The honest comparison</h2>
+    <div class="my-6 overflow-x-auto not-prose rounded-xl border border-slate-200 dark:border-slate-800">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white"><tr><th class="p-4">Concern</th><th class="p-4">Bash / PowerShell</th><th class="p-4">Python</th><th class="p-4">Go</th></tr></thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-600 dark:text-slate-400">
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">First 20 lines</td><td class="p-4">Excellent</td><td class="p-4">Excellent</td><td class="p-4">More ceremony</td></tr>
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">Calling local tools</td><td class="p-4">Native strength</td><td class="p-4">Good</td><td class="p-4">Explicit</td></tr>
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">Data and API logic</td><td class="p-4">Becomes fragile</td><td class="p-4">Very productive</td><td class="p-4">Strong and typed</td></tr>
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">Distribution</td><td class="p-4">Depends on host tools</td><td class="p-4">Manage runtime and packages</td><td class="p-4">Versioned executable</td></tr>
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">Cross-platform consistency</td><td class="p-4">Often separate scripts</td><td class="p-4">Good with discipline</td><td class="p-4">One codebase, target builds</td></tr>
+          <tr><td class="p-4 font-semibold text-slate-900 dark:text-white">Refactoring shared systems</td><td class="p-4">Risk rises quickly</td><td class="p-4">Good with typing and tests</td><td class="p-4">Compiler-assisted</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="leading-relaxed">Python can be operated professionally with locked dependencies, <code>uv</code>, <code>pipx</code>, containers, type checking, and disciplined packaging. PowerShell has excellent object-oriented pipeline behavior and deep Windows integration. Bash remains unbeatable for a few commands already available on a Unix runner.</p>
+    <p class="leading-relaxed"><strong>Go wins when the artifact itself must be boring to consume.</strong> It asks more from the author than a quick script, then asks less from every runner and every team that uses it. That trade becomes attractive as the number of consumers and the cost of failure grow.</p>
+
+    <div class="my-8 p-6 bg-slate-100 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner"><h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">Do not migrate these</h3><p class="text-slate-700 dark:text-slate-300 mb-0">Keep the three-line wrapper. Keep the one-off investigation. Keep Python beside data-science and model workflows where its ecosystem is the reason the code exists. Keep PowerShell for focused Windows administration. A rewrite should remove operational complexity, not merely relocate syntax.</p></div>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Approval is not enablement</h2>
+    <p class="leading-relaxed">Adding Go to an architecture standard creates work. Teams need training, examples, ownership conventions, and a supported path from source to trusted binary. Artifact repositories may need a release convention for platform-specific executables. Security and engineering systems must recognize modules, scan source and dependencies, retain evidence, and enforce the same controls applied to other production code.</p>
+    <div class="my-8 grid sm:grid-cols-2 gap-4 not-prose">
+      <section class="rounded-xl border border-go/20 bg-go/5 p-6"><h3 class="font-bold text-slate-900 dark:text-white">Expected benefits</h3><ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400"><li>Reproducible builds and immutable releases</li><li>Fast startup for frequently invoked tools</li><li>Consistent execution across supported platforms</li><li>Compiler-assisted maintenance and refactoring</li><li>Smaller runtime and container dependency surface</li><li>A clearer support boundary for shared automation</li></ul></section>
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6"><h3 class="font-bold text-slate-900 dark:text-white">Required investment</h3><ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400"><li>Upskilling and review experience</li><li>Approved builder images and pipeline templates</li><li>Module proxy and artifact repository integration</li><li>Source, dependency, license, and vulnerability scanning</li><li>Signing, checksums, provenance, and SBOM generation</li><li>Versioning, deprecation, ownership, and support policies</li></ul></section>
+    </div>
+    <p class="leading-relaxed">Many enterprise security platforms already understand Go source and dependencies, so the challenge is usually integration rather than tool availability. The important architectural consequence is that governance follows the artifact. A standalone binary is simpler for consumers, but its producer must still prove where it came from, what it contains, who owns it, and how vulnerabilities are remediated.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">How to move without a rewrite disaster</h2>
+    <ol class="list-decimal pl-5 space-y-3">
+      <li><strong>Inventory behavior, not files.</strong> Record inputs, outputs, exit codes, side effects, retries, and known consumers.</li>
+      <li><strong>Pick one painful, bounded workflow.</strong> Choose a command with clear input and output—not the entire pipeline estate.</li>
+      <li><strong>Freeze the current contract with black-box tests.</strong> Capture success, failure, edge cases, stdout, stderr, and exit status.</li>
+      <li><strong>Separate decisions from effects.</strong> Keep policy rules pure; put cloud, filesystem, process, and clock access behind narrow boundaries.</li>
+      <li><strong>Run both implementations.</strong> In shadow mode, compare plans or dry-run output before allowing the Go tool to change state.</li>
+      <li><strong>Release, pin, and verify.</strong> Publish per-platform binaries, checksums, signatures, a software bill of materials, and release notes. Never download “latest” in production.</li>
+      <li><strong>Roll out gradually.</strong> Start with one team, measure failure quality and lead time, then expand. Keep rollback to the old version simple.</li>
+      <li><strong>Deprecate deliberately.</strong> Warn on old flags and configuration, publish dates, and remove compatibility behavior only in a major release.</li>
+    </ol>
+    <p class="leading-relaxed">The target is not fewer lines of code. Go will often produce more. The target is fewer ambiguous contracts, fewer runner-specific surprises, faster diagnosis, safer change, and one supported delivery behavior across the organization.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">A proposal, not a crusade</h2>
+    <p class="leading-relaxed">The next time a shared pipeline script needs another retry loop, another cloud API, another platform-specific branch, or another environment variable, do not ask only, “Can we add this?” Ask a better question:</p>
+    <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">If this automation were presented as a production service today, would we accept its interface, tests, release process, and failure behavior?</blockquote>
+    <p class="leading-relaxed">If the answer is no, the script has already outgrown its packaging. Keep CI/CD declarative. Put complicated delivery behavior in a program you can compile, test, version, sign, run locally, and support. For that job, Go is not the cleverest option—and that is precisely why it deserves serious consideration.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Further reading</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><a href="https://stackoverflow.blog/2022/03/09/rewriting-bash-scripts-in-go-using-black-box-testing/" target="_blank" rel="noopener noreferrer">Flipp: Rewriting Bash scripts in Go using black-box testing</a></li>
+      <li><a href="https://go.dev/doc/tutorial/compile-install" target="_blank" rel="noopener noreferrer">Go documentation: compiling and installing an executable</a></li>
+      <li><a href="https://go.dev/doc/modules/managing-dependencies" target="_blank" rel="noopener noreferrer">Go documentation: managing and verifying dependencies</a></li>
+      <li><a href="https://go.dev/doc/security/vuln/" target="_blank" rel="noopener noreferrer">Go vulnerability management and <code>govulncheck</code></a></li>
+    </ul>
   </article>
+
   <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active"><img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm"><div class="text-center sm:text-left"><h2 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h2><p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">Solution Architect &amp; Platform Engineer</p><p class="text-sm text-slate-500 dark:text-slate-400">Jeroen designs scalable cloud and AI platforms, specializing in Internal Developer Platforms, MLOps, data engineering, and solution architecture.</p></div></div>
 </div></main>
 <footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900"><div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8"><div><p class="text-sm font-bold text-slate-900 dark:text-white">Jeroen van Hoof</p><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p></div><div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm"><a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a><a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a><a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a></div></div></footer>
