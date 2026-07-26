@@ -5,6 +5,16 @@ if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localS
     document.documentElement.classList.remove('dark');
 }
 
+// Global Scroll Reveal Observer (initialized early for inline scripts)
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+window.observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+        }
+    });
+}, observerOptions);
+
 document.addEventListener('DOMContentLoaded', () => {
     // Current Year
     const yearEl = document.getElementById('current-year');
@@ -71,14 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll Reveal Observer
-    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-    window.observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, observerOptions);
+    // Initial observation of reveal elements
     document.querySelectorAll('.reveal').forEach(el => window.observer.observe(el));
 });
