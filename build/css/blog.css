@@ -59,6 +59,14 @@ article a:hover {
   margin-top: 1.5rem !important;
   margin-bottom: 1.5rem !important;
   color: #f8fafc !important; /* Ensure text is readable on dark background */
+  overflow-x: auto !important; /* Ensure horizontal scrolling on small screens */
+}
+
+@media (max-width: 640px) {
+  .prose pre {
+    padding: 1rem !important;
+    font-size: 0.8125rem !important;
+  }
 }
 
 .dark .prose pre {

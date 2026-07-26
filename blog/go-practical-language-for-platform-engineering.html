@@ -24,20 +24,23 @@
 <nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
   <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
     <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none" aria-label="Home">
-      <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><defs><style>html.dark svg path { fill: white !important; } html.dark svg rect { stroke: white !important; } html:not(.dark) svg path { fill: black !important; } html:not(.dark) svg rect { stroke: black !important; }</style></defs><path style="font-weight:bold;font-size:170.497px;font-family:Roboto;stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/><rect style="fill:none;stroke-width:17.8144;stroke-dasharray:none" width="224.11226" height="219.19101" x="15.943868" y="18.404495"/></svg>
+      <svg aria-hidden="true" width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><defs><style>html.dark svg path { fill: white !important; } html.dark svg rect { stroke: white !important; } html:not(.dark) svg path { fill: black !important; } html:not(.dark) svg rect { stroke: black !important; }</style></defs><path style="font-weight:bold;font-size:170.497px;font-family:Roboto;stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z"/><rect style="fill:none;stroke-width:17.8144;stroke-dasharray:none" width="224.11226" height="219.19101" x="15.943868" y="18.404495"/></svg>
     </a>
     <div class="hidden md:flex items-center gap-x-8"><a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a><a href="../blog.html" class="text-sm font-semibold leading-6 text-accent font-bold transition">Blog</a></div>
-    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode"><svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z"/></svg></button>
+    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+      <svg aria-hidden="true" id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+      <svg aria-hidden="true" id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+    </button>
   </div>
 </nav>
 <main class="pt-24 pb-16 min-h-screen"><div class="mx-auto max-w-4xl px-6 lg:px-8">
-  <div class="mb-8 reveal active"><a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="material-icons" style="font-size:18px">arrow_back</i>Back to Blog</a></div>
+  <div class="mb-8 reveal active"><a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="material-icons" style="font-size:18px" aria-hidden="true">arrow_back</i>Back to Blog</a></div>
   <header class="mb-10 reveal active">
-    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-go/10 font-bold text-go text-xs">Go &amp; CI/CD</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">calendar_today</i>July 24, 2026</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px">schedule</i>19 min read</span></div>
+    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-go/10 font-bold text-go text-xs">Go &amp; CI/CD</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px" aria-hidden="true">calendar_today</i>July 24, 2026</span><span class="flex items-center gap-1"><i class="material-icons" style="font-size:14px" aria-hidden="true">schedule</i>19 min read</span></div>
     <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">When CI/CD Scripts Become Software: Why Go Is Worth Considering</h1>
     <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">Bash, PowerShell, and Python are the workhorses of delivery automation. But as that automation grows and serves more teams, the hidden friction of environment management and scale often makes Go a compelling next step.</p>
   </header>
-  <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active bg-slate-950 relative">
+  <div role="img" aria-label="Conceptual diagram showing the transition from scripts to a Go CLI called platformctl" class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active bg-slate-950 relative">
     <div class="absolute inset-0 opacity-30" style="background-image:linear-gradient(rgba(0,173,216,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(0,173,216,.35) 1px,transparent 1px);background-size:32px 32px"></div>
     <div class="relative h-full flex flex-col justify-center px-8 sm:px-16"><p class="font-mono text-slate-400 text-sm sm:text-base mb-3">pipeline.yml</p><div class="flex items-center gap-4"><span class="font-mono text-xl sm:text-3xl font-bold text-slate-300">scripts/</span><span class="text-3xl text-go">→</span><span class="font-mono text-xl sm:text-3xl font-bold text-white">platformctl</span></div><p class="mt-6 max-w-xl text-sm sm:text-base text-slate-400">A declarative pipeline backed by a small, tested, versioned executable.</p></div>
   </div>
@@ -84,23 +87,23 @@
     <p class="leading-relaxed">That is the terrain Go was designed for. Born at Google in response to friction in large software systems, Go optimizes the system around the code: compilation, collaboration, deployment, concurrency, operations. It doesn't try to offer every abstraction or win every microbenchmark — it trades less language surface and some GC runtime overhead for productive development, native compilation, efficient execution, and a simple operational model.</p>
     <p class="leading-relaxed">For many tools, Go finds a useful balance between productivity and performance: enough speed for demanding work, with an emphasis on making software approachable to build, understand, ship, and operate.</p>
     <div class="my-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 not-prose">
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">speed</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Performance &amp; Startup</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Native compilation, sub-millisecond startup, and modest memory use suit frequently invoked tools and services.</p></div>
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">bolt</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Productive feedback loops</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Fast builds and gofmt shorten the edit-build-test cycle — a loop that also suits coding agents and AI-generated code well.</p></div>
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">account_tree</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Built-in Concurrency</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Goroutines and channels provide a direct vocabulary for parallel I/O, coordination, and cancellation without a GIL.</p></div>
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">inventory_2</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Operational ease</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A single statically-linked binary replaces interpreters, virtual environments, and complex runtime setup on the consumer side.</p></div>
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">public</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Cross-platform by design</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Write once, compile for Windows, Linux, and macOS without maintaining parallel shell and PowerShell versions.</p></div>
-      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go">rule</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Type Safety &amp; Data</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Native JSON/YAML support with static typing catches typos and schema mismatches before the code ever reaches a runner.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">speed</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Performance &amp; Startup</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Native compilation, sub-millisecond startup, and modest memory use suit frequently invoked tools and services.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">bolt</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Productive feedback loops</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Fast builds and gofmt shorten the edit-build-test cycle — a loop that also suits coding agents and AI-generated code well.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">account_tree</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Built-in Concurrency</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Goroutines and channels provide a direct vocabulary for parallel I/O, coordination, and cancellation without a GIL.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">inventory_2</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Operational ease</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">A single statically-linked binary replaces interpreters, virtual environments, and complex runtime setup on the consumer side.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">public</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Cross-platform by design</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Write once, compile for Windows, Linux, and macOS without maintaining parallel shell and PowerShell versions.</p></div>
+      <div class="rounded-xl border border-go/20 bg-go/5 p-5"><i class="material-icons text-go" aria-hidden="true">rule</i><h4 class="mt-2 font-bold text-slate-900 dark:text-white">Type Safety &amp; Data</h4><p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Native JSON/YAML support with static typing catches typos and schema mismatches before the code ever reaches a runner.</p></div>
     </div>
 
     <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Supply chain security by design</h3>
     <p class="leading-relaxed">Go was built with large-scale dependency management in mind. For platform engineering, where tools often run with high privileges, that translates to a more predictable, secure delivery pipeline.</p>
     <div class="grid sm:grid-cols-2 gap-6 my-8 not-prose">
       <div class="p-6 bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800">
-        <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 20px">verified</i>Minimal Version Selection</h4>
+        <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 20px" aria-hidden="true">verified</i>Minimal Version Selection</h4>
         <p class="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Unlike managers that resolve to the latest compatible version (risking "dependency drift"), Go prefers the <strong>oldest</strong> version that satisfies requirements — builds stay reproducible and don't inherit new vulnerabilities unexpectedly.</p>
       </div>
       <div class="p-6 bg-white dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-slate-800">
-        <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 20px">security</i>Precision Vulnerability Scanning</h4>
+        <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 20px" aria-hidden="true">security</i>Precision Vulnerability Scanning</h4>
         <p class="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">With <code>govulncheck</code>, Go provides an official, high-precision scanner. It analyzes the <strong>call graph</strong> to see if you actually invoke vulnerable functions, drastically reducing noise in security reports.</p>
       </div>
     </div>
@@ -108,8 +111,8 @@
 
 
     <div class="my-10 p-6 bg-slate-900 text-slate-300 rounded-2xl border border-slate-800 shadow-xl relative overflow-hidden">
-      <div class="absolute top-0 right-0 p-4 opacity-10"><i class="material-icons" style="font-size: 80px">dock</i></div>
-      <h3 class="text-xl font-bold text-white mt-0 flex items-center gap-2 mb-4"><i class="material-icons text-go">auto_awesome</i>Bonus: The "scratch" container</h3>
+      <div class="absolute top-0 right-0 p-4 opacity-10"><i class="material-icons" style="font-size: 80px" aria-hidden="true">dock</i></div>
+      <h3 class="text-xl font-bold text-white mt-0 flex items-center gap-2 mb-4"><i class="material-icons text-go" aria-hidden="true">auto_awesome</i>Bonus: The "scratch" container</h3>
       <p class="leading-relaxed mb-6">One of Go's most powerful operational features is <strong>statically linked binaries</strong>. Disabling CGO (<code>CGO_ENABLED=0</code>) removes any dependency on the host's C library, allowing you to build onto <code>scratch</code> — a completely empty base image.</p>
       <div class="grid lg:grid-cols-2 gap-8 items-start">
         <div class="code-block-container !my-0">
@@ -125,21 +128,21 @@ ENTRYPOINT ["/platformctl"]</code></pre>
         </div>
         <div class="space-y-4">
           <div class="flex gap-3">
-            <i class="material-icons text-go mt-1" style="font-size: 20px">security</i>
+            <i class="material-icons text-go mt-1" style="font-size: 20px" aria-hidden="true">security</i>
             <div>
               <p class="font-bold text-white mb-1 text-sm">Minimal attack surface</p>
               <p class="text-xs leading-relaxed">No shell, no package manager, no unnecessary binaries — an attacker has no built-in tools for lateral movement.</p>
             </div>
           </div>
           <div class="flex gap-3">
-            <i class="material-icons text-go mt-1" style="font-size: 20px">speed</i>
+            <i class="material-icons text-go mt-1" style="font-size: 20px" aria-hidden="true">speed</i>
             <div>
               <p class="font-bold text-white mb-1 text-sm">Extreme portability</p>
               <p class="text-xs leading-relaxed">Images under 15MB give near-instant pulls and lower registry storage costs.</p>
             </div>
           </div>
           <div class="flex gap-3">
-            <i class="material-icons text-go mt-1" style="font-size: 20px">published_with_changes</i>
+            <i class="material-icons text-go mt-1" style="font-size: 20px" aria-hidden="true">published_with_changes</i>
             <div>
               <p class="font-bold text-white mb-1 text-sm">Zero OS maintenance</p>
               <p class="text-xs leading-relaxed">No base-image patching or library drift — security focus stays on your own code.</p>
@@ -184,45 +187,18 @@ ENTRYPOINT ["/platformctl"]</code></pre>
     <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Stop Shelling Out in CI/CD: The Case for a Go CLI</h3>
     <p class="leading-relaxed">Automation usually starts by <strong>"shelling out"</strong>—gluing Bash, PowerShell, or Python scripts together to invoke external tools like <code>databricks</code> or <code>kubectl</code>. In Azure DevOps (ADO), this creates fragile pipelines that break when agent images update, dependencies fail to install, or a CLI changes its text output format. The most effective fix is replacing fragmented pipeline scripts with a unified, compiled Go CLI.</p>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <div class="grid sm:grid-cols-2 gap-4 mt-6">
       <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
-        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">check_circle</i>Zero Environmental Drift</p>
+        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px" aria-hidden="true">check_circle</i>Zero Environmental Drift</p>
         <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Go compiles to a single, statically linked binary. Whether running on <code>ubuntu-latest</code>, <code>windows-latest</code>, or a self-hosted agent, it executes instantly without requiring <code>pip install</code>, heavy PowerShell modules, or external CLI installations.</p>
       </div>
       <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
-        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">storage</i>Typed SDKs over Brittle Parsing</p>
+        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px" aria-hidden="true">storage</i>Typed SDKs over Brittle Parsing</p>
         <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Instead of piping CLI text output into <code>jq</code> or <code>awk</code> and hoping the UI contract hasn't changed, Go utilizes official SDKs. This guarantees compile-time validation, structured data, and explicit error handling.</p>
       </div>
-      <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
-        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">terminal</i>Native Pipeline Integration</p>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">A custom Go binary can directly emit ADO pipeline commands (<code>##vso</code>) to set variables and log UI errors cleanly without wrapper scripts or brittle regex parsing.</p>
-      </div>
     </div>
 
-    <div class="my-6 code-block-container">
-      <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">The Code Reality: Brittle Scripts vs. Stable Go (Azure DevOps)</span>
-      <div class="grid lg:grid-cols-2 gap-px bg-slate-800 border-x border-b border-slate-800 rounded-b-lg overflow-hidden">
-        <div class="bg-slate-900 dark:bg-slate-950 p-4">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Bash (Brittle Script)</p>
-          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-bash"># Fails silently if jq is missing or output changes
-ID=$(databricks clusters list -o json \
-  | jq -r '.clusters[] | select(.name=="prod") | .id')</code></pre>
-        </div>
-        <div class="bg-slate-900 dark:bg-slate-950 p-4 border-t lg:border-t-0 lg:border-l border-slate-800">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-go mb-2">Go (Stable Typed SDK)</p>
-          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-go">// Native Azure DevOps error logging and variable setting
-cluster, err := client.Clusters.GetByName(ctx, "prod")
-if err != nil {
-    fmt.Printf("##vso[task.logissue type=error]Failed: %v\n", err)
-    os.Exit(1)
-}
-fmt.Printf("##vso[task.setvariable variable=ClusterId;isOutput=true]%s\n",
-  cluster.ClusterId)</code></pre>
-        </div>
-      </div>
-    </div>
-    <p class="leading-relaxed"><strong>The Takeaway:</strong> Keep shell scripts for one-off local tasks. For critical CI/CD pipelines, replacing fragmented scripts with a Go CLI eliminates runtime dependency errors, removes cross-platform runner friction, and turns brittle glue code into stable platform engineering.</p>
-
+    <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-8">The Power of the Standard Library</h4>
     <p class="leading-relaxed">The Go standard library itself replaces a surprising number of external dependencies: <code>net/http</code> replaces <code>curl</code>, <code>encoding/json</code> replaces <code>jq</code>, and <code>os/exec</code> provides a safer, more observable way to manage subprocesses when you actually do need to run an external binary.</p>
 
     <div class="my-6 code-block-container">
@@ -243,6 +219,40 @@ json.NewDecoder(resp.Body).Decode(&repo)</code></pre>
         </div>
       </div>
     </div>
+
+    <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-8">Architectural Best Practice: Maintain Clean Boundaries</h4>
+    <p class="leading-relaxed">While writing a Go CLI solves the fragility of shell scripts, how you implement it matters. A common mistake is leaking CI abstractions into the tool itself.</p>
+    <p class="leading-relaxed">Injecting vendor-specific magic strings (like Azure DevOps <code>##vso</code> commands or GitHub Actions environment files) directly into your Go code creates a leaky abstraction. It vendor-locks your tooling and pollutes standard output for local testing.</p>
+    <p class="leading-relaxed">A well-designed Go CLI acts as a <strong>pure function</strong>: it outputs pure data to <code>stdout</code> and throws explicit errors to <code>stderr</code>. The pipeline script acts as the glue, capturing the clean output and formatting it for the specific CI vendor.</p>
+
+    <div class="my-6 code-block-container">
+      <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">The Code Reality: Brittle Scripts vs. Stable Go (Azure DevOps)</span>
+      <div class="grid lg:grid-cols-2 gap-px bg-slate-800 border-x border-b border-slate-800 rounded-b-lg overflow-hidden">
+        <div class="bg-slate-900 dark:bg-slate-950 p-4">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Bash (Brittle Script)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-bash"># Fails silently if jq is missing or output changes
+ID=$(databricks clusters list -o json \
+  | jq -r '.clusters[] | select(.name=="prod") | .id')</code></pre>
+        </div>
+        <div class="bg-slate-900 dark:bg-slate-950 p-4 border-t lg:border-t-0 lg:border-l border-slate-800">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-go mb-2">Go (Pure Logic &amp; Contract)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-go">// Return structured JSON for the orchestrator
+cluster, err := client.Clusters.GetByName(ctx, "prod")
+if err != nil {
+    log.Fatalf("Failed: %v", err)
+}
+
+// Pure data output - no CI-specific magic strings
+json.NewEncoder(os.Stdout).Encode(cluster)</code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="my-10 p-6 bg-blue-50 dark:bg-blue-900/10 border-l-4 border-accent rounded-r-xl reveal">
+      <p class="leading-relaxed m-0 text-slate-800 dark:text-slate-200">
+        <strong class="text-accent">The Takeaway:</strong> A Go CLI should behave like software, not just a smarter script. It manages the <strong>logic</strong> and returns a <strong>contract</strong> (JSON), while the pipeline manages the <strong>workflow</strong> and CI-specific side effects. This decoupling keeps your tools vendor-agnostic, testable, and friendly to local development.
+      </p>
+    </div>
+
 
     <!-- SUCCESS STORIES -->
     <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Success stories: Finding the right boundary</h2>
