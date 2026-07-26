@@ -58,11 +58,12 @@
       <li>Multiple repositories or teams depend on it.</li>
       <li>It changes production state or enforces delivery policy.</li>
       <li>It needs retries, timeouts, concurrency, rollback, or idempotency.</li>
-      <li>Linux and Windows implementations have started to drift.</li>
+      <li>It relies on a brittle chain of external tools (<code>jq</code>, <code>yq</code>, <code>sed</code>, <code>curl</code>) being present and consistent on the runner.</li>
+      <li>Linux and Windows implementations have started to drift (e.g., BSD vs GNU <code>sed</code>).</li>
       <li>Inputs are mostly undocumented environment variables.</li>
       <li>Tests require mocking a shell, a filesystem layout, and several installed CLIs.</li>
+      <li>Failure output is meant for both people and pipeline logic, but Bash's silent failures or pipe status quirks make it unreliable.</li>
       <li>A change must be coordinated — or can break every consumer at once.</li>
-      <li>Failure output is meant for both people and pipeline logic.</li>
     </ul>
     <p class="leading-relaxed">In practice, this automation already behaves like an API: environment variables are parameters, console text is a response model, and exit codes form an error protocol. Building a CLI just makes that existing contract explicit instead of implicit. This transition also enables a <strong>smaller role for pipeline YAML</strong>, which works best when describing the workflow itself — stages, dependencies, approvals, and environments — rather than complex logic. Moving that behavior into a CLI keeps the pipeline readable, testable, and portable across runners.</p>
     <div class="my-6 code-block-container"><span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">A deliberately thin pipeline step</span><pre><code class="language-yaml">- script: |
@@ -112,8 +113,8 @@
       <p class="leading-relaxed mb-6">One of Go's most powerful operational features is <strong>statically linked binaries</strong>. Disabling CGO (<code>CGO_ENABLED=0</code>) removes any dependency on the host's C library, allowing you to build onto <code>scratch</code> — a completely empty base image.</p>
       <div class="grid lg:grid-cols-2 gap-8 items-start">
         <div class="code-block-container !my-0">
-          <span class="block text-xs font-mono bg-slate-800 px-4 py-1.5 text-slate-400 border border-slate-700 rounded-t-lg">Dockerfile</span>
-          <pre class="!bg-slate-950 !m-0"><code class="language-dockerfile">FROM golang:1.23-alpine AS builder
+          <span class="block text-xs font-mono bg-slate-800 px-4 py-1.5 text-slate-400 border border-slate-700/50 rounded-t-lg">Dockerfile</span>
+          <pre class="!bg-slate-950 !m-0 !border-slate-700/50"><code class="language-dockerfile">FROM golang:1.23-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN CGO_ENABLED=0 go build -o platformctl .
@@ -179,6 +180,69 @@ ENTRYPOINT ["/platformctl"]</code></pre>
       </div>
     </div>
     <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100 mt-8">One of Go's nicest qualities is how often unfamiliar code still looks familiar.</blockquote>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Stop Shelling Out in CI/CD: The Case for a Go CLI</h3>
+    <p class="leading-relaxed">Automation usually starts by <strong>"shelling out"</strong>—gluing Bash, PowerShell, or Python scripts together to invoke external tools like <code>databricks</code> or <code>kubectl</code>. In Azure DevOps (ADO), this creates fragile pipelines that break when agent images update, dependencies fail to install, or a CLI changes its text output format. The most effective fix is replacing fragmented pipeline scripts with a unified, compiled Go CLI.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+      <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">check_circle</i>Zero Environmental Drift</p>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Go compiles to a single, statically linked binary. Whether running on <code>ubuntu-latest</code>, <code>windows-latest</code>, or a self-hosted agent, it executes instantly without requiring <code>pip install</code>, heavy PowerShell modules, or external CLI installations.</p>
+      </div>
+      <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">storage</i>Typed SDKs over Brittle Parsing</p>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Instead of piping CLI text output into <code>jq</code> or <code>awk</code> and hoping the UI contract hasn't changed, Go utilizes official SDKs. This guarantees compile-time validation, structured data, and explicit error handling.</p>
+      </div>
+      <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+        <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><i class="material-icons text-go" style="font-size: 18px">terminal</i>Native Pipeline Integration</p>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">A custom Go binary can directly emit ADO pipeline commands (<code>##vso</code>) to set variables and log UI errors cleanly without wrapper scripts or brittle regex parsing.</p>
+      </div>
+    </div>
+
+    <div class="my-6 code-block-container">
+      <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">The Code Reality: Brittle Scripts vs. Stable Go (Azure DevOps)</span>
+      <div class="grid lg:grid-cols-2 gap-px bg-slate-800 border-x border-b border-slate-800 rounded-b-lg overflow-hidden">
+        <div class="bg-slate-900 dark:bg-slate-950 p-4">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Bash (Brittle Script)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-bash"># Fails silently if jq is missing or output changes
+ID=$(databricks clusters list -o json \
+  | jq -r '.clusters[] | select(.name=="prod") | .id')</code></pre>
+        </div>
+        <div class="bg-slate-900 dark:bg-slate-950 p-4 border-t lg:border-t-0 lg:border-l border-slate-800">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-go mb-2">Go (Stable Typed SDK)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-go">// Native Azure DevOps error logging and variable setting
+cluster, err := client.Clusters.GetByName(ctx, "prod")
+if err != nil {
+    fmt.Printf("##vso[task.logissue type=error]Failed: %v\n", err)
+    os.Exit(1)
+}
+fmt.Printf("##vso[task.setvariable variable=ClusterId;isOutput=true]%s\n",
+  cluster.ClusterId)</code></pre>
+        </div>
+      </div>
+    </div>
+    <p class="leading-relaxed"><strong>The Takeaway:</strong> Keep shell scripts for one-off local tasks. For critical CI/CD pipelines, replacing fragmented scripts with a Go CLI eliminates runtime dependency errors, removes cross-platform runner friction, and turns brittle glue code into stable platform engineering.</p>
+
+    <p class="leading-relaxed">The Go standard library itself replaces a surprising number of external dependencies: <code>net/http</code> replaces <code>curl</code>, <code>encoding/json</code> replaces <code>jq</code>, and <code>os/exec</code> provides a safer, more observable way to manage subprocesses when you actually do need to run an external binary.</p>
+
+    <div class="my-6 code-block-container">
+      <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">Replacing curl and jq with the Go standard library</span>
+      <div class="grid lg:grid-cols-2 gap-px bg-slate-800 border-x border-b border-slate-800 rounded-b-lg overflow-hidden">
+        <div class="bg-slate-900 dark:bg-slate-950 p-4">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Bash (curl + jq)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-bash"># Hard to debug and handle errors
+STARS=$(curl -s https://api.github.com/repos/golang/go \
+  | jq '.stargazers_count')</code></pre>
+        </div>
+        <div class="bg-slate-900 dark:bg-slate-950 p-4 border-t lg:border-t-0 lg:border-l border-slate-800">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-go mb-2">Go (net/http + encoding/json)</p>
+          <pre class="!bg-transparent !p-0 !my-0 !border-none !shadow-none"><code class="language-go">// Native, fast, and structured
+resp, _ := http.Get("https://api.github.com/repos/golang/go")
+var repo struct { Stars int `json:"stargazers_count"` }
+json.NewDecoder(resp.Body).Decode(&repo)</code></pre>
+        </div>
+      </div>
+    </div>
 
     <!-- SUCCESS STORIES -->
     <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Success stories: Finding the right boundary</h2>
