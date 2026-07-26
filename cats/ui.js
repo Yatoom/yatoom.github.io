@@ -165,16 +165,4 @@ export function initUI(uiHandlers) {
       legendPanel.classList.remove('visible');
     }
   });
-
-  const themeBtn = document.getElementById('theme-toggle');
-  const themeIcon = document.getElementById('theme-icon');
-  const setThemeIcon = () => {
-    themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
-  };
-  setThemeIcon();
-  themeBtn.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
-    setThemeIcon();
-  });
 }

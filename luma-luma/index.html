@@ -28,6 +28,7 @@
     <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../build/js/blog.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -326,13 +327,6 @@
         }
     </style>
 
-    <script>
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
 </head>
 <body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
 
@@ -896,76 +890,6 @@
 </div>
 
 <script>
-    // Theme Toggle
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-    const themeToggleBtn = document.getElementById('theme-toggle');
-
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        themeToggleLightIcon.classList.remove('hidden');
-    } else {
-        themeToggleDarkIcon.classList.remove('hidden');
-    }
-
-    themeToggleBtn.addEventListener('click', function() {
-        themeToggleDarkIcon.classList.toggle('hidden');
-        themeToggleLightIcon.classList.toggle('hidden');
-
-        if (localStorage.getItem('color-theme')) {
-            if (localStorage.getItem('color-theme') === 'light') {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            }
-        } else {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            }
-        }
-    });
-
-    // Mobile Menu
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuBtn.addEventListener('click', () => {
-        const isOpen = !mobileMenu.classList.contains('hidden');
-        if (isOpen) {
-            mobileMenu.classList.add('hidden');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        } else {
-            mobileMenu.classList.remove('hidden');
-            mobileMenuBtn.setAttribute('aria-expanded', 'true');
-        }
-    });
-
-    // Close mobile menu on link click
-    mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        });
-    });
-
-    // Current Year
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    // Scroll Reveal Observer
-    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, observerOptions);
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
     // FAQ Accordion
     document.querySelectorAll('.faq-btn').forEach(btn => {
         btn.addEventListener('click', () => {

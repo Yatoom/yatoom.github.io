@@ -13,12 +13,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 
-  <script>
-    if (localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  </script>
+  <script src="../build/js/blog.js"></script>
 </head>
 <body>
 
@@ -72,11 +67,23 @@
     <a href="index.html" class="active">Cats</a>
   </div>
   <div class="nav-right">
+    <button id="mobile-menu-btn" class="md:hidden" aria-label="Open menu">
+      <i class="material-icons">menu</i>
+    </button>
     <button id="theme-toggle" aria-label="Toggle dark mode">
-      <i class="material-icons" id="theme-icon">dark_mode</i>
+      <i class="material-icons" id="theme-toggle-dark-icon">dark_mode</i>
+      <i class="material-icons hidden" id="theme-toggle-light-icon">light_mode</i>
     </button>
   </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden">
+  <div class="mobile-menu-links">
+    <a href="../index.html#projects">Projects</a>
+    <a href="index.html" class="active">Cats</a>
+  </div>
+</div>
 
 <!-- CANVAS -->
 <div class="canvas-wrap">
@@ -134,5 +141,6 @@
   document.getElementById('layout-force').onclick = () => buildForceLayout(uiHandlers);
   document.getElementById('layout-tree').onclick = () => buildLayeredLayout(uiHandlers);
 </script>
+<script src="../build/js/blog.js"></script>
 </body>
 </html>

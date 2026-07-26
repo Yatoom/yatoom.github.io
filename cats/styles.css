@@ -68,6 +68,58 @@ nav a:hover, nav a.active { color: var(--accent); }
 }
 #theme-toggle:hover { background: var(--border); }
 
+#mobile-menu-btn {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); width: 40px; height: 40px;
+  border-radius: 10px; align-items: center; justify-content: center;
+  transition: background .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+#mobile-menu-btn:hover { background: var(--border); }
+
+#mobile-menu {
+  display: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+#mobile-menu.hidden {
+  display: none;
+}
+
+#mobile-menu:not(.hidden) {
+  display: block;
+}
+
+.mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+}
+
+.mobile-menu-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 600;
+  transition: color .2s;
+}
+
+.mobile-menu-links a:hover, .mobile-menu-links a.active {
+  color: var(--accent);
+}
+
+.hidden {
+  display: none !important;
+}
+
 /* ── MAIN CANVAS AREA ── */
 .canvas-wrap {
   flex: 1;
@@ -382,6 +434,8 @@ nav a:hover, nav a.active { color: var(--accent); }
 @media (max-width: 600px) {
   nav { padding: 0 12px; height: 52px; }
   .nav-links { display: none; }
+  #mobile-menu-btn { display: flex; }
+  #mobile-menu { top: 52px; }
 
   .legend-toggle { display: flex; }
   .legend {
