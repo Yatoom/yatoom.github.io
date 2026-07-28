@@ -265,6 +265,16 @@
   // Blog Post Dataset
   const posts = [
     {
+      title: "How Fast Is Go's Standard Library in Practice?",
+      url: "blog/go-stdlib-techempower-benchmarks.html",
+      date: "July 28, 2026",
+      readTime: "7 min read",
+      category: "Go",
+      excerpt: "A practical reading of TechEmpower Round 23, Go's modern net/http router, prefork performance, and how the same ideas map to Kubernetes.",
+      tags: ["Go", "net/http", "TechEmpower", "Performance", "Kubernetes"],
+      visual: "benchmark"
+    },
+    {
       title: "When CI/CD Scripts Become Software: Why Go Is Worth Considering",
       url: "blog/go-practical-language-for-platform-engineering.html",
       date: "July 24, 2026",
@@ -377,10 +387,25 @@
           `<span class="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-medium border border-slate-200/50 dark:border-slate-800/50">${tag}</span>`
         ).join("");
 
+        const mediaHtml = post.visual === "benchmark" ? `
+          <div role="img" aria-label="Miniature backend throughput chart" class="w-full h-full bg-slate-950 p-5 flex flex-col justify-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(59,130,246,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.25) 1px,transparent 1px);background-size:24px 24px"></div>
+            <div class="relative flex items-end justify-between gap-4 mb-4"><div><p class="font-mono text-[9px] uppercase tracking-[.2em] text-blue-400">Round 23 · single query</p><p class="mt-1 text-sm font-bold text-white">Backend throughput</p></div><span class="font-mono text-[9px] text-slate-500">req/s →</span></div>
+            <div class="relative space-y-1.5">
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] text-slate-300">Rust</span><span class="h-2 w-[98%] rounded-sm bg-blue-500"></span></div>
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] text-slate-300">Java</span><span class="h-2 w-[91%] rounded-sm bg-amber-500"></span></div>
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] font-bold text-white">Go</span><span class="h-2 w-[69%] rounded-sm bg-amber-500"></span></div>
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] text-slate-300">C#</span><span class="h-2 w-[57%] rounded-sm bg-blue-500"></span></div>
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] text-slate-300">Node.js</span><span class="h-2 w-[34%] rounded-sm bg-blue-500"></span></div>
+              <div class="flex items-center gap-2"><span class="w-10 text-[9px] text-slate-300">Python</span><span class="h-2 w-[13%] rounded-sm bg-amber-500"></span></div>
+            </div>
+          </div>` : `
+          <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`;
+
         return `
           <article class="group relative flex flex-col bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden blog-card reveal active" style="animation-delay: ${index * 50}ms">
             <div class="aspect-video bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden border-b border-slate-100 dark:border-slate-800">
-              <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+              ${mediaHtml}
             </div>
             <div class="p-6 flex-grow flex flex-col">
               <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-3">
