@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designing an Internal Developer Platform for Data & AI — Jeroen van Hoof</title>
+  <meta name="description" content="How we consolidated mature data and model-serving platforms into a workflow-driven Internal Developer Platform for enterprise banking.">
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" href="../build/img/j.svg">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { accent: '#3B82F6' } } }
+    }
+  </script>
+  <link rel="stylesheet" href="../build/css/blog.css">
+  <script src="../build/js/blog.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="group flex items-center gap-2 -m-1.5 p-1.5 rounded-lg focus-visible:outline-none">
+        <svg width="32" height="32" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>html.dark svg path { fill: white !important; } html.dark svg text { fill: white !important; } html.dark svg rect { stroke: white !important; } html:not(.dark) svg path { fill: black !important; } html:not(.dark) svg text { fill: black !important; } html:not(.dark) svg rect { stroke: black !important; }</style></defs>
+          <g>
+            <path style="font-weight:bold;font-size:170.497px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke-width:2.13123" d="M 100.65222,142.27747 V 58.277726 h 24.89189 v 83.999744 q 0,12.15457 -5.32803,20.89587 -5.32803,8.65805 -14.56884,13.32008 -9.157549,4.66202 -20.646116,4.66202 -11.904819,0 -21.062373,-3.99602 -9.157553,-3.99602 -14.402334,-12.23782 -5.24478,-8.32505 -5.24478,-21.06237 h 25.058396 q 0,6.66003 1.831511,10.57281 1.914761,3.91277 5.411281,5.57778 3.496521,1.66501 8.408299,1.66501 4.745278,0 8.241798,-2.24776 3.496521,-2.24777 5.411282,-6.57679 1.998016,-4.32903 1.998016,-10.57281 z m 111.05614,37.21296 v 18.23186 h -75.59144 v -18.23186 z" aria-label="J_" />
+            <rect style="fill:none;stroke-width:17.8144;stroke-dasharray:none" width="224.11226" height="219.19101" x="15.943868" y="18.404495" />
+          </g>
+        </svg>
+      </a>
+    </div>
+    <div class="hidden md:flex items-center gap-x-8">
+      <a href="../index.html#projects" class="text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 hover:text-accent transition">Projects</a>
+      <a href="../blog.html" class="text-sm font-semibold leading-6 text-accent dark:text-accent font-bold transition">Blog</a>
+    </div>
+    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2.5 transition" aria-label="Toggle dark mode">
+      <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+      <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+    </button>
+  </div>
+</nav>
+
+<main class="pt-24 pb-16 min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 lg:px-8">
+    <div class="mb-8 reveal active">
+      <a href="../blog.html" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="material-icons" style="font-size: 18px;">arrow_back</i>Back to Blog</a>
+    </div>
+
+    <header class="mb-10 reveal active">
+      <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 font-bold text-accent text-xs">Platform Engineering</span>
+        <span class="flex items-center gap-1"><i class="material-icons" style="font-size: 14px;">calendar_today</i>July 2026</span>
+        <span class="flex items-center gap-1"><i class="material-icons" style="font-size: 14px;">schedule</i>9 min read</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">Designing an Internal Developer Platform for Enterprise Data & AI</h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">Consolidating mature platform capabilities into one configuration model, workflow-driven delivery, and secure golden paths.</p>
+    </header>
+
+    <div class="aspect-[2/1] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-12 reveal active">
+      <img src="../build/img/enterprise-analytics-platform.svg" alt="Internal Developer Platform architecture for enterprise data and AI" class="w-full h-full object-cover">
+    </div>
+
+    <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
+      <p class="leading-relaxed">This architecture did not start with a blank sheet. It followed the batch model-serving platform, application-isolated MLflow registry, and real-time model-serving platform that I had led as architect. Each had matured independently and accumulated useful patterns around self-service, security, delivery, and operations.</p>
+      <p class="leading-relaxed">The <a href="scaling-enterprise-analytics-platform.html" class="font-semibold text-accent hover:text-blue-600 dark:hover:text-blue-400 transition">first article in this series</a> covers those original platforms. This article focuses on the next phase: consolidating their shared foundations into an Internal Developer Platform without erasing their domain-specific interfaces or ownership.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Evolution to an Internal Developer Platform</h2>
+      <p class="leading-relaxed">The consolidated platform began only after the earlier platforms had evolved through multiple iterations. Repeated patterns across infrastructure, delivery, security, and operations made a shared foundation practical. The goal was not one oversized platform. The IDP consolidated the <strong>developer experience</strong> beneath existing capabilities: self-service, composable infrastructure, delivery standards, security controls, and operational guardrails.</p>
+      <p class="leading-relaxed">The technology catalog includes <strong>Databricks</strong>, <strong>AzureML</strong>, <strong>Azure Container Apps</strong>, <strong>Azure App Service Web Apps</strong>, <strong>Azure AI Search</strong>, and other services selected according to the workload. Delivery is workflow-driven rather than tied to one infrastructure tool.</p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Components, Workflows, and Deploy</h3>
+      <ol class="list-decimal pl-5 space-y-2">
+        <li><strong>Components:</strong> Reusable blueprints and building blocks, including Pulumi components, bundle templates, and platform CLIs.</li>
+        <li><strong>Workflows:</strong> Capability-specific pipelines that execute ordered validation and deployment steps.</li>
+        <li><strong>Deploy:</strong> Environment-specific configuration and pipeline entry points that select and run the appropriate workflow.</li>
+      </ol>
+      <p class="leading-relaxed">A workflow might validate and deploy a <strong>Databricks Declarative Automation Bundle</strong> with the Databricks CLI, invoke our AzureML CLI, execute <strong>pulumi up</strong> for a project, or coordinate several actions. The workflow is the stable platform interface; the implementation tool remains a capability-level decision.</p>
+      <p class="leading-relaxed">Components and workflows are semantically versioned. Development can consume a newer version while production remains stable, and temporary alpha spokes can validate changes without affecting existing workloads. <strong>Renovate</strong> helps roll component and workflow updates forward safely.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Monitoring as a Platform Capability</h2>
+      <p class="leading-relaxed">Infrastructure health is only one part of production analytics. We introduced model portals where users could inspect logs, create dashboards, and configure alerts without waiting for a platform engineer. We also explored <strong>Lakehouse Monitoring</strong> as a configurable workspace capability integrated with the wider data ecosystem.</p>
+      <p class="leading-relaxed">Questions around evidence retention, champion and challenger comparison, intermediate-data traceability, and governed model chains helped shape storage and metadata boundaries. New technology such as MLflow 3 is valuable only when it addresses a validated platform need.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">GenAI and Agentic Systems</h2>
+      <p class="leading-relaxed">We introduced a <strong>RAG blueprint</strong> in which Databricks handles chunking and embedding while Azure AI Search provides vector retrieval. Declarative indexing configuration replaced fragile implementations based on manually parsed documents and hard-coded page ranges.</p>
+      <p class="leading-relaxed">The design separated indexing, centrally managed middleware and authentication, and the user interface. For custom agentic workloads, Azure Container Apps can host LangChain or LangGraph code exposed through Kong. We also investigated an AI Gateway for centralized policy, routing, observability, and cost control.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The Four-Layer Platform Architecture</h2>
+      <ol class="list-decimal pl-5 space-y-4 mt-4">
+        <li><strong>Global Layer:</strong> Hub networking, firewalls, DNS resolvers, cross-organization private endpoints, and a hub-owned Azure Front Door entry point.</li>
+        <li><strong>Subscription Vending:</strong> An application spoke with networking, Key Vault, Log Analytics, and Azure Container Registry.</li>
+        <li><strong>PaaS Self-Service:</strong> A catalog through which teams select Databricks, AzureML, AI Search, and other managed capabilities.</li>
+        <li><strong>Workload Workflows:</strong> Delivery pipelines connecting application configuration, code, and models to the appropriate capability tools.</li>
+      </ol>
+      <p class="leading-relaxed">The resulting design is private by default. Managed services communicate through private endpoints, subnet boundaries, network security groups, and centralized firewall policy. Workload identities receive least-privilege access, and secrets reach compute through Key Vault-backed integrations.</p>
+      <p class="leading-relaxed"><strong>Azure Front Door</strong> centralizes custom domains, TLS, Web Application Firewall policy, health-aware routing, and global traffic distribution for applications that need a governed public edge.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">From Components to a Product Operating Model</h2>
+      <p class="leading-relaxed">The next iteration treats the platform as a product rather than a collection of infrastructure components. Its portal-driven golden paths combine clear ownership, supported delivery flows, operational integration, and Azure Well-Architected guardrails.</p>
+      <p class="leading-relaxed">A shared service-management model connects applications and subapplications to ownership, lifecycle, impact analysis, and operational responsibilities. Architecture decisions remain visible through ADRs and are revisited as implementation evidence arrives.</p>
+
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Application Configuration and Reconciliation</h3>
+      <p class="leading-relaxed">Each registered application receives a <strong>workload-configuration repository</strong> as the source of truth for its intended state. It stores application metadata and environment-specific capability configuration—not shared infrastructure or full application source code.</p>
+      <div class="my-6 code-block-container">
+        <span class="block text-xs font-mono bg-slate-100 dark:bg-slate-900 px-4 py-1.5 text-slate-500 border border-slate-200 dark:border-slate-800 rounded-t-lg">application configuration repository</span>
+        <pre><code class="language-none">application-config/
+├── metadata/
+│   └── application.yaml          # Application identity and ownership
+├── environments/
+│   ├── test/
+│   └── production/
+│       ├── databricks-resources/ # Declarative Automation Bundle resources
+│       ├── azureml-endpoints/    # Real-time model endpoints
+│       ├── container-apps/       # Containerized applications
+│       └── web-apps/             # Web-facing applications
+└── pipelines/
+    ├── validate.yaml             # Pull-request checks
+    └── deploy.yaml               # Deployment requests after merge</code></pre>
+      </div>
+      <p class="leading-relaxed">Environment folders favor fully hydrated, <strong>WET configuration</strong>: repetition is acceptable when it makes the exact desired state directly reviewable. Pull requests validate metadata, configuration, deployment assets, and capability contracts.</p>
+      <p class="leading-relaxed">After merge, automation identifies changed workloads and starts the matching capability workflow at the immutable commit. Databricks workflows deploy bundles, real-time workflows invoke the AzureML CLI, and infrastructure steps can run Pulumi projects. Each reports status through the same GitOps experience.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Architecture Is Also an Operating Model</h2>
+      <p class="leading-relaxed">The platform did not scale through technology alone. Docs-as-code decision logs recorded context, alternatives, ownership, and consequences. Reusable components were paired with mentoring, demonstrations, developer sessions, and incremental transfer of ownership.</p>
+      <p class="leading-relaxed">These social interfaces matter as much as APIs: a design becomes a platform capability only when other teams can understand, operate, and extend it safely.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Extending the Golden Path</h2>
+      <p class="leading-relaxed"><strong>Backstage</strong> could become the front door, combining workload ownership, documentation, APIs, dependencies, operational links, and scaffolding. Its actions can create pull requests, start workflows, or invoke platform CLIs without replacing capability-specific delivery.</p>
+      <p class="leading-relaxed"><strong>Argo CD</strong> can add a Kubernetes path for workloads that need it, while the Pulumi Kubernetes Operator can reconcile cloud infrastructure and Kubernetes resources together. These are additional workflow implementations—not competing configuration models.</p>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Final Thoughts</h2>
+      <p class="leading-relaxed">Workflow-driven delivery lets the platform scale without forcing every capability into one tool. Databricks bundles, platform CLIs, Pulumi projects, and other mechanisms sit behind consistent workflows and automated gates. Product teams receive a cloud-native experience while security and compliance remain part of the paved road.</p>
+      <p class="leading-relaxed">The next frontier is application code itself: standardized scaffolds can help teams start right and stay right. In enterprise engineering, the best platform is not only about technology—it is about the interface provided to developers.</p>
+    </article>
+
+    <div class="mt-16 p-8 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6 reveal active">
+      <img src="../build/img/me.jpeg" alt="Jeroen van Hoof" class="h-20 w-20 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="text-center sm:text-left">
+        <h4 class="text-lg font-bold text-slate-900 dark:text-white">Jeroen van Hoof</h4>
+        <p class="text-xs text-accent font-semibold uppercase tracking-wide mb-2">Solution Architect & Platform Engineer</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Jeroen designs scalable cloud and AI platforms, specializing in Internal Developer Platforms, MLOps, data engineering, and solution architecture.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-white dark:bg-slate-900">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div><p class="text-sm font-bold text-slate-900 dark:text-white">Jeroen van Hoof</p><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">&copy; <span id="current-year"></span> All rights reserved.</p></div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+      <a href="https://www.linkedin.com/in/jmapvhoof/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">LinkedIn</a>
+      <a href="https://github.com/Yatoom" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">GitHub</a>
+      <a href="mailto:jvhnl@jeroenvanhoof.nl" class="text-slate-500 dark:text-slate-400 hover:text-accent transition">Contact</a>
+    </div>
+  </div>
+</footer>
+<script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
