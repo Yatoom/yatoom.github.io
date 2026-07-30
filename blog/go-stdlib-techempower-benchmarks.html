@@ -83,65 +83,126 @@
     <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">A small curiosity about practical language performance led me into the TechEmpower benchmarks—and to a more interesting question: if Go's built-in HTTP stack is already this capable, when is a web framework actually necessary?</p>
   </header>
 
-  <figure class="benchmark-visual rounded-2xl border border-slate-800 shadow-2xl overflow-hidden mb-12 reveal active text-slate-200" aria-labelledby="benchmark-title benchmark-caption">
-    <div class="p-6 sm:p-8 border-b border-slate-800">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-        <div><p class="font-mono text-xs uppercase tracking-[.2em] text-blue-400">TechEmpower · Round 23 · Single query</p><h2 id="benchmark-title" class="mt-2 text-xl sm:text-2xl font-bold text-white">Backend throughput, selected variants</h2></div>
-        <p class="font-mono text-xs text-slate-400">responses / second →</p>
-      </div>
-      <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400">
-        <span class="inline-flex items-center gap-2"><span class="legend-dot bg-slate-400"></span>Enterprise default</span>
-        <span class="inline-flex items-center gap-2"><span class="legend-dot bg-blue-500"></span>Modern successor / ecosystem baseline</span>
-        <span class="inline-flex items-center gap-2"><span class="legend-dot bg-amber-500"></span>Low-effort performance upgrade</span>
-      </div>
-    </div>
-    <div class="p-4 sm:p-8">
-      <div class="benchmark-chart space-y-5" role="img" aria-label="Selected TechEmpower Round 23 single-query results grouped as enterprise default, modern successor, and low-effort performance upgrade for Java, C sharp, Python, Node.js, Go, and Rust.">
-        <div class="benchmark-row text-[10px] uppercase tracking-wider text-slate-500"><span>Language</span><span>Variant</span><span class="flex justify-between"><span>0</span><span>650k</span><span>1.3m</span></span><span class="text-right">req/s</span></div>
-        <div class="benchmark-row"><strong class="text-sm text-white">Rust</strong><span class="text-xs text-blue-300">Axum · emerging baseline</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:97.70%"></div></div><span class="font-mono text-xs text-right">1,270,151</span></div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="space-y-2">
-          <div class="benchmark-row"><strong class="text-sm text-white">Java</strong><span class="text-xs text-slate-400">Spring</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:15.84%"></div></div><span class="font-mono text-xs text-right">205,876</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Quarkus · RESTEasy + Hibernate</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:61.71%"></div></div><span class="font-mono text-xs text-right">802,294</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">Quarkus · Vert.x + reactive PG</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:90.88%"></div></div><span class="font-mono text-xs text-right text-amber-300">1,181,497</span></div>
-        </div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="space-y-2">
-          <div class="benchmark-row"><strong class="text-sm text-white">Go</strong><span class="text-xs text-slate-400">Gin</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:17.13%"></div></div><span class="font-mono text-xs text-right">222,674</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">stdlib + pgx</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:32.56%"></div></div><span class="font-mono text-xs text-right">423,301</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">stdlib + pgx-prefork</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:69.12%"></div></div><span class="font-mono text-xs text-right text-amber-300">898,606</span></div>
-        </div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="space-y-2">
-          <div class="benchmark-row"><strong class="text-sm text-white">C#</strong><span class="text-xs text-slate-400">ASP.NET Core MVC</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:31.48%"></div></div><span class="font-mono text-xs text-right">409,255</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Minimal APIs + Dapper</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:56.78%"></div></div><span class="font-mono text-xs text-right">738,196</span></div>
-        </div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="space-y-2">
-          <div class="benchmark-row"><strong class="text-sm text-white">Node.js</strong><span class="text-xs text-slate-400">Express PostgreSQL</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:6.48%"></div></div><span class="font-mono text-xs text-right">84,189</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Fastify PostgreSQL</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:33.63%"></div></div><span class="font-mono text-xs text-right">437,129</span></div>
-        </div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="space-y-2">
-          <div class="benchmark-row"><strong class="text-sm text-white">Python</strong><span class="text-xs text-slate-400">Django PostgreSQL</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:3.36%"></div></div><span class="font-mono text-xs text-right">43,669</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">FastAPI</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:12.61%"></div></div><span class="font-mono text-xs text-right">163,894</span></div>
-          <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">FastAPI + orjson</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:12.84%"></div></div><span class="font-mono text-xs text-right text-amber-300">166,904</span></div>
-        </div>
-      </div>
-    </div>
-    <figcaption id="benchmark-caption" class="px-6 sm:px-8 py-4 border-t border-slate-800 text-xs leading-relaxed text-slate-500">
-      <p>Each established ecosystem is shown with an enterprise default, followed by a modern successor and a low-effort performance upgrade only where those categories were selected. C# and Node.js have no upgrade row. Rust is shown separately through Axum as an emerging ecosystem baseline: its frameworks are still maturing, so calling it an enterprise default or successor would overstate the comparison. Treat this as a map of benchmark implementations—not a universal language ranking.</p>
-    </figcaption>
-  </figure>
-
   <article class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 space-y-6 reveal active">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">How to read the visual</h2>
-    <p class="leading-relaxed">The chart deliberately uses three roles rather than pretending every bar is an equivalent production application. <strong>Grey</strong> is the enterprise default or mainstream starting point. <strong>Blue</strong> is a modern successor—or, for Rust, an emerging ecosystem baseline. <strong>Orange</strong> is a distinct, realistic, low-effort performance upgrade. Missing categories are left out rather than filled with duplicate or less representative rows.</p>
-    <div class="my-8 p-5 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 not-prose">
-      <div class="flex gap-3"><i class="material-icons text-amber-500" aria-hidden="true">science</i><div><h3 class="font-bold text-slate-900 dark:text-white">Benchmark, not buying guide</h3><p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">TechEmpower measures narrowly specified implementations under controlled load. Database drivers, raw SQL versus ORM usage, server configuration, and even database choice differ between some selected variants. The numbers are useful for finding interesting engineering questions, not for choosing a stack from the longest bar.</p></div></div>
+    <p class="leading-relaxed">
+      If you visit the .NET website today, you'll see a prominent performance graph showing <strong>Fortunes</strong> responses per second. By pitting .NET against Express and Gin, Microsoft highlights a significant throughput advantage over the industry-standard baselines for Node.js and Go. This comparison got me wondering: if these popular frameworks are the benchmarks, where does Go's built-in <code>net/http</code> actually sit?
+    </p>
+
+    <div class="my-10 pt-8 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden not-prose bg-white dark:bg-black shadow-lg">
+      <img src="images/fortunes-graphic.png" alt="Microsoft's .NET benchmark comparison showing ASP.NET Core Minimal APIs at 609.9K req/s vs Express at 172.5K and Gin at 110.5K" class="block dark:hidden w-full h-auto">
+      <img src="images/fortunes-graphic-dark.png" alt="Microsoft's .NET benchmark comparison showing ASP.NET Core Minimal APIs at 609.9K req/s vs Express at 172.5K and Gin at 110.5K" class="hidden dark:block w-full h-auto">
+      <div class="px-5 py-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 font-medium italic">
+        Source: Microsoft .NET homepage performance showcase (2025). The graphic highlights .NET's throughput advantage in the TechEmpower Fortunes benchmark.
+      </div>
     </div>
 
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Go's standard library changed the baseline</h2>
+    <p class="leading-relaxed">
+      The Fortunes benchmark is the ideal test for this question because it represents a realistic workload: database connectivity, sorting, and server-side HTML templating. It doesn't just measure raw serialization; it measures how a stack handles the overhead of preparing a dynamic response. For a practical discussion about Go's standard library, it is the perfect baseline.
+    </p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12">Selection Rationale: Mapping the Ecosystems</h2>
+    <p class="leading-relaxed">
+      Comparing web frameworks across different languages is notoriously tricky because benchmark implementations rarely serve the same architectural purpose. A bare-metal HTTP router stripped of all abstractions cannot be fairly weighed against a heavy enterprise monolith with full object-relational mapping.
+    </p>
+    <p class="leading-relaxed">
+      To avoid arbitrary comparisons, every row in the benchmark map below was selected based on three strict criteria:
+    </p>
+
+    <div class="space-y-8 my-10 not-prose">
+      <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">1. The Three-Role Taxonomy</h3>
+        <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+          Instead of ranking stacks on a single ladder, variants are grouped into three distinct roles that reflect real-world engineering decisions:
+        </p>
+        <ul class="list-none p-0 space-y-4">
+          <li class="flex gap-4">
+            <span class="flex-none w-1 h-auto bg-slate-400 rounded-full"></span>
+            <span class="text-sm text-slate-600 dark:text-slate-400"><strong>Enterprise Default (Grey):</strong> The mainstream starting point for traditional production services (e.g., Spring Data JPA, Django, ASP.NET Core MVC, Express). These reflect standard enterprise conventions, carrying heavy pipeline features, reflection, and full ORMs out of the box.</span>
+          </li>
+          <li class="flex gap-4">
+            <span class="flex-none w-1 h-auto bg-blue-500 rounded-full"></span>
+            <span class="text-sm text-slate-600 dark:text-slate-400"><strong>Modern Successor / Baseline (Blue):</strong> The modern, idiomatic choice for greenfield cloud-native development (e.g., stdlib + pgx, Minimal APIs + Dapper, Fastify, FastAPI + asyncpg, Axum). These prioritize developer ergonomics while stripping away unneeded framework tax.</span>
+          </li>
+          <li class="flex gap-4">
+            <span class="flex-none w-1 h-auto bg-amber-500 rounded-full"></span>
+            <span class="text-sm text-slate-600 dark:text-slate-400"><strong>Low-Effort Performance Upgrade (Orange):</strong> Non-architectural runtime or process optimizations that boost throughput with minimal code changes—such as Go’s process-level prefork or Quarkus’s reactive Vert.x driver.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">2. Data Layer Parity</h3>
+          <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            Data access heavily influences HTTP benchmark scores. To make the comparison honest across runtimes:
+          </p>
+          <ul class="list-disc pl-5 mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li><strong>Enterprise Defaults</strong> retain their native full ORMs (like Hibernate or Django ORM) because that is how those stacks are predominantly deployed.</li>
+            <li><strong>Modern Successors</strong> standardize on direct SQL drivers or lightweight micro-ORMs (such as <code>pgx</code>, Dapper, <code>postgres.js</code>, and <code>asyncpg</code>). This strips away state tracking and entity hydration to measure actual router efficiency and runtime concurrency.</li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">3. Test & Database Isolation</h3>
+          <ul class="list-disc pl-5 space-y-3 text-sm text-slate-600 dark:text-slate-400">
+            <li><strong>Test Suite:</strong> All data is pulled from the TechEmpower Round 23 Fortunes benchmark. Unlike synthetic JSON benchmarks, Fortunes forces the stack to handle database connections, object sorting, and HTML server-side rendering.</li>
+            <li><strong>Database Backend:</strong> Every selected implementation connects to a PostgreSQL instance to eliminate database engine variance from the results.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <figure class="benchmark-visual rounded-2xl border border-slate-800 shadow-2xl overflow-hidden mb-12 not-prose text-slate-200" aria-labelledby="benchmark-title benchmark-caption">
+      <div class="p-6 sm:p-8 border-b border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div><p class="font-mono text-xs uppercase tracking-[.2em] text-blue-400">TechEmpower · Round 23 · Fortunes</p><h2 id="benchmark-title" class="mt-2 text-xl sm:text-2xl font-bold text-white">Backend throughput, selected variants</h2></div>
+          <p class="font-mono text-xs text-slate-400">responses / second →</p>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400">
+          <span class="inline-flex items-center gap-2"><span class="legend-dot bg-slate-400"></span>Enterprise default</span>
+          <span class="inline-flex items-center gap-2"><span class="legend-dot bg-blue-500"></span>Modern successor / ecosystem baseline</span>
+          <span class="inline-flex items-center gap-2"><span class="legend-dot bg-amber-500"></span>Low-effort performance upgrade</span>
+        </div>
+      </div>
+      <div class="p-4 sm:p-8">
+        <div class="benchmark-chart space-y-5" role="img" aria-label="Selected TechEmpower Round 23 Fortunes results grouped as enterprise default, modern successor, and low-effort performance upgrade for Rust, Java, Go, C#, Node.js, and Python.">
+          <div class="benchmark-row text-[10px] uppercase tracking-wider text-slate-500"><span>Language</span><span>Variant</span><span class="flex justify-between"><span>0</span><span>650k</span><span>1.3m</span></span><span class="text-right">req/s</span></div>
+          <div class="benchmark-row"><strong class="text-sm text-white">Rust</strong><span class="text-xs text-blue-300">Axum · emerging baseline</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:100%"></div></div><span class="font-mono text-xs text-right">1,270,151</span></div>
+          <div class="h-px bg-slate-800"></div>
+          <div class="space-y-2">
+            <div class="benchmark-row"><strong class="text-sm text-white">Java</strong><span class="text-xs text-slate-400">Spring</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:16.21%"></div></div><span class="font-mono text-xs text-right">205,876</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Quarkus · RESTEasy + Hibernate</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:63.16%"></div></div><span class="font-mono text-xs text-right">802,294</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">Quarkus · Vert.x + reactive PG</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:93.02%"></div></div><span class="font-mono text-xs text-right text-amber-300">1,181,497</span></div>
+          </div>
+          <div class="h-px bg-slate-800"></div>
+          <div class="space-y-2">
+            <div class="benchmark-row"><strong class="text-sm text-white">Go</strong><span class="text-xs text-slate-400">Gin</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:8.71%"></div></div><span class="font-mono text-xs text-right">110,596</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">stdlib + pgx</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:33.33%"></div></div><span class="font-mono text-xs text-right">423,301</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">stdlib + pgx-prefork</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:70.75%"></div></div><span class="font-mono text-xs text-right text-amber-300">898,606</span></div>
+          </div>
+          <div class="h-px bg-slate-800"></div>
+          <div class="space-y-2">
+            <div class="benchmark-row"><strong class="text-sm text-white">C#</strong><span class="text-xs text-slate-400">ASP.NET Core MVC</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:32.22%"></div></div><span class="font-mono text-xs text-right">409,255</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Minimal APIs + Dapper</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:58.12%"></div></div><span class="font-mono text-xs text-right">738,196</span></div>
+          </div>
+          <div class="h-px bg-slate-800"></div>
+          <div class="space-y-2">
+            <div class="benchmark-row"><strong class="text-sm text-white">Node.js</strong><span class="text-xs text-slate-400">Express [postgres.js]</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:13.58%"></div></div><span class="font-mono text-xs text-right">172,523</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">Fastify PostgreSQL</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:34.42%"></div></div><span class="font-mono text-xs text-right">437,129</span></div>
+          </div>
+          <div class="h-px bg-slate-800"></div>
+          <div class="space-y-2">
+            <div class="benchmark-row"><strong class="text-sm text-white">Python</strong><span class="text-xs text-slate-400">Django PostgreSQL</span><div class="benchmark-track"><div class="benchmark-bar legacy" style="--value:3.44%"></div></div><span class="font-mono text-xs text-right">43,669</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-blue-300">FastAPI</span><div class="benchmark-track"><div class="benchmark-bar baseline" style="--value:12.90%"></div></div><span class="font-mono text-xs text-right">163,894</span></div>
+            <div class="benchmark-row"><span></span><span class="text-xs text-amber-300">FastAPI + orjson</span><div class="benchmark-track"><div class="benchmark-bar optimized" style="--value:13.14%"></div></div><span class="font-mono text-xs text-right text-amber-300">166,904</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption id="benchmark-caption" class="px-6 sm:px-8 py-4 border-t border-slate-800 text-xs leading-relaxed text-slate-500">
+        <p>TechEmpower Round 23 Fortunes results. Missing categories are left out rather than filled with duplicate or less representative rows. Treat this as a map of benchmark implementations—not a universal language ranking.</p>
+      </figcaption>
+    </figure>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">Go's standard library changed the baseline</h2>
     <p class="leading-relaxed">I initially expected Gin—or perhaps Fiber, which also performs extremely well—to be the obvious Go baseline. Since Go 1.22, however, the built-in <code>net/http</code> router supports method-aware patterns and wildcards. Routes such as <code>GET /users/{id}</code> no longer require a third-party router for many ordinary APIs.</p>
     <div class="my-6 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 not-prose">
       <div class="px-4 py-2 text-xs font-mono text-slate-500 border-b border-slate-800">Go 1.22+ · net/http</div>
@@ -154,7 +215,7 @@ http.ListenAndServe(":8080", mux)</code></pre>
     <p class="leading-relaxed">That makes <code>net/http</code> a credible enterprise baseline: strong performance, fewer dependencies, complete compatibility with the standard Go ecosystem, and enough routing for a large class of services. A framework can still add real value—middleware conventions, validation, binding, dependency injection, or a team-wide application structure—but it is increasingly optional rather than the price of entry.</p>
     <blockquote class="border-l-4 border-go pl-5 py-1 text-xl font-medium text-slate-800 dark:text-slate-100">In modern Go, “no framework” no longer means “build the router yourself.”</blockquote>
 
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">Why did prefork help?</h2>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">Why did prefork help?</h2>
     <p class="leading-relaxed">The normal Go standard-library variant reached roughly <strong>423 thousand responses per second</strong>. Its prefork variant reached roughly <strong>899 thousand</strong>. Prefork runs multiple operating-system processes and distributes incoming work across them. At first that sounds unnecessary: Go already has goroutines and a runtime designed for concurrency. But concurrency and parallelism answer different questions.</p>
     <div class="grid sm:grid-cols-2 gap-4 my-8 not-prose">
       <div class="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-950/20 p-5"><i class="material-icons text-blue-500" aria-hidden="true">hourglass_top</i><h3 class="mt-2 font-bold text-slate-900 dark:text-white">Concurrency</h3><p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">Many cheap waiters making progress: goroutines paused on I/O, timers, database calls, or channels.</p></div>
@@ -162,30 +223,119 @@ http.ListenAndServe(":8080", mux)</code></pre>
     </div>
     <p class="leading-relaxed">One Go process can use multiple cores—<code>GOMAXPROCS</code> normally defaults to the available CPU capacity—so prefork is not required for parallel execution. The more precise interpretation is that multiple processes can sometimes improve a particular high-load profile by giving each process its own runtime, scheduler state, heap, garbage collector, connection pools, and contention boundaries. Whether that helps a real service depends on its CPU limits, I/O, memory, database, and deployment topology.</p>
 
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">The Kubernetes version of the same idea</h2>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">The Kubernetes version of the same idea</h2>
     <p class="leading-relaxed">Prefork also resembles a familiar cloud-native pattern: instead of making one process enormous, run multiple smaller replicas. Kubernetes turns that process boundary into a scheduling and resilience boundary. Each pod can receive explicit CPU and memory limits, be restarted independently, and be spread across nodes or zones.</p>
-    <div class="my-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4 not-prose">
-      <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-5 text-center"><i class="material-icons text-slate-400" aria-hidden="true">dns</i><p class="mt-2 font-bold text-slate-900 dark:text-white">One large process</p><p class="mt-1 text-xs text-slate-500">Shared runtime and failure boundary</p></div>
-      <i class="material-icons text-blue-500" aria-hidden="true">arrow_forward</i>
-      <div class="grid grid-cols-2 gap-2"><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 1</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 2</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 3</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 4</div></div>
+    <div class="my-8 flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4 not-prose">
+      <div class="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-5 text-center"><i class="material-icons text-slate-400" aria-hidden="true">dns</i><p class="mt-2 font-bold text-slate-900 dark:text-white">One large process</p><p class="mt-1 text-xs text-slate-500">Shared runtime and failure boundary</p></div>
+      <i class="material-icons text-blue-500 rotate-90 sm:rotate-0" aria-hidden="true">arrow_forward</i>
+      <div class="w-full grid grid-cols-2 gap-2"><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 1</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 2</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 3</div><div class="rounded-lg bg-blue-500/10 border border-blue-500/30 p-3 text-center text-xs font-bold text-blue-600 dark:text-blue-400">Pod 4</div></div>
     </div>
     <p class="leading-relaxed">Go makes that shape attractive because a service is commonly delivered as one binary with a modest runtime footprint. With careful static compilation it can run in a scratch or distroless image: no package manager and no general-purpose OS userland, just the executable and the files it needs. The container still shares the node's Linux kernel; “scratch” means an empty filesystem image, not a kernel-free virtual machine.</p>
 
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white pt-6 border-t border-slate-100 dark:border-slate-800/60">What I took away</h2>
+    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-16 pt-8 border-t-2 border-slate-100 dark:border-slate-800">The 2026 Landscape: Evolution and Convergence</h2>
+    <p class="leading-relaxed text-lg italic text-slate-600 dark:text-slate-400">While Go set the pace for cloud-native performance, the rest of the industry didn't stand still. By 2026, the "performance gap" has largely evaporated, replaced by a choice of architectural philosophies.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">The Go Story: Scaling Through Simplicity</h2>
+    <p class="leading-relaxed">For a decade, Go rode the "cloud-native exodus." As industries shifted to Kubernetes, Java’s traditional thread-per-request model and heavy JVM footprint showed their age. Go offered a radical alternative: <strong>Goroutines</strong>, instant-start native binaries, and a minimalist philosophy that avoided "framework magic."</p>
+    <p class="leading-relaxed">By 2026, the forced migrations have slowed, but Go’s dominance has matured. It is no longer just a Java replacement but the undisputed "Control Plane" standard—the language of choice for the orchestrators, agents, and networking proxies that power modern infrastructure.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">The Java Story: How the Giant Fought Back</h2>
+    <p class="leading-relaxed">Realizing it was losing ground in the cloud-native era, the Java ecosystem (led by Oracle and the OpenJDK community) launched a multi-year counter-offensive. By the release of Java 21 (and refined further in Java 25), Java successfully closed the technical gaps that once drove developers toward Go.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-6">Project Loom: Virtual Threads</h3>
+    <p class="leading-relaxed">Java’s direct answer to Goroutines. Finalized in Java 21, these lightweight, JVM-managed threads effectively eliminate the old OS-thread bottleneck. Developers can now write simple, blocking Java code that scales just as well as Go for I/O-bound workloads, without needing complex asynchronous frameworks.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">GraalVM and Native Image</h3>
+    <p class="leading-relaxed">To fix cold-start and memory issues, GraalVM allows Java code to be compiled ahead-of-time (AOT) into a native executable. This strips away traditional JVM overhead, allowing Java apps to boot in milliseconds, directly rivaling Go's startup speeds.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Generational ZGC</h3>
+    <p class="leading-relaxed">While Go was long praised for its low-latency garbage collector, Java introduced Generational ZGC, which keeps pause times under a single millisecond—even on multi-terabyte heaps, addressing the "stop-the-world" anxiety of the previous decade.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Modernized Syntax</h3>
+    <p class="leading-relaxed">Recent Java versions introduced records, pattern matching, and switch expressions, cutting down on the infamous "Java boilerplate" and closing the developer productivity gap with more expressive, concise code.</p>
+    <p class="leading-relaxed">However, this modernization often feels like a complex layer of paint over a heavy foundation. To achieve Go-like performance and efficiency, a Java developer must navigate a maze of JVM flags, GraalVM constraints, and framework-specific "reactive" patterns. Java's success in 2026 is a triumph of engineering, but it lacks the cohesive, "batteries-included" simplicity of a language built for the cloud from day one.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">The .NET Story: The Performance Powerhouse</h2>
+    <p class="leading-relaxed">Microsoft took a different path to modernization, focusing on extreme performance and hardware-level optimizations. By 2026, the .NET ecosystem has transformed from a heavy enterprise runtime into one of the fastest stacks available.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-6">Concurrency: async/await vs. Goroutines</h3>
+    <p class="leading-relaxed">Go's primary weapon was always Goroutines—lightweight, "green" threads that multiplexed onto a smaller pool of OS threads. C# took a different path, pioneering the <strong>async/await</strong> pattern.</p>
+    <ul class="list-disc pl-5 space-y-3">
+        <li><strong>The Go Advantage:</strong> Goroutines are generally easier to learn for beginners. There is no "colored function" problem where synchronous and asynchronous code are forced into different silos.</li>
+        <li><strong>The C# Response:</strong> While async/await requires more syntactic awareness, the Task Parallel Library (TPL) in modern .NET is incredibly optimized. In terms of raw throughput, a tuned C# application handling millions of asynchronous awaits per second can easily go toe-to-toe with Go. The choice often comes down to preference: Go offers simple, implicit concurrency, while C# offers explicit, powerful, and highly controllable concurrency.</li>
+    </ul>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Startup Time and Footprint: Native AOT</h3>
+    <p class="leading-relaxed">For years, Go's single, statically linked native binary was its "killer feature." Traditional C# applications, running on a JIT compiler, required a heavy runtime and had slower startup times.</p>
+    <p class="leading-relaxed"><strong>The C# Response:</strong> Microsoft aggressively pushed <strong>Native AOT</strong>. By .NET 10, developers can publish C# applications as self-contained, native executables. Native AOT C# apps now boast startup times and memory footprints that closely rival Go, eliminating Go's historical deployment advantage for modern APIs.</p>
+
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-8">Raw Performance and Memory</h3>
+    <p class="leading-relaxed">Go's compiler and garbage collector were built for low latency, but Microsoft overhauled the .NET runtime with features like <code>Span&lt;T&gt;</code> and <code>Memory&lt;T&gt;</code>. These allow developers to read and manipulate memory safely without allocating new objects, drastically reducing GC burden.</p>
+    <p class="leading-relaxed"><strong>The 2026 Reality:</strong> In pure computational benchmarks, modern .NET 10 frequently outperforms Go. The .NET JIT compiler is incredibly sophisticated at optimizing code paths dynamically at runtime—a capability Go's AOT compiler lacks. However, this performance is often "opt-in." To reach these heights, .NET developers must use low-level primitives and AOT-compatible libraries that deviate from standard C# idioms. In contrast, Go delivers its performance by default, using the same simple patterns for every service, regardless of scale.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">The Rust Story: Safety at the Speed of C</h2>
+    <p class="leading-relaxed">Rust’s role in 2026 is defined by its challenge to garbage collection. By providing memory safety without a runtime GC, it eliminates "stop-the-world" pauses entirely. It is the gold standard for the "Data Plane"—powering the networking proxies and core engines where deterministic, ultra-low latency is the only priority.</p>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">Conclusion: The Choice of Philosophy</h2>
+    <p class="leading-relaxed font-medium">By 2026, the industry has reached a point of convergence. The choice between Go, Rust, or a modernized enterprise stack is rarely about finding a language fast enough to survive—they all are. Instead, the decision is driven by architectural philosophy: the minimalist simplicity of Go, the ironclad safety of Rust, or the rich business ecosystems of Java and .NET.</p>
+
+    <div class="my-8 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 not-prose">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead class="bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-800">
+            <tr>
+              <th class="px-4 py-4 whitespace-nowrap">Feature / Domain</th>
+              <th class="px-4 py-4">Go</th>
+              <th class="px-4 py-4">Rust</th>
+              <th class="px-4 py-4">Modern Java / .NET</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-600 dark:text-slate-400">
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900 dark:text-white align-top">Concurrency</td>
+              <td class="px-4 py-4 align-top">Goroutines (Managed)</td>
+              <td class="px-4 py-4 align-top">Fearless (Compile-time)</td>
+              <td class="px-4 py-4 align-top">Virtual Threads / Tasks</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900 dark:text-white align-top">Memory Management</td>
+              <td class="px-4 py-4 align-top">Garbage Collected</td>
+              <td class="px-4 py-4 align-top">Ownership (No GC)</td>
+              <td class="px-4 py-4 align-top">GC (Low-allocation mode)</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900 dark:text-white align-top">Developer Velocity</td>
+              <td class="px-4 py-4 align-top">Very High</td>
+              <td class="px-4 py-4 align-top">Low to Medium</td>
+              <td class="px-4 py-4 align-top">High</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900 dark:text-white align-top">Sweet Spot</td>
+              <td class="px-4 py-4 align-top">Control Plane &amp; CLIs</td>
+              <td class="px-4 py-4 align-top">Data Plane &amp; Engines</td>
+              <td class="px-4 py-4 align-top">Complex Business Logic</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-12 pt-6 border-t border-slate-100 dark:border-slate-800/60">What I took away</h2>
     <ul class="list-disc pl-5 space-y-3">
       <li><strong>Go's standard library is strong enough that a web framework is often optional.</strong> Choose one for the developer experience and conventions it provides, not because basic routing demands it.</li>
       <li><strong>The prefork result is a clue, not a prescription.</strong> Measure one process, multiple workers, and multiple pods under realistic CPU and database limits before adopting any topology.</li>
       <li><strong>Small processes fit horizontal scaling well.</strong> Separate runtime and failure boundaries, modest memory use, and small container images make replication inexpensive.</li>
       <li><strong>PostgreSQL was usually the strongest backend in the compared variants.</strong> Where equivalent MongoDB or MySQL rows were available, the PostgreSQL implementation generally achieved higher throughput</li>
-      <li><strong>ASP.NET Core deserves attention too.</strong> The selected MVC and Minimal APIs with Dapper rows reached 409,255 and 738,196 responses per second respectively, while representing one of the most mature and complete ecosystems in this comparison.</li>
+      <li><strong>Modern .NET is a top-tier performance contender.</strong> The ASP.NET Core variants (Minimal APIs + Dapper) reached over 738k req/s, proving that the ecosystem has successfully shed its "heavy enterprise" reputation and now rivals Go in raw efficiency.</li>
     </ul>
-    <p class="leading-relaxed">None of this proves that Go is the right language for every web service. It does show why the default Go stack is so compelling: the boring option—the standard library—can be both operationally simple and very fast.</p>
+    <p class="leading-relaxed">Ultimately, while Java and .NET have engineered brilliant, heavy-duty workarounds like Native AOT and Project Loom to climb the benchmark charts, Go wins by refusing to play the same game. You don't have to retrofit a Go service for Kubernetes because it was built for that exact environment from day one. With the modern <code>net/http</code> router, you get top-tier concurrent performance, microscopic memory footprints, and instant cold-starts right out of the box—compiling down to a single, zero-dependency static binary in seconds.</p>
+    <p class="leading-relaxed font-medium">In 2026, the true measure of a backend language isn't just raw requests per second, but the operational simplicity it brings to your platform; Java and C# make you earn their performance through heavy frameworks and complex runtime tuning, while Go simply gets out of your way.</p>
 
     <div class="my-10 p-6 rounded-2xl border border-blue-200 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-950/20 not-prose">
       <p class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Benchmark source</p>
       <h3 class="mt-2 text-lg font-bold text-slate-900 dark:text-white">TechEmpower Web Framework Benchmarks, Round 23</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">The visual uses the single-query database test published on February 24, 2025. Open the source to inspect exact variants, implementation metadata, requirements, and environment details.</p>
-      <a href="https://www.techempower.com/benchmarks/#section=data-r23&amp;test=db" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold">Explore the benchmark data <i class="material-icons" style="font-size:16px" aria-hidden="true">open_in_new</i></a>
+      <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">The visual uses the Fortunes test published on February 24, 2025. Open the source to inspect exact variants, implementation metadata, requirements, and environment details.</p>
+      <a href="https://www.techempower.com/benchmarks/#section=data-r23&amp;test=fortunes" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold">Explore the benchmark data <i class="material-icons" style="font-size:16px" aria-hidden="true">open_in_new</i></a>
     </div>
   </article>
 
