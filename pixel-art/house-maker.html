@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Little house maker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#e9ebf3;--c1:#dfe2ee;--c2:#f3f4fa;--panel:#fff;--ink:#1f2140;--muted:#656a8c;--line:#cfd3e6;--accent:#3a4bd1;--accent-ink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15162b;--panel:#20223f;--ink:#eceefc;--muted:#9aa0c8;--line:#353963;--accent:#8fa0ff;--accent-ink:#15162b;--c1:#2a2c4d;--c2:#34376a}}
+:root[data-theme="dark"]{--bg:#15162b;--panel:#20223f;--ink:#eceefc;--muted:#9aa0c8;--line:#353963;--accent:#8fa0ff;--accent-ink:#15162b;--c1:#2a2c4d;--c2:#34376a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pixelify Sans",ui-monospace,Menlo,monospace;font-size:17px;line-height:1.4}
+main{max-width:1000px;margin:0 auto;padding:24px 16px 40px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+h1{font-size:30px;margin:0 0 4px;font-weight:600}
+.sub{margin:0 0 16px;color:var(--muted)}
+.frame{position:relative;max-width:380px;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);background:conic-gradient(var(--c1) 25%,var(--c2) 0 50%,var(--c1) 0 75%,var(--c2) 0) 0 0/24px 24px}
+canvas{display:block;width:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+#grid{position:absolute;inset:0;pointer-events:none;display:none;
+background-image:linear-gradient(to right,rgba(70,80,170,.55) 1px,transparent 1px),linear-gradient(to bottom,rgba(70,80,170,.55) 1px,transparent 1px);
+background-size:calc(100%/5) calc(100%/7)}
+.bar{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+button{font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--ink);padding:6px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary,button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+#panel{background:var(--panel);border:2px solid var(--line);padding:6px 18px 14px}
+h2{font-size:19px;margin:16px 0 6px;font-weight:600}
+.row{display:grid;grid-template-columns:78px 36px 1fr 36px;gap:6px;align-items:center;margin:5px 0}
+.row .lbl{color:var(--muted)}
+.row button{padding:2px 0;box-shadow:2px 2px 0 var(--ink);font-size:20px;line-height:1.1}
+.val{text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;min-height:32px;border-bottom:2px dotted var(--line)}
+.sw{width:14px;height:14px;border:2px solid var(--ink);display:inline-block}
+@media (max-width:760px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<section>
+<h1>Little house maker</h1>
+<p class="sub">Flip through the pieces. The background is transparent. The scene is 5 × 7 tiles, 16 px each.</p>
+<div class="frame"><canvas id="c"></canvas><div id="grid"></div></div>
+<div class="bar"><button id="rnd" class="primary">Randomize</button><button id="gr" aria-pressed="false">Tile grid</button></div>
+</section>
+<section id="panel"></section>
+</main>
+<script>
+const T=16,W=5,H=7,PW=W*T,PH=H*T;
+const cv=document.getElementById('c');cv.width=PW;cv.height=PH;
+let g=cv.getContext('2d');
+const hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const toHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const shade=(c,f)=>toHex(hx(c).map(v=>f<0?v*(1+f):v+(255-v)*f));
+const mix=(a,b,t)=>{const B=hx(b);return toHex(hx(a).map((v,i)=>v+(B[i]-v)*t))};
+const rnd=(x,y,s=0)=>{let n=(Math.imul(x,374761393)+Math.imul(y,668265263)+Math.imul(s+1,982451653))|0;n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/4294967296};
+const px=(x,y,c)=>{if(x<0||y<0||x>=PW||y>=PH)return;g.fillStyle=c;g.fillRect(x,y,1,1)};
+const rect=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x,y,w,h)};
+const disc=(cx,cy,r,c)=>{for(let y=Math.floor(cy-r);y<=cy+r;y++)for(let x=Math.floor(cx-r);x<=cx+r;x++)if((x+.5-cx)**2+(y+.5-cy)**2<=r*r)px(x,y,c)};
+
+function cast(fn,dx,dy,a){
+  if(S.shadows!==0)return;
+  const main=g,o=document.createElement('canvas');o.width=PW;o.height=PH;
+  g=o.getContext('2d');fn();
+  g.globalCompositeOperation='source-in';g.fillStyle='rgba(20,20,50,'+a+')';g.fillRect(0,0,PW,PH);
+  g=main;g.save();g.globalCompositeOperation='source-atop';g.drawImage(o,dx,dy);g.restore();
+}
+const pal=(names,hexes)=>({vals:names,colors:hexes});
+const OPT={
+roofStyle:{label:'Shape',vals:['Gable','Flat']},
+roofMat:{label:'Material',vals:['Shingle','Thatch','Planks']},
+roofColor:{label:'Color',...pal(['Blue','Terracotta','Slate','Moss','Plum','Mustard','Charcoal'],['#2f7be0','#b5533c','#5b6b86','#5e8a4e','#7d4f7a','#cf9a2e','#3f4048'])},
+ridge:{label:'Ridge',vals:['Wood','Matching']},
+chimney:{label:'Chimney',vals:['None','Brick','Stone','Brick + smoke']},
+chimneySide:{label:'Side',vals:['Left','Right']},
+wallStyle:{label:'Material',vals:['Brick','Siding','Stone','Tudor']},
+wallColor:{label:'Color',...pal(['Stone','Cream','Brick red','Sage','Sky','Rose','Ochre'],['#b9b3a4','#efe2c2','#b4573f','#a9c4a0','#9fc3dd','#e3aeb0','#d6a85c'])},
+wear:{label:'Wear',vals:['Worn','Clean']},
+trim:{label:'Trim',...pal(['White','Brown','Teal','Navy','Red'],['#f5f2ea','#5a3d2b','#2f7f86','#27345a','#b8413a'])},
+windowStyle:{label:'Style',vals:['Square','Arched','Round','Shuttered']},
+glass:{label:'Glass',vals:['Clear','Lit']},
+doorStyle:{label:'Style',vals:['Plain','Arched','Windowed','Planked']},
+doorColor:{label:'Color',...pal(['Red','Blue','Green','Yellow','Wood'],['#b8413a','#3d6fb6','#3f8a5a','#e0b13a','#8a5a36'])},
+decor:{label:'Gable',vals:['None','Round window','Heart','Wreath','Lantern']},
+garden:{label:'Garden',vals:['None','Bush','Flowers','Barrel','Pumpkin']},
+shadows:{label:'Shadows',vals:['On','Off']}
+};
+const GROUPS=[['Roof',['roofStyle','roofMat','roofColor','ridge','chimney','chimneySide']],['Walls',['wallStyle','wallColor','wear','trim']],['Windows',['windowStyle','glass']],['Door',['doorStyle','doorColor']],['Details',['decor','garden','shadows']]];
+const S={roofStyle:0,roofMat:0,roofColor:0,ridge:0,chimney:2,chimneySide:0,wallStyle:2,wallColor:0,wear:0,trim:1,windowStyle:0,glass:0,doorStyle:1,doorColor:0,decor:1,garden:0,shadows:0};
+
+const CR=new Set();
+for(let i=0;i<9;i++){let x=8+Math.floor(rnd(i,0,20)*64),y=54+Math.floor(rnd(i,1,20)*50);const n=6+Math.floor(rnd(i,2,20)*10);
+  for(let k=0;k<n;k++){CR.add(x+','+y);const r=rnd(i*40+k,3,20);if(r<.3){x--;CR.add(x+','+y)}else if(r>.7){x++;CR.add(x+','+y)}y++}}
+function wpx(st,c,x,y){
+  let col=wbase(st,c,x,y);
+  if(S.wear!==0)return col;
+  if(CR.has(x+','+y))return shade(col,-.6);
+  if(CR.has((x-1)+','+y))col=shade(col,.14);
+  if(rnd(x>>3,y>>3,9)<.3)col=shade(col,-.07);
+  if(y>94&&rnd(x>>2,1,12)<.3)col=shade(col,-.1);
+  const n=rnd(x,y,11);
+  if(n<.03)col=shade(col,-.2);else if(n<.05)col=shade(col,.12);
+  return col;
+}
+function wbase(st,c,x,y){
+  if(st==='Brick'){const b=y>>2,o=(b%2)*4;return(y%4===3||(x+o)%8===7)?shade(c,.4):shade(c,rnd((x+o)>>3,b)*.2-.1)}
+  if(st==='Siding')return y%6===5?shade(c,-.3):y%6===0?shade(c,.12):rnd(x,y)<.05?shade(c,-.1):c;
+  if(st==='Stone'){const r=y>>3,o=(r%2)*6,cx=Math.floor((x+o)/12);if(y%8===7||(x+o)%12===11)return shade(c,-.4);const k=shade(c,rnd(cx,r,2)*.24-.12);return(y%8===0||(x+o)%12===0)?shade(k,.15):k}
+  return (x-8)%16<2?'#5a3d2b':(rnd(x,y)<.04?shade(c,-.06):c);
+}
+function wall(st,c,trim,flat){
+  const top=flat?60:80;
+  if(!flat)for(let y=52;y<80;y++){const hw=(y-52)*1.18;for(let x=Math.ceil(40-hw);x<40+hw;x++){
+    const e=hw-Math.abs(x+.5-40);
+    px(x,y,(y>=77)?shade(trim,-.1):e<2?trim:wpx(st,c,x,y));
+  }}
+  for(let y=top;y<112;y++){const xl=y<top+4?8:10;for(let x=xl;x<80-xl;x++){
+    let col=wpx(st,c,x,y);
+    if(x<xl+3||x>76-xl)col=shade(trim,-.1);
+    if(y<top+4)col=y===top+3?shade(trim,-.3):trim;
+    if(y>=106)col=y===106?'#6b6d78':shade('#8a8c96',rnd(x>>2,y)*.2-.1);
+    px(x,y,col);
+  }}
+}
+function roof(st,mat,c,rg){
+  const dk=shade(c,-.3),lt=shade(c,.2),ol=shade(c,-.55),flat=st==='Flat';
+  const D=x=>Math.abs(x+.5-40),dMax=y=>Math.min(40,38+(79-y)*.08),top=d=>13+Math.max(0,d-5)*1.18;
+  const ins=(x,y)=>{
+    if(x<0||x>=80||y<0||y>=80)return false;
+    if(flat){const i=2-(59-y)*.04;return y>=10&&y<60&&x>=i&&x<=79-i}
+    const d=D(x);return d<=dMax(y)&&y>=top(d)&&y<=Math.min(52+d*.85,79);
+  };
+  for(let y=0;y<80;y++)for(let x=0;x<80;x++){
+    if(!ins(x,y))continue;
+    let col;
+    if(!ins(x-1,y)||!ins(x+1,y)||!ins(x,y-1)||!ins(x,y+1))col=ol;
+    else{
+      const d=D(x),L=x<40,sd=flat?0:(L?-.1:.08),v=Math.floor(flat?y:y-d*.85+30),r=Math.floor(v/6);
+      const fi=2-(59-y)*.04,m=flat?Math.min(x-fi,79-x-fi,y-10,59-y):9;
+      if(flat&&y>=57)col=shade(c,-.45);
+      else if(m<3)col=lt;else if(m===3)col=dk;
+      else if(mat==='Shingle'){
+        const f=v%6,o=(r%2)*4,k=(Math.floor(d)+o)%8;
+        col=f===0||k===0?dk:f===5?lt:shade(c,rnd(Math.floor((d+o)/8),r)*.14-.07+sd+(f===1?-.05:0));
+        if(k===1&&f>0&&f<5)col=shade(col,.1);
+      }
+      else if(mat==='Planks'){const f=v%6;col=f===0?dk:f===5?lt:shade(c,rnd(Math.floor(d/9),Math.floor(v/6),4)*.12-.06+sd)}
+      else{const q=rnd(x,y>>1,5);col=v%8===7?dk:q<.3?dk:q<.5?lt:c;col=shade(col,sd)}
+      if(!flat){
+        const rk=Math.min(52+d*.85,79.9),e1=dMax(y)-d;
+        if(rk-y<2.2)col=shade(c,-.5);
+        else if(rk-y<3.4)col=shade(c,.28);
+        else if(e1<2.2)col=L?shade(c,.3):shade(c,-.45);
+        if(d>=5&&y-top(d)<1.5)col=shade(c,.3);
+        if(d<6)col=ol;else if(d<8)col=shade(col,-.15+(d-6)*.075);
+      }
+    }
+    px(x,y,col);
+  }
+  const R=()=>{
+    const W=rg==='Wood';
+    for(let y=10;y<54;y++)for(let x=35;x<45;x++){
+      const L=x<40;let col;
+      if(W){col=L?'#82523a':'#9a6a4c';if(x>=37&&x<=42&&rnd(x>>1,y>>2,8)<.3)col=L?'#8e5c3f':'#a8744f';if(rnd(x,y,3)<.06)col=shade(col,-.12)}
+      else col=L?shade(c,-.15):shade(c,.1);
+      if(x===35||x===44)col=W?'#5b3a22':dk;
+      if(y===10)col=W?'#5b3a22':ol;
+      if(y>=45){col=W?'#4a2e1a':dk;if((y===47||y===51)&&x>35&&x<44)col=W?'#6b4a3a':c}
+      if(y===53)col=W?'#2f1d12':ol;
+      px(x,y,col);
+    }
+    for(let y=54;y<63;y++){const hw=5+(y-54)*.5;for(let x=Math.ceil(40-hw);x<40+hw;x++){
+      const dd=Math.abs(x+.5-40);
+      let col=(y===54||y===62)?ol:(y===55||y===56)?lt:y===57?dk:(y===58||y===59)?c:y===60?dk:shade(c,-.15);
+      if(dd>hw-1)col=ol;
+      px(x,y,col);
+    }}
+  };
+  if(!flat){cast(R,3,2,.3);R()}
+}
+function chimney(k,side,flat){
+  if(k==='None')return;
+  const X=x=>side==='Right'?79-x:x,stone=k==='Stone',base=stone?'#a9a7a0':'#a5523d',bot=flat?46:42;
+  for(let y=20;y<=bot;y++)for(let x=15;x<=28;x++){
+    const lim=flat?bot:bot-(x-15)*.85;if(y>lim)continue;
+    let c;
+    if(x===15||x===28)c=shade(base,-.35);
+    else if(stone){const r=y>>3,o=(r%2)*5;c=(y%8===7||(x+o)%10===9)?shade(base,-.3):shade(base,rnd(Math.floor((x+o)/10),r)*.2-.05)}
+    else{const b=y>>2;c=(y%4===3||(x+(b%2)*3)%6===0)?shade(base,.35):shade(base,rnd(x,b)*.14-.07)}
+    if(y>lim-3)c=shade(c,-.4);
+    px(X(x),y,c);
+  }
+  for(let y=13;y<=21;y++)for(let x=13;x<=30;x++){
+    let c='#cfcbc0';
+    if(y===13||x===13||x===30||y===21)c='#6e6a63';
+    else if(y===14)c='#efece4';
+    else if(y>=16&&y<=18&&x>=16&&x<=27)c='#2a2733';
+    else if(y>=20)c='#a8a398';
+    px(X(x),y,c);
+  }
+  if(k==='Brick + smoke'){disc(X(22),9,2,'#e8eaf2');disc(X(25),5,2.5,'#d3d7e6');disc(X(22),1,2.5,'#bcc1d6')}
+}
+function win(ox,oy,st,trim,glass,shutter){
+  const sh=st==='Shuttered',m=(x,y,i)=>{
+    if(st==='Round')return (x+.5-8)**2+(y+.5-7.5)**2<=(6.4-i-0)**2;
+    const t=0;if(x<(sh?3:2)+i+t||x>(sh?12:13)-i-t||y<1+i||y>13-i)return false;
+    if(st==='Arched'){const r=y-(1+i);if(r===0&&(x<5+i||x>10-i))return false;if(r===1&&(x<3+i||x>12-i))return false}
+    return true;
+  };
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){
+    let col=null;
+    if(st!=='Round'){
+      const a=sh?0:1,b=sh?15:14;
+      if(y===0&&x>=a&&x<=b)col=shade(trim,.1);
+      if(y===14&&x>=a&&x<=b)col=shade(trim,.2);
+      if(y===15&&x>=a&&x<=b)col=shade(trim,-.45);
+    }
+    if(sh&&y>=1&&y<=13&&(x<=2||x>=13))col=(x===0||x===15)?shade(shutter,-.4):(y%2===0?shade(shutter,-.2):shutter);
+    if(m(x,y,0))col=(!m(x-1,y,0)||!m(x,y-1,0))?shade(trim,.2):shade(trim,-.08);
+    if(m(x,y,1))col=shade(trim,-.45);
+    if(m(x,y,2)){
+      col=(x===7||x===8||y===8)?shade(trim,-.1):(y<8?glass:shade(glass,-.12));
+      if((x+y)%7===0&&col===glass)col=shade(glass,.35);
+      if(S.shadows===0&&!(x===7||x===8||y===8)){if(y===3)col=shade(col,-.2);else if(y===4)col=shade(col,-.1);else if(x===4)col=shade(col,-.08)}
+    }
+    if(col)px(ox+x,oy+y,col);
+  }
+}
+function door(ox,oy,st,dc,trim,glass){
+  const m=(x,y,i)=>{
+    const t=0;if(x<i+t||x>15-i-t||y<i)return false;
+    if(st==='Arched'){const r=y-i;if(r===0&&(x<5+i||x>10-i))return false;if(r===1&&(x<3+i||x>12-i))return false;if(r===2&&(x<2+i||x>13-i))return false}
+    return true;
+  };
+  const dk=shade(dc,-.3);
+  for(let y=0;y<32;y++)for(let x=0;x<16;x++){
+    let col=null;
+    if(m(x,y,0))col=((y>>2)%2)?shade(trim,.18):shade(trim,-.02);
+    if(m(x,y,1))col=shade(trim,-.4);
+    if(m(x,y,2)){
+      col=dc;
+      const up=x>=4&&x<=11&&y>=6&&y<=13,lo=x>=4&&x<=11&&y>=17&&y<=28;
+      if(st==='Planked'){if(x%4===3&&x<14)col=dk;if(y===10||y===25)col=dk;if(y===11||y===26)col=shade(dc,.12)}
+      else{
+        if(up||lo){const e=x===4||x===11||y===6||y===13||y===17||y===28;col=e?dk:shade(dc,-.08)}
+        if(st==='Windowed'&&up)col=(x===4||x===11||y===6||y===13)?trim:glass;
+      }
+      if(S.shadows===0){if(y<=3)col=shade(col,-.28);else if(y<=5)col=shade(col,-.14);if(x<=3)col=shade(col,-.1)}
+      if(x===12&&(y===21||y===22))col='#f2c94c';
+    }
+    if(st==='Arched'&&x>=7&&x<=8&&y<=3)col=shade(trim,.35);
+    if(y>=30)col=y===30?'#b5b6c2':'#9b9ca8';
+    if(col)px(ox+x,oy+y,col);
+  }
+}
+function decor(t,ox,oy,trim,glass){
+  const D=(cx,cy,r,c)=>disc(ox+cx,oy+cy,r,c),R=(x,y,w,h,c)=>rect(ox+x,oy+y,w,h,c);
+  if(t==='Round window'){D(8,8,6,trim);D(8,8,4.5,glass);R(7,3,2,10,trim);R(3,7,10,2,trim)}
+  else if(t==='Heart'){
+    ['.XX.XX.','XXXXXXX','XXXXXXX','.XXXXX.','..XXX..','...X...'].forEach((s,y)=>[...s].forEach((ch,x)=>{if(ch==='X')px(ox+4+x,oy+5+y,y===3||y>3?'#b5304c':'#d94a63')}));
+    px(ox+5,oy+6,'#ff9aae');
+  }
+  else if(t==='Wreath'){
+    for(let y=0;y<16;y++)for(let x=0;x<16;x++){const d=Math.hypot(x+.5-8,y+.5-8);if(d<=6&&d>=3.4)px(ox+x,oy+y,rnd(x,y,4)<.35?'#2f6a2f':'#3f7d3a')}
+    [[4,6],[11,5],[11,10],[5,11]].forEach(([x,y])=>px(ox+x,oy+y,'#d93c3c'));
+    R(6,13,4,2,'#d93c3c');
+  }
+  else if(t==='Lantern'){
+    R(7,0,2,4,'#3a3a44');R(4,4,8,2,'#3a3a44');R(4,6,8,6,'#ffd96b');R(7,6,2,6,'#3a3a44');R(4,12,8,2,'#3a3a44');R(5,7,1,3,'#fff2a8');
+  }
+}
+function garden(t,ox,oy){
+  const D=(cx,cy,r,c)=>disc(ox+cx,oy+cy,r,c),R=(x,y,w,h,c)=>rect(ox+x,oy+y,w,h,c);
+  if(t==='Bush'){D(5,11,5,'#3f8a43');D(11,11,5,'#3f8a43');D(8,8,5,'#4aa04c');D(7,6,1.5,'#7cc063');D(12,10,1,'#7cc063');D(4,10,1,'#7cc063')}
+  else if(t==='Flowers'){
+    [[4,'#ee6f9a',9],[8,'#ffd84a',6],[12,'#ffffff',10]].forEach(([x,c,h])=>{R(x,16-h,1,h,'#3f8a43');R(x-1,15-h,3,3,c);px(ox+x,oy+16-h,'#e07a2b');R(x+1,12,2,1,'#4aa04c')});
+  }
+  else if(t==='Barrel'){R(4,5,8,11,'#8a5a36');R(5,4,6,1,'#a8744a');R(5,6,1,9,'#a8744a');R(4,7,8,1,'#3b3b44');R(4,13,8,1,'#3b3b44')}
+  else if(t==='Pumpkin'){
+    for(let y=0;y<16;y++)for(let x=0;x<16;x++)if(((x-7.5)/6)**2+((y-11.5)/4.5)**2<=1)px(ox+x,oy+y,(x===6||x===10)?'#c85f12':(x===8?'#f5953a':'#e8791f'));
+    R(7,5,2,3,'#4a7a2c');
+  }
+}
+function draw(){
+  const v=k=>OPT[k].vals[S[k]],col=k=>OPT[k].colors[S[k]];
+  const glass=v('glass')==='Lit'?'#ffd96b':'#9bd8f2',trim=col('trim'),flat=v('roofStyle')==='Flat';
+  g.clearRect(0,0,PW,PH);
+  wall(v('wallStyle'),col('wallColor'),trim,flat);
+  const dec=()=>decor(v('decor'),32,flat?62:61,trim,glass);
+  cast(dec,1,1,.35);dec();
+  [[14,86],[50,86]].forEach(([x,y])=>{const w=()=>win(x,y,v('windowStyle'),trim,glass,col('doorColor'));cast(w,2,2,.4);w()});
+  const d=()=>door(32,80,v('doorStyle'),col('doorColor'),trim,glass);
+  cast(d,3,0,.4);d();
+  [10,54].forEach(x=>{const gd=()=>garden(v('garden'),x,96);cast(gd,2,1,.35);gd()});
+  const R=()=>roof(v('roofStyle'),v('roofMat'),col('roofColor'),v('ridge'));
+  if(flat){cast(R,0,4,.5);cast(R,0,8,.3)}else{cast(R,0,3,.5);cast(R,0,6,.3)}
+  R();
+  const C=()=>chimney(v('chimney'),v('chimneySide'),flat);
+  cast(C,3,3,.45);C();
+  if(S.shadows===0){g.save();g.globalCompositeOperation='destination-over';g.fillStyle='rgba(20,20,50,.3)';const y0=flat?62:82;g.fillRect(4,y0,6,110-y0);g.fillRect(70,y0,6,110-y0);g.restore()}
+}
+const panel=document.getElementById('panel');
+const vals={};
+GROUPS.forEach(([title,keys])=>{
+  const h=document.createElement('h2');h.textContent=title;panel.appendChild(h);
+  keys.forEach(k=>{
+    const o=OPT[k],row=document.createElement('div');row.className='row';
+    row.innerHTML=`<span class="lbl">${o.label}</span><button aria-label="Previous ${title.toLowerCase()} ${o.label.toLowerCase()}">‹</button><span class="val" aria-live="polite"></span><button aria-label="Next ${title.toLowerCase()} ${o.label.toLowerCase()}">›</button>`;
+    const [bp,bn]=row.querySelectorAll('button');vals[k]=row.querySelector('.val');
+    bp.onclick=()=>step(k,-1);bn.onclick=()=>step(k,1);
+    panel.appendChild(row);
+  });
+});
+function label(k){const o=OPT[k];vals[k].innerHTML=(o.colors?`<i class="sw" style="background:${o.colors[S[k]]}"></i>`:'')+o.vals[S[k]]}
+function step(k,d){const n=OPT[k].vals.length;S[k]=(S[k]+d+n)%n;label(k);draw()}
+Object.keys(OPT).forEach(label);
+document.getElementById('rnd').onclick=()=>{Object.keys(OPT).forEach(k=>{S[k]=Math.floor(Math.random()*OPT[k].vals.length);label(k)});draw()};
+const gb=document.getElementById('gr');
+gb.onclick=()=>{const on=gb.getAttribute('aria-pressed')!=='true';gb.setAttribute('aria-pressed',on);document.getElementById('grid').style.display=on?'block':'none'};
+draw();
+</script>
+</body>
+</html>
